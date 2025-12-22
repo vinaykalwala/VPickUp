@@ -85,7 +85,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "VPickup.wsgi.application"
 
-# AUTH_USER_MODEL = 'accounts.User'
+AUTH_USER_MODEL = 'accounts.User'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -93,7 +93,7 @@ WSGI_APPLICATION = "VPickup.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "NAME": BASE_DIR / "Pickupdb.sqlite3",
     }
 }
 
