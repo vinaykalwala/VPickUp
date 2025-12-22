@@ -38,6 +38,19 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "Pickup",
+    'accounts',
+    'stores',
+    'catalog',
+    'inventory',
+    'carts',
+    'orders',
+    'payments',
+    'offers',
+    'commissions',
+    'disputes',
+    'notifications',
+    'analytics',
+    'audits',
 ]
 
 MIDDLEWARE = [
@@ -72,6 +85,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "VPickup.wsgi.application"
 
+# AUTH_USER_MODEL = 'accounts.User'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
