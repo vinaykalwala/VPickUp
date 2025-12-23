@@ -1,37 +1,239 @@
 {% extends "base.html" %}
-
-{% block title %}Terms & Conditions{% endblock %}
+{% block title %}Terms & Conditions | VPickup{% endblock %}
 
 {% block content %}
-<section class="page-content">
-  <h1>Terms & Conditions</h1>
 
-  <p>
-    Welcome to VPickup. By accessing or using our platform, you agree to comply
-    with and be bound by these Terms & Conditions.
-  </p>
+<style>
+/* ===== MODERN TERMS PAGE ===== */
 
-  <h3>Use of Service</h3>
-  <p>
-    VPickup provides a pickup-based ordering platform connecting customers with
-    nearby stores. You agree to use the service only for lawful purposes.
-  </p>
+.terms-hero {
+  background: linear-gradient(135deg, #0ea5e9, #0284c7);
+  min-height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 20px;
+  color: #ffffff;
+}
 
-  <h3>User Responsibilities</h3>
-  <p>
-    You are responsible for maintaining the confidentiality of your account and
-    ensuring that all information you provide is accurate and up to date.
-  </p>
+.terms-hero h1 {
+  font-size: 44px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
 
-  <h3>Termination</h3>
-  <p>
-    We reserve the right to suspend or terminate access to the platform if these
-    terms are violated.
-  </p>
+.terms-hero p {
+  font-size: 17px;
+  max-width: 700px;
+  line-height: 1.7;
+  opacity: 0.95;
+  margin: auto;
+}
 
-  <p>
-    These terms may be updated at any time. Continued use of VPickup indicates
-    acceptance of the revised terms.
-  </p>
+/* responsive */
+@media (max-width: 768px) {
+  .terms-hero h1 {
+    font-size: 32px;
+  }
+}
+
+.terms-wrapper {
+  background: #f8fafc;
+  padding: 70px 20px;
+}
+
+.terms-container {
+  max-width: 960px;
+  margin: auto;
+}
+
+/* Section blocks */
+
+/* Main wrapper */
+.terms-wrapper {
+  background: #f1f5f9;
+  padding: 70px 20px;
+}
+
+/* Single white content panel */
+.terms-container {
+  max-width: 960px;
+  margin: auto;
+  background: #ffffff;
+  padding: 60px;
+  border-radius: 16px;
+  border: 1px solid #e5e7eb;
+}
+
+/* Section styling (NO cards) */
+.terms-section {
+  padding: 35px 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.terms-section:last-child {
+  border-bottom: none;
+}
+
+.terms-section h3 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 12px;
+}
+
+.terms-section p {
+  font-size: 16px;
+  line-height: 1.9;
+  color: #374151;
+}
+
+/* Highlight box stays */
+.terms-highlight {
+  background: #eff6ff;
+  border-left: 4px solid #2563eb;
+  padding: 16px 20px;
+  margin-top: 20px;
+  font-size: 15px;
+  color: #1e3a8a;
+}
+
+/* Footer */
+.terms-footer {
+  text-align: center;
+  padding-top: 40px;
+  margin-top: 40px;
+  border-top: 1px solid #e5e7eb;
+  font-size: 15px;
+  color: #475569;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .terms-container {
+    padding: 35px 25px;
+  }
+
+  .terms-section h3 {
+    font-size: 20px;
+  }
+
+  .terms-section p {
+    font-size: 15px;
+  }
+}
+
+
+/* Responsive */
+
+@media (max-width: 768px) {
+  .terms-hero h1 {
+    font-size: 32px;
+  }
+
+  .terms-section {
+    padding: 26px;
+  }
+}
+</style>
+
+<!-- HERO -->
+<section class="terms-hero">
+  <div>
+    <h1>Terms & Conditions</h1>
+    <p>
+      Please read these terms carefully before using the VPickup platform.
+      By accessing our services, you agree to be legally bound by these terms.
+    </p>
+  </div>
 </section>
+
+
+<!-- CONTENT -->
+<section class="terms-wrapper">
+  <div class="terms-container">
+
+    <div class="terms-section">
+      <h3>1. Platform Overview</h3>
+      <p>
+        VPickup is a pickup-based commerce platform that enables users to browse
+        products, place orders, and collect them from nearby partner stores.
+        VPickup does not manufacture, store, or deliver products directly.
+      </p>
+    </div>
+
+    <div class="terms-section">
+      <h3>2. Eligibility & Account Security</h3>
+      <p>
+        You must be at least 18 years old to use the VPickup platform. You are
+        responsible for safeguarding your login credentials and all activities
+        performed under your account.
+      </p>
+
+      <div class="terms-highlight">
+        Any unauthorized use of your account must be reported to VPickup
+        immediately.
+      </div>
+    </div>
+
+    <div class="terms-section">
+      <h3>3. Orders, Pricing & Payments</h3>
+      <p>
+        Prices displayed on VPickup are determined by partner stores and may vary
+        by location. All payments must be completed through authorized payment
+        methods available on the platform.
+      </p>
+    </div>
+
+    <div class="terms-section">
+      <h3>4. Cancellations & Pickups</h3>
+      <p>
+        Orders once confirmed may be subject to cancellation limits. Users are
+        required to collect orders within the specified pickup window. Failure
+        to do so may result in order cancellation without refund.
+      </p>
+    </div>
+
+    <div class="terms-section">
+      <h3>5. User Conduct</h3>
+      <p>
+        Users agree not to misuse the platform, interfere with its operations,
+        submit false information, or engage in fraudulent or unlawful activities.
+      </p>
+    </div>
+
+    <div class="terms-section">
+      <h3>6. Limitation of Liability</h3>
+      <p>
+        VPickup shall not be liable for indirect, incidental, or consequential
+        damages arising from the use or inability to use the platform, including
+        delays or inaccuracies caused by partner stores.
+      </p>
+    </div>
+
+    <div class="terms-section">
+      <h3>7. Privacy & Data Protection</h3>
+      <p>
+        Your personal information is handled in accordance with our Privacy
+        Policy. By using VPickup, you consent to the collection and use of your
+        data as described therein.
+      </p>
+    </div>
+
+    <div class="terms-section">
+      <h3>8. Governing Law</h3>
+      <p>
+        These Terms & Conditions shall be governed by and interpreted in
+        accordance with the laws of India.
+      </p>
+    </div>
+
+    <div class="terms-footer">
+      Last updated: September 2025 · Questions? Contact VPickup Support
+    </div>
+
+  </div>
+</section>
+
 {% endblock %}
