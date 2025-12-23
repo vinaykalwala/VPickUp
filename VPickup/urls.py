@@ -1,11 +1,12 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path , include
 from django.conf import settings
 from django.conf.urls.static import static
 import Pickup.views as views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path('', include('accounts.urls')),
     path("terms/", views.terms, name="terms"),
     path("privacy/", views.privacy, name="privacy"),
     path("faq/", views.faq, name="faq"),

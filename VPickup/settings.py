@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'notifications',
     'analytics',
     'audits',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -145,3 +146,15 @@ RAZORPAY_KEY_SECRET = 'F8aPdLzdQKLt3RmgTWFcnYBG'
 RAZORPAY_CURRENCY = 'INR'
 
 SUBSCRIPTION_CURRENCY = "INR"
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+
+AUTHENTICATION_BACKENDS = [
+    'accounts.authentication.UsernameEmailPhoneBackend',
+]
+
+ADMIN_REGISTRATION_SECRET = "Vindus@0302"

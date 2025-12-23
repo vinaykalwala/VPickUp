@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
+<form method="post">{% csrf_token %}
+<input name="email" value="{{ email }}">
+<input name="otp" placeholder="OTP">
+<input type="hidden" name="purpose" value="register">
+<button>Verify</button>
+</form>
+{% endblock %}
