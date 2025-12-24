@@ -1,0 +1,124 @@
+<h2>{{ store.name }}</h2>
+
+{% if store.store_image %}
+    <img src="{{ store.store_image.url }}" width="300" alt="Store Image">
+{% else %}
+    <p><em>No store image uploaded</em></p>
+{% endif %}
+
+<hr>
+
+<h3>Store Information</h3>
+<p><strong>Description:</strong> {{ store.description|default:"N/A" }}</p>
+<p><strong>Address:</strong> {{ store.address }}</p>
+<p><strong>City:</strong> {{ store.city }}</p>
+<p><strong>State:</strong> {{ store.state }}</p>
+<p><strong>Pincode:</strong> {{ store.pincode }}</p>
+
+<p>
+    <strong>Location (Lat / Lng):</strong>
+    {{ store.latitude }}, {{ store.longitude }}
+</p>
+
+<p>
+    <strong>Opening Time:</strong> {{ store.opening_time }} <br>
+    <strong>Closing Time:</strong> {{ store.closing_time }}
+</p>
+
+<p>
+    <strong>Verification Status:</strong>
+    <span style="font-weight:bold;">
+        {{ store.verification_status|capfirst }}
+    </span>
+</p>
+
+<p>
+    <strong>Is Active:</strong>
+    {{ store.is_active|yesno:"Yes,No" }}
+</p>
+
+<p>
+    <strong>Created At:</strong>
+    {{ store.created_at }}
+</p>
+
+<hr>
+
+<h3>Owner Details</h3>
+<p><strong>Name:</strong> {{ store.owner.first_name }} {{ store.owner.last_name }}</p>
+<p><strong>Email:</strong> {{ store.owner.email }}</p>
+<p><strong>Phone:</strong> {{ store.owner.phone_number }}</p>
+
+<hr>
+
+<h3>Verification Details</h3>
+
+{% if store.storeverification %}
+    <p>
+        <strong>KYC Status:</strong>
+        {{ store.storeverification.status|capfirst }}
+    </p>
+
+    <p>
+        <strong>Verified By:</strong>
+        {% if store.storeverification.verified_by %}
+            {{ store.storeverification.verified_by.email }}
+        {% else %}
+            Not verified yet
+        {% endif %}
+    </p>
+
+    <p>
+        <strong>Verified At:</strong>
+        {{ store.storeverification.verified_at|default:"—" }}
+    </p>
+
+    <p>
+        <strong>Admin Remarks:</strong>
+        {{ store.storeverification.remarks|default:"—" }}
+    </p>
+
+    <ul>
+        <li>
+            <strong>Owner ID Proof:</strong>
+            <a href="{{ store.storeverification.owner_id_proof.url }}" target="_blank">
+                View Document
+            </a>
+        </li>
+
+        <li>
+            <strong>Business License:</strong>
+            <a href="{{ store.storeverification.business_license.url }}" target="_blank">
+                View Document
+            </a>
+        </li>
+
+        {% if store.storeverification.gst_certificate %}
+            <li>
+                <strong>GST Certificate:</strong>
+                <a href="{{ store.storeverification.gst_certificate.url }}" target="_blank">
+                    View Document
+                </a>
+            </li>
+        {% endif %}
+    </ul>
+{% else %}
+    <p><em>No verification details uploaded yet.</em></p>
+{% endif %}
+
+<hr>
+
+{% if is_owner %}
+    <h3>Owner Actions</h3>
+    <a href="{% url 'store_update' store.id %}">Edit Store</a> |
+    <a href="{% url 'store_delete' store.id %}">Delete Store</a> |
+    <a href="{% url 'store_verification' store.id %}">Upload / Update Verification</a>
+{% endif %}
+
+{% if is_admin %}
+    <hr>
+    <h3>Admin Actions</h3>
+    <a href="{% url 'admin_store_verify' store.id %}">
+        Review / Verify Store
+    </a>
+{% endif %}

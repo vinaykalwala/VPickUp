@@ -19,8 +19,19 @@ class CustomerRegisterView(APIView):
         return render(request, 'accounts/register_customer.html', {'form': CustomerRegisterForm()})
 
     def post(self, request):
+        form = CustomerRegisterForm(request.POST)
         s = CustomerRegisterSerializer(data=request.POST)
         s.is_valid(raise_exception=True)
+        if not s.is_valid():
+            return render(
+                request,
+                'accounts/register_customer.html',
+                {
+                    'form': form,
+                    'error': 'Invalid input'
+                }
+            )
+
 
         user = User.objects.create_user(
             username=s.validated_data['email'],
@@ -46,8 +57,19 @@ class SellerRegisterView(APIView):
         return render(request, 'accounts/register_seller.html', {'form': SellerRegisterForm()})
 
     def post(self, request):
+        form = SellerRegisterForm(request.POST)
         s = SellerRegisterSerializer(data=request.POST)
         s.is_valid(raise_exception=True)
+
+        if not s.is_valid():
+            return render(
+                request,
+                'accounts/register_seller.html',
+                {
+                    'form': form,
+                    'error': 'Invalid input'
+                }
+            )
 
         user = User.objects.create_user(
             username=s.validated_data['email'],
@@ -78,8 +100,19 @@ class AdminRegisterView(APIView):
         })
 
     def post(self, request):
+        form = AdminRegisterForm(request.POST)
         serializer = AdminRegisterSerializer(data=request.POST)
         serializer.is_valid(raise_exception=True)
+
+        if not serializer.is_valid():
+            return render(
+                request,
+                'accounts/register_admin.html',
+                {
+                    'form': form,
+                    'error': 'Invalid input'
+                }
+            )
 
         if serializer.validated_data['secret_key'] != settings.ADMIN_REGISTRATION_SECRET:
             return render(
@@ -117,6 +150,17 @@ class VerifyOTPView(APIView):
         s = OTPSerializer(data=request.POST)
         s.is_valid(raise_exception=True)
 
+        if not s.is_valid():
+            return render(
+                request,
+                'accounts/verify_otp.html',
+                {
+                    'email': request.POST.get('email'),
+                    'error': 'Invalid input'
+                }
+            )
+
+
         user = User.objects.get(email=s.validated_data['email'])
         otp = EmailOTP.objects.filter(
             user=user,
@@ -144,19 +188,37 @@ class VerifyOTPView(APIView):
 
 class LoginView(APIView):
     def get(self, request):
-        return render(request, 'accounts/login.html', {'form': LoginForm()})
+        form = LoginForm()
+        return render(request, 'accounts/login.html', {'form': form})
 
     def post(self, request):
-        s = LoginSerializer(data=request.POST)
-        s.is_valid(raise_exception=True)
+        form = LoginForm(request.POST)
+        serializer = LoginSerializer(data=request.POST)
+
+        if not serializer.is_valid():
+            return render(
+                request,
+                'accounts/login.html',
+                {
+                    'form': form,
+                    'error': 'Invalid input'
+                }
+            )
 
         user = authenticate(
-            username=s.validated_data['login'],
-            password=s.validated_data['password']
+            username=serializer.validated_data['login'],
+            password=serializer.validated_data['password']
         )
 
         if not user:
-            return render(request, 'accounts/login.html', {'error': 'Invalid credentials'})
+            return render(
+                request,
+                'accounts/login.html',
+                {
+                    'form': form,
+                    'error': 'Invalid credentials'
+                }
+            )
 
         login(request, user)
         return redirect('dashboard')
@@ -263,7 +325,7 @@ class ResetPasswordView(APIView):
 def logout_view(request):
     logout(request)
     request.session.flush()
-    return redirect('login')
+    return redirect('home')
 
 
 @login_required

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Store</title>
+
+    <!-- Leaflet CSS -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <style>
+        #map {
+            height: 380px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+        }
+        textarea[readonly] {
+            background: #f5f5f5;
+        }
+        .hint {
+            font-size: 13px;
+            color: #555;
+        }
+        .error {
+            color: red;
+        }
+        .search-box {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Create Store</h2>
+
+<form method="post" enctype="multipart/form-data" id="storeForm">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <!-- 🔍 LOCATION SEARCH -->
+    <div class="search-box">
+        <label><strong>Search Location</strong></label><br>
+        <input
+            type="text"
+            id="locationSearch"
+            placeholder="Search area, landmark, city"
+            style="width:100%; padding:8px;"
+        >
+        <button type="button" onclick="searchLocation()">Search</button>
+    </div>
+
+    <!-- 🔒 Hidden location fields -->
+    <input type="hidden" name="latitude" id="latitude">
+    <input type="hidden" name="longitude" id="longitude">
+
+    <!-- 🗺️ MAP -->
+    <label><strong>Select Store Location</strong></label>
+    <div id="map"></div>
+
+    <p class="hint">Search, click on map, or drag marker to set exact location</p>
+
+    <!-- Auto address -->
+    <label>Detected Address</label><br>
+    <textarea id="autoAddress" rows="2" readonly></textarea><br><br>
+
+    <button type="submit" id="submitBtn" disabled>Create Store</button>
+</form>
+
+<p id="status"></p>
+
+{% if error %}
+    <p class="error">{{ error }}</p>
+{% endif %}
+
+<script>
+let map, marker;
+
+const submitBtn = document.getElementById("submitBtn");
+const statusEl = document.getElementById("status");
+const latInput = document.getElementById("latitude");
+const lngInput = document.getElementById("longitude");
+const addressBox = document.getElementById("autoAddress");
+
+/* ---------- INIT MAP ---------- */
+function initMap(lat = 20.5937, lng = 78.9629) {
+    map = L.map("map").setView([lat, lng], 13);
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: "© OpenStreetMap"
+    }).addTo(map);
+
+    marker = L.marker([lat, lng], { draggable: true }).addTo(map);
+
+    setLocation(lat, lng);
+
+    map.on("click", function (e) {
+        const { lat, lng } = e.latlng;
+        marker.setLatLng([lat, lng]);
+        setLocation(lat, lng);
+    });
+
+    marker.on("dragend", function () {
+        const pos = marker.getLatLng();
+        setLocation(pos.lat, pos.lng);
+    });
+}
+
+/* ---------- SET LOCATION ---------- */
+function setLocation(lat, lng) {
+    latInput.value = lat.toFixed(6);
+    lngInput.value = lng.toFixed(6);
+    submitBtn.disabled = false;
+    statusEl.innerText = "Location selected";
+    reverseGeocode(lat, lng);
+}
+
+/* ---------- REVERSE GEOCODE ---------- */
+function reverseGeocode(lat, lng) {
+    fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`)
+    .then(res => res.json())
+    .then(data => {
+        addressBox.value = data.display_name || "Selected location";
+    })
+    .catch(() => {
+        addressBox.value = "Selected location";
+    });
+}
+
+/* ---------- SEARCH LOCATION ---------- */
+function searchLocation() {
+    const query = document.getElementById("locationSearch").value;
+    if (!query) return;
+
+    statusEl.innerText = "Searching location...";
+
+    fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`)
+    .then(res => res.json())
+    .then(data => {
+        if (data.length === 0) {
+            statusEl.innerText = "Location not found";
+            return;
+        }
+
+        const lat = parseFloat(data[0].lat);
+        const lng = parseFloat(data[0].lon);
+
+        map.setView([lat, lng], 15);
+        marker.setLatLng([lat, lng]);
+        setLocation(lat, lng);
+    })
+    .catch(() => {
+        statusEl.innerText = "Error searching location";
+    });
+}
+
+/* ---------- AUTO-DETECT (OPTIONAL) ---------- */
+if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+        pos => initMap(pos.coords.latitude, pos.coords.longitude),
+        () => initMap()
+    );
+} else {
+    initMap();
+}
+</script>
+
+</body>
+</html>

@@ -1,38 +1,1351 @@
 {% extends "base.html" %}
-
-{% block title %}Frequently Asked Questions{% endblock %}
-
+{% load static %}
+{% block title %}FAQ | VPickup{% endblock %}
 {% block content %}
-<section class="page-content">
-  <h1>Frequently Asked Questions</h1>
 
-  <h3>What is VPickup?</h3>
-  <p>
-    VPickup is an online platform that allows customers to order items online
-    and pick them up from nearby verified stores.
-  </p>
-
-  <h3>How does pickup work?</h3>
-  <p>
-    Place an order through VPickup, select a pickup slot, and collect your items
-    from the store once the order is ready.
-  </p>
-
-  <h3>Are payments secure?</h3>
-  <p>
-    Yes. All payments are processed through secure and trusted payment gateways.
-  </p>
-
-  <h3>What if I face an issue with my order?</h3>
-  <p>
-    You can contact our Customer Care team through the support section for quick
-    assistance.
-  </p>
-
-  <h3>Can I cancel an order?</h3>
-  <p>
-    Cancellation policies depend on the store and order status. Please refer to
-    the order details or contact support.
-  </p>
+<!-- ================= HERO ================= -->
+<section class="faq-hero">
+  <div class="faq-hero-inner">
+    <div class="faq-hero-content">
+      <div class="faq-hero-text">
+        <span class="faq-subtitle">Help Center</span>
+        <h1>Frequently Asked Questions</h1>
+        <p>
+          Everything you need to know about ordering, pickup, payments,
+          compliance, and customer support — all in one place.
+        </p>
+        <div class="faq-search">
+          <input type="text" placeholder="Search for answers..." id="faqSearch">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+      </div>
+      <div class="faq-hero-image">
+        <div class="paint-bg"></div>
+        <div class="paint-bg-2"></div>
+        <img src="{% static 'faq.avif' %}" alt="FAQ Illustration">
+      </div>
+    </div>
+  </div>
 </section>
-{% endblock %}
+
+<!-- ================= FAQ LAYOUT ================= -->
+<section class="faq-wrapper">
+  <div class="faq-container">
+    <!-- LEFT CATEGORIES -->
+    <aside class="faq-categories">
+      <div class="faq-categories-header">
+        <h3>Categories</h3>
+        <span class="faq-categories-count">6 topics</span>
+      </div>
+      <div class="faq-categories-list">
+        <button class="faq-cat active" data-cat="how">
+          <div class="faq-cat-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M9.5 14C9.5 15.3807 10.6193 16.5 12 16.5C13.3807 16.5 14.5 15.3807 14.5 14C14.5 12.6193 13.3807 11.5 12 11.5C10.6193 11.5 9.5 12.6193 9.5 14Z" fill="currentColor"/>
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22ZM11 6.5C11 5.94772 11.4477 5.5 12 5.5C12.5523 5.5 13 5.94772 13 6.5V9.5C13 10.0523 12.5523 10.5 12 10.5C11.4477 10.5 11 10.0523 11 9.5V6.5ZM12 18C14.2091 18 16 16.2091 16 14C16 11.7909 14.2091 10 12 10C9.79086 10 8 11.7909 8 14C8 16.2091 9.79086 18 12 18Z" fill="currentColor"/>
+            </svg>
+          </div>
+          <div class="faq-cat-text">
+            <span class="faq-cat-title">How It Works</span>
+          </div>
+        </button>
+        <button class="faq-cat" data-cat="start">
+          <div class="faq-cat-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M12 15V3M12 15L8 11M12 15L16 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M2 17L2.5 18.5L3 17L3.5 18.5L4 17L4.5 18.5L5 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <path d="M20 17L20.5 18.5L21 17L21.5 18.5L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <path d="M18 12H20V21H4V12H6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="faq-cat-text">
+            <span class="faq-cat-title">Getting Started</span>
+            <span class="faq-cat-desc">Click To See</span>
+          </div>
+        </button>
+        <button class="faq-cat" data-cat="orders">
+          <div class="faq-cat-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M3 10H21M7 15H8M12 15H13M6 19H18C19.6569 19 21 17.6569 21 16V8C21 6.34315 19.6569 5 18 5H6C4.34315 5 3 6.34315 3 8V16C3 17.6569 4.34315 19 6 19Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="faq-cat-text">
+            <span class="faq-cat-title">Orders & Pickup</span>
+            <span class="faq-cat-desc">Click To See</span>
+          </div>
+        </button>
+        <button class="faq-cat" data-cat="payments">
+          <div class="faq-cat-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <rect x="2" y="5" width="20" height="14" rx="2" stroke="currentColor" stroke-width="2"/>
+              <path d="M2 10H22" stroke="currentColor" stroke-width="2"/>
+              <circle cx="16" cy="15" r="1" fill="currentColor"/>
+            </svg>
+          </div>
+          <div class="faq-cat-text">
+            <span class="faq-cat-title">Payments</span>
+            <span class="faq-cat-desc">Click To See</span>
+          </div>
+        </button>
+        <button class="faq-cat" data-cat="legal">
+          <div class="faq-cat-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2"/>
+              <path d="M12 16V12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="12" cy="9" r="1" fill="currentColor"/>
+            </svg>
+          </div>
+          <div class="faq-cat-text">
+            <span class="faq-cat-title">Legal & Compliance</span>
+            <span class="faq-cat-desc">Click To See</span>
+          </div>
+        </button>
+        <button class="faq-cat" data-cat="support">
+          <div class="faq-cat-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M8 10H8.01M12 10H12.01M16 10H16.01M21 12C21 16.4183 16.9706 20 12 20C10.4607 20 9.01172 19.6565 7.74467 19.0511L3 20L4.39499 16.28C3.51156 15.0423 3 13.5743 3 12C3 7.58172 7.02944 4 12 4C16.9706 4 21 7.58172 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="faq-cat-text">
+            <span class="faq-cat-title">Support</span>
+            <span class="faq-cat-desc">Click To See</span>
+          </div>
+        </button>
+      </div>
+    </aside>
+
+    <!-- RIGHT QUESTIONS -->
+    <div class="faq-content">
+      <!-- Active Category Indicator -->
+      <div class="faq-active-category">
+        <span class="faq-active-title">How It Works</span>
+        <span class="faq-active-count">Click To See</span>
+      </div>
+
+      <!-- Questions Container -->
+      <div class="faq-groups-wrapper">
+        <!-- HOW IT WORKS -->
+        <div class="faq-group active" id="how">
+          <div class="faq-item">
+            <button class="faq-q">
+              <span class="faq-q-text">How does VPickup work?</span>
+              <svg class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="faq-a">
+              <p>Browse items online, place an order, choose a pickup slot, and collect from a nearby verified store.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q">
+              <span class="faq-q-text">How fast is pickup?</span>
+              <svg class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="faq-a">
+              <p>Most orders are ready within minutes depending on store preparation.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q">
+              <span class="faq-q-text">Can I schedule pickup?</span>
+              <svg class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="faq-a">
+              <p>Yes, pickup time slots can be selected during checkout.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q">
+              <span class="faq-q-text">Is inventory live?</span>
+              <svg class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="faq-a">
+              <p>Yes, inventory is synced in real time with stores.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q">
+              <span class="faq-q-text">Are stores verified?</span>
+              <svg class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="faq-a">
+              <p>All partner stores go through a verification process.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- GETTING STARTED -->
+        <div class="faq-group" id="start">
+          <div class="faq-item">
+            <button class="faq-q">
+              <span class="faq-q-text">How do I create an account?</span>
+              <svg class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="faq-a">
+              <p>Sign up using your phone number or email address.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q">
+              <span class="faq-q-text">Is registration free?</span>
+              <svg class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="faq-a">
+              <p>Yes, creating an account is completely free.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q">
+              <span class="faq-q-text">Do I need an app?</span>
+              <svg class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="faq-a">
+              <p>No app required — VPickup works directly on the web.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q">
+              <span class="faq-q-text">Can I browse without logging in?</span>
+              <svg class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="faq-a">
+              <p>Yes, you can browse items without logging in.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q">
+              <span class="faq-q-text">Is OTP verification required?</span>
+              <svg class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="faq-a">
+              <p>OTP verification may be required for security.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ORDERS -->
+        <div class="faq-group" id="orders">
+          <div class="faq-item">
+            <button class="faq-q">
+              <span class="faq-q-text">Can I cancel my order?</span>
+              <svg class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="faq-a">
+              <p>Cancellation depends on order status and store policy.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q">
+              <span class="faq-q-text">What if an item is missing?</span>
+              <svg class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="faq-a">
+              <p>Contact support immediately for assistance.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q">
+              <span class="faq-q-text">Will I get order notifications?</span>
+              <svg class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="faq-a">
+              <p>Yes, you'll receive real-time updates.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q">
+              <span class="faq-q-text">Can I reorder previous orders?</span>
+              <svg class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="faq-a">
+              <p>Yes, reordering is available from order history.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q">
+              <span class="faq-q-text">What if a store cancels?</span>
+              <svg class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="faq-a">
+              <p>You'll receive an instant refund.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- PAYMENTS -->
+        <div class="faq-group" id="payments">
+          <div class="faq-item">
+            <button class="faq-q">
+              <span class="faq-q-text">Are payments secure?</span>
+              <svg class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="faq-a">
+              <p>All payments are encrypted and processed securely.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q">
+              <span class="faq-q-text">What payment methods are supported?</span>
+              <svg class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="faq-a">
+              <p>UPI, debit cards, credit cards, and net banking.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q">
+              <span class="faq-q-text">Is cash on delivery available?</span>
+              <svg class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="faq-a">
+              <p>Availability depends on the store.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q">
+              <span class="faq-q-text">Can I download invoices?</span>
+              <svg class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="faq-a">
+              <p>Invoices are available in your order history.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q">
+              <span class="faq-q-text">How fast are refunds processed?</span>
+              <svg class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="faq-a">
+              <p>Refunds are usually processed quickly.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- LEGAL -->
+        <div class="faq-group" id="legal">
+          <div class="faq-item">
+            <button class="faq-q">
+              <span class="faq-q-text">Is my data safe?</span>
+              <svg class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="faq-a">
+              <p>Yes, we follow strict data protection practices.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q">
+              <span class="faq-q-text">Do you share customer data?</span>
+              <svg class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="faq-a">
+              <p>No, customer data is never sold or misused.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q">
+              <span class="faq-q-text">Is VPickup compliant with laws?</span>
+              <svg class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="faq-a">
+              <p>Yes, we comply with applicable regulations.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q">
+              <span class="faq-q-text">Where can I read policies?</span>
+              <svg class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="faq-a">
+              <p>Privacy and terms pages are available on the site.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q">
+              <span class="faq-q-text">Is payment data stored?</span>
+              <svg class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="faq-a">
+              <p>No, payment data is handled by gateways.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUPPORT -->
+        <div class="faq-group" id="support">
+          <div class="faq-item">
+            <button class="faq-q">
+              <span class="faq-q-text">How do I contact support?</span>
+              <svg class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="faq-a">
+              <p>Use the Contact Support page.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q">
+              <span class="faq-q-text">Is support available 24/7?</span>
+              <svg class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="faq-a">
+              <p>Yes, our support team works around the clock.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q">
+              <span class="faq-q-text">How fast is response time?</span>
+              <svg class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="faq-a">
+              <p>Most issues are resolved quickly.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q">
+              <span class="faq-q-text">Can I track my support tickets?</span>
+              <svg class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="faq-a">
+              <p>Yes, from your account dashboard.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q">
+              <span class="faq-q-text">Can I report a store?</span>
+              <svg class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="faq-a">
+              <p>Yes, via the support section.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom CTA -->
+      <div class="faq-bottom-cta">
+        <div class="faq-cta-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M21 11.5C21.0034 12.8199 20.6951 14.1219 20.1 15.3C19.3944 16.7117 18.3098 17.8992 16.9674 18.7293C15.6251 19.5594 14.0782 19.9994 12.5 20C11.1801 20.0035 9.87812 19.6951 8.7 19.1L3 21L4.9 15.3C4.30493 14.1219 3.99656 12.8199 4 11.5C4.00061 9.92176 4.44061 8.37485 5.27072 7.03255C6.10083 5.69025 7.28825 4.60557 8.7 3.9C9.87812 3.30493 11.1801 2.99656 12.5 3H13C15.0843 3.11499 17.053 3.99476 18.5291 5.47086C20.0052 6.94695 20.885 8.91565 21 11V11.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="faq-cta-content">
+          <h4>Still have questions?</h4>
+          <p>Can't find the answer you're looking for? Please reach out to our friendly support team.</p>
+          <a href="/contact" class="faq-cta-button">Contact Support</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= STYLES ================= -->
+<style>
+/* Reset & Base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --primary: #06b6d4;
+  --primary-dark: #0e7490;
+  --primary-light: #cffafe;
+  --primary-bg: #ecfeff;
+  --text-dark: #1e293b;
+  --text-light: #64748b;
+  --border: #e2e8f0;
+  --shadow: 0 4px 20px rgba(6, 182, 212, 0.08);
+  --radius: 12px;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: var(--text-dark);
+  background: #fff;
+}
+
+/* HERO */
+.faq-hero {
+  padding: 60px 20px 100px;
+  position: relative;
+  overflow: hidden;
+}
+
+.faq-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.08) 0%, transparent 70%);
+}
+
+.faq-hero-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.faq-hero-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+.faq-subtitle {
+  display: inline-block;
+  background: var(--primary-light);
+  color: var(--primary-dark);
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.faq-hero-text h1 {
+  font-size: 48px;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 20px;
+  line-height: 1.2;
+}
+
+.faq-hero-text p {
+  font-size: 18px;
+  color: var(--text-light);
+  line-height: 1.6;
+  max-width: 500px;
+  margin-bottom: 40px;
+}
+
+.faq-search {
+  position: relative;
+  max-width: 500px;
+}
+
+.faq-search input {
+  width: 100%;
+  padding: 16px 24px 16px 48px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 16px;
+  background: white;
+  transition: var(--transition);
+}
+
+.faq-search input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1);
+}
+
+.faq-search svg {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-light);
+}
+
+/* Image */
+.faq-hero-image {
+  position: relative;
+}
+
+.paint-bg {
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  background: linear-gradient(135deg, #a5f3fc 0%, #ccfbf1 100%);
+  border-radius: 40% 60% 60% 40% / 50% 40% 60% 50%;
+  animation: float 8s ease-in-out infinite;
+  z-index: 1;
+}
+
+.paint-bg-2 {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  background: linear-gradient(135deg, #5eead4 0%, #67e8f9 100%);
+  border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+  top: 50px;
+  right: 50px;
+  animation: float 6s ease-in-out infinite reverse;
+  opacity: 0.6;
+  z-index: 2;
+}
+
+.faq-hero-image img {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  z-index: 3;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(2deg); }
+}
+
+/* FAQ Layout */
+.faq-wrapper {
+  padding: 0 20px 100px;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+.faq-container {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 20px;
+  margin-top: 40px;
+}
+
+/* Categories */
+.faq-categories {
+  background: white;
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow);
+  height: fit-content;
+  position: sticky;
+  top: 100px;
+}
+
+.faq-categories-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid var(--primary-bg);
+}
+
+.faq-categories-header h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+
+.faq-categories-count {
+  background: var(--primary-bg);
+  color: var(--primary-dark);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.faq-categories-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.faq-cat {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border:1px solid #bef1ff;
+  background: transparent;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: var(--transition);
+  text-align: left;
+  width: 100%;
+}
+
+.faq-cat:hover {
+  background: var(--primary-bg);
+}
+
+.faq-cat.active {
+  background: var(--primary-light);
+  border-left: 10px solid var(--primary);
+}
+
+.faq-cat-icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border-radius: 10px;
+  color: var(--primary-dark);
+  flex-shrink: 0;
+}
+
+.faq-cat.active .faq-cat-icon {
+  background: var(--primary);
+  color: white;
+}
+
+.faq-cat-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.faq-cat-title {
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.faq-cat.active .faq-cat-title {
+  color: var(--primary-dark);
+}
+
+.faq-cat-desc {
+  font-size: 12px;
+  color: var(--text-light);
+}
+
+/* FAQ Content */
+.faq-content {
+  display: flex;
+  flex-direction: column;
+  gap:20px;
+  background-color:#fff;
+  padding:20px;
+  box-shadow:
+    0 8px 24px rgba(15, 23, 42, 0.08),
+    0 2px 6px rgba(15, 23, 42, 0.04);
+     border-radius: 16px;
+}
+
+.faq-active-category {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg, #039cb7, #0e7490);
+padding: 20px;
+
+}
+
+.faq-active-title {
+  font-size: 24px;
+  font-weight: 700;
+color: white;
+}
+
+.faq-active-count {
+  background: var(--primary-bg);
+  color: var(--primary-dark);
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.faq-groups-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.faq-group {
+  display: none;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.faq-group.active {
+  display: flex;
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.faq-item {
+  background: white;
+  border-bottom: 2px dotted var(--border);
+  overflow: hidden;
+  transition: var(--transition);
+}
+
+
+
+.faq-q {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-dark);
+  transition: var(--transition);
+}
+
+.faq-q:hover {
+  color: var(--primary-dark);
+}
+
+.faq-q-text {
+  flex: 1;
+  padding-right: 16px;
+}
+
+.faq-arrow {
+  color: var(--text-light);
+  transition: var(--transition);
+  flex-shrink: 0;
+}
+
+.faq-item.active .faq-arrow {
+  transform: rotate(180deg);
+  color: var(--primary);
+}
+
+.faq-a {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.faq-item.active .faq-a {
+  max-height: 500px;
+}
+
+.faq-a p {
+  padding: 0 24px 24px;
+  color: var(--text-light);
+  line-height: 1.6;
+  font-size: 15px;
+}
+
+/* Bottom CTA */
+.faq-bottom-cta {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+  border-radius: var(--radius);
+  padding: 32px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-top: 20px;
+  color: white;
+}
+
+.faq-cta-icon {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  flex-shrink: 0;
+}
+
+.faq-cta-content {
+  flex: 1;
+}
+
+.faq-cta-content h4 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.faq-cta-content p {
+  opacity: 0.9;
+  margin-bottom: 20px;
+  font-size: 15px;
+}
+
+.faq-cta-button {
+  display: inline-block;
+  background: white;
+  color: var(--primary-dark);
+  padding: 12px 28px;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: var(--transition);
+  border: 2px solid transparent;
+}
+
+.faq-cta-button:hover {
+  background: transparent;
+  color: white;
+  border-color: white;
+  transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .faq-hero-content {
+    gap: 40px;
+  }
+  
+  .faq-hero-text h1 {
+    font-size: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .faq-hero {
+    padding: 60px 20px 40px;
+  }
+  
+  .faq-hero-content {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  
+  .faq-hero-text h1 {
+    font-size: 36px;
+  }
+  
+  .faq-container {
+    grid-template-columns: 1fr;
+  }
+  
+  .faq-categories {
+    position: static;
+    margin-bottom: 20px;
+  }
+  
+  .faq-bottom-cta {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .faq-cta-icon {
+    width: 50px;
+    height: 50px;
+  }
+}
+
+@media (max-width: 480px) {
+  .faq-hero-text h1 {
+    font-size: 32px;
+  }
+  
+  .faq-hero-text p {
+    font-size: 16px;
+  }
+  
+  .faq-active-category {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .faq-q {
+    padding: 20px;
+    font-size: 15px;
+  }
+  
+  .faq-a p {
+    padding: 0 20px 20px;
+  }
+}
+</style>
+
+<!-- ================= JS ================= -->
+<!-- ================= JS ================= -->
+<script>
+// Store original content for reset
+let isSearching = false;
+const originalContent = {};
+let currentActiveCategory = 'how'; // Track current category
+
+// Initialize: store original content of all FAQ items
+function storeOriginalContent() {
+  document.querySelectorAll('.faq-item').forEach(item => {
+    const id = item.closest('.faq-group').id + '-' + Array.from(item.parentNode.children).indexOf(item);
+    originalContent[id] = {
+      question: item.querySelector('.faq-q-text').innerHTML,
+      answer: item.querySelector('.faq-a p').innerHTML,
+      group: item.closest('.faq-group').id
+    };
+  });
+}
+
+// Reset all content to original
+function resetAllContent() {
+  document.querySelectorAll('.faq-item').forEach(item => {
+    const id = item.closest('.faq-group').id + '-' + Array.from(item.parentNode.children).indexOf(item);
+    if (originalContent[id]) {
+      item.querySelector('.faq-q-text').innerHTML = originalContent[id].question;
+      item.querySelector('.faq-a p').innerHTML = originalContent[id].answer;
+    }
+  });
+}
+
+// Function to switch to a specific category (NORMAL VIEW)
+function switchToCategory(categoryId) {
+  // Reset searching state
+  isSearching = false;
+  currentActiveCategory = categoryId;
+  
+  // Hide all FAQ groups
+  document.querySelectorAll('.faq-group').forEach(group => {
+    group.classList.remove('active');
+    group.style.display = 'none';
+  });
+  
+  // Show only the selected category group
+  const targetGroup = document.getElementById(categoryId);
+  if (targetGroup) {
+    targetGroup.classList.add('active');
+    targetGroup.style.display = 'flex';
+  }
+  
+  // Update category buttons
+  document.querySelectorAll('.faq-cat').forEach(btn => {
+    btn.classList.remove('active');
+    if (btn.dataset.cat === categoryId) {
+      btn.classList.add('active');
+    }
+  });
+  
+  // Show ALL items in this category, hide items from other categories
+  document.querySelectorAll('.faq-item').forEach(item => {
+    if (item.closest('.faq-group').id === categoryId) {
+      item.style.display = 'flex';
+      item.classList.remove('active'); // Close all answers when switching categories
+    } else {
+      item.style.display = 'none';
+    }
+  });
+  
+  // Update header
+  const activeBtn = document.querySelector(`.faq-cat[data-cat="${categoryId}"]`);
+  if (activeBtn) {
+    const categoryTitle = activeBtn.querySelector('.faq-cat-title').textContent;
+    const itemCount = document.querySelectorAll(`#${categoryId} .faq-item`).length;
+    
+    document.querySelector('.faq-active-title').textContent = categoryTitle;
+    document.querySelector('.faq-active-count').textContent = `${itemCount} questions`;
+  }
+}
+
+// Category switching
+document.querySelectorAll(".faq-cat").forEach(btn => {
+  btn.onclick = () => {
+    const categoryId = btn.dataset.cat;
+    
+    // Clear search if active
+    if (isSearching) {
+      const searchInput = document.getElementById('faqSearch');
+      if (searchInput) {
+        searchInput.value = '';
+      }
+      const clearBtn = searchInput?.parentElement.querySelector('button');
+      if (clearBtn) {
+        clearBtn.style.display = 'none';
+      }
+      resetAllContent();
+    }
+    
+    // Switch to the selected category
+    switchToCategory(categoryId);
+  }
+});
+
+// FAQ accordion
+document.querySelectorAll(".faq-q").forEach(q => {
+  q.onclick = () => {
+    const item = q.parentElement;
+    const isActive = item.classList.contains("active");
+    
+    // Only toggle if item is visible
+    if (item.style.display !== 'none') {
+      if (!isActive) {
+        // Close all other items
+        document.querySelectorAll(".faq-item").forEach(i => i.classList.remove("active"));
+        // Open clicked item
+        item.classList.add("active");
+      } else {
+        item.classList.remove("active");
+      }
+    }
+  }
+});
+
+// Clear search function
+function clearSearch() {
+  const searchInput = document.getElementById('faqSearch');
+  if (searchInput) {
+    searchInput.value = '';
+  }
+  
+  // Hide clear button
+  const clearBtn = searchInput?.parentElement.querySelector('button');
+  if (clearBtn) {
+    clearBtn.style.display = 'none';
+  }
+  
+  // Reset all content and switch back to current category
+  resetAllContent();
+  switchToCategory(currentActiveCategory);
+}
+
+// SEARCH FUNCTIONALITY - Only shows matching results
+const faqSearch = document.getElementById('faqSearch');
+if (faqSearch) {
+  // Store original content on load
+  storeOriginalContent();
+  
+  // Add clear button
+  const searchContainer = faqSearch.parentElement;
+  const clearBtn = document.createElement('button');
+  clearBtn.innerHTML = `
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+      <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+  `;
+  clearBtn.style.cssText = `
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    padding: 4px;
+    display: none;
+    z-index: 10;
+  `;
+  clearBtn.addEventListener('click', () => {
+    clearSearch();
+    faqSearch.focus();
+  });
+  searchContainer.appendChild(clearBtn);
+  searchContainer.style.position = 'relative';
+  
+  faqSearch.addEventListener('input', function(e) {
+    const searchTerm = e.target.value.toLowerCase().trim();
+    
+    // Show/hide clear button
+    clearBtn.style.display = searchTerm ? 'block' : 'none';
+    
+    if (searchTerm.length === 0) {
+      clearSearch();
+      return;
+    }
+    
+    isSearching = true;
+    let totalMatches = 0;
+    
+    // Reset all content first
+    resetAllContent();
+    
+    // SEARCH MODE: Show ALL groups but hide all items initially
+    document.querySelectorAll('.faq-group').forEach(group => {
+      group.style.display = 'flex';
+      group.classList.remove('active');
+    });
+    
+    // Search across ALL questions and answers
+    document.querySelectorAll('.faq-group').forEach(group => {
+      let groupMatches = 0;
+      
+      group.querySelectorAll('.faq-item').forEach(item => {
+        const questionText = item.querySelector('.faq-q-text').textContent.toLowerCase();
+        const answerText = item.querySelector('.faq-a p').textContent.toLowerCase();
+        
+        const id = item.closest('.faq-group').id + '-' + Array.from(item.parentNode.children).indexOf(item);
+        
+        if (questionText.includes(searchTerm) || answerText.includes(searchTerm)) {
+          // Show only this matching item
+          item.style.display = 'flex';
+          groupMatches++;
+          totalMatches++;
+          
+          // Highlight matching text in question
+          if (questionText.includes(searchTerm)) {
+            const qText = originalContent[id].question;
+            const regex = new RegExp(`(${searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+            const highlighted = qText.replace(regex, '<mark class="search-highlight">$1</mark>');
+            item.querySelector('.faq-q-text').innerHTML = highlighted;
+          }
+          
+          // Highlight matching text in answer
+          if (answerText.includes(searchTerm)) {
+            const aText = originalContent[id].answer;
+            const regex = new RegExp(`(${searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+            const highlighted = aText.replace(regex, '<mark class="search-highlight">$1</mark>');
+            item.querySelector('.faq-a p').innerHTML = highlighted;
+          }
+          
+          // Automatically open the answer when searching
+          item.classList.add('active');
+        } else {
+          // Hide non-matching items
+          item.style.display = 'none';
+        }
+      });
+      
+      // Hide entire group if it has no matches
+      if (groupMatches === 0) {
+        group.style.display = 'none';
+      }
+    });
+    
+    // Update header for search results
+    if (searchTerm.length > 0) {
+      const searchResultsText = totalMatches === 1 ? '1 result found' : `${totalMatches} results found`;
+      document.querySelector('.faq-active-title').textContent = `Search: "${searchTerm}"`;
+      document.querySelector('.faq-active-count').textContent = searchResultsText;
+    }
+  });
+  
+  // Add Escape key to clear search
+  faqSearch.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      clearSearch();
+    }
+  });
+}
+
+// Smooth animations
+document.addEventListener('DOMContentLoaded', () => {
+  // Add CSS for search highlight
+  const style = document.createElement('style');
+  style.textContent = `
+    .search-highlight {
+      background-color: #fef3c7;
+      color: #92400e;
+      padding: 2px 4px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+    
+    /* Ensure proper display of FAQ items */
+    .faq-item {
+      display: flex !important;
+      flex-direction: column;
+    }
+    
+    .faq-q {
+      display: flex;
+      width: 100%;
+    }
+    
+    .faq-a {
+      display: block;
+      width: 100%;
+    }
+    
+    /* Ensure groups are properly shown/hidden */
+    .faq-group {
+      display: none;
+      flex-direction: column;
+      gap: 16px;
+    }
+    
+    .faq-group.active {
+      display: flex;
+    }
+    
+    /* Hide category highlight during search */
+    .search-mode .faq-cat {
+      border-left-width: 1px !important;
+      background: transparent !important;
+    }
+  `;
+  document.head.appendChild(style);
+  
+  // Initialize with first category active
+  switchToCategory('how');
+  
+  // Animate FAQ items on load
+  setTimeout(() => {
+    document.querySelectorAll('.faq-item').forEach((item, index) => {
+      item.style.opacity = '0';
+      item.style.transform = 'translateY(20px)';
+      
+      setTimeout(() => {
+        item.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        item.style.opacity = '1';
+        item.style.transform = 'translateY(0)';
+      }, index * 100);
+    });
+  }, 300);
+});
+</script>
+
+{% endblock %} hey whats wrong in it 
