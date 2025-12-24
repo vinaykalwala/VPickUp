@@ -1,0 +1,15 @@
+<h2>{{ store.name }}</h2>
+{% if store.store_image %}
+    <img src="{{ store.store_image.url }}" width="300">
+{% endif %}
+<p><strong>Description:</strong> {{ store.description }}</p>
+<p><strong>Address:</strong> {{ store.address }}</p>
+<p><strong>City:</strong> {{ store.city }}</p>
+<p><strong>Timings:</strong> {{ store.opening_time }} – {{ store.closing_time }}</p>
+<p><strong>Status:</strong> {{ store.verification_status }}</p>
+
+{% if is_owner %}
+    <a href="{% url 'store_update' store.id %}">Edit</a> |
+    <a href="{% url 'store_delete' store.id %}">Delete</a> |
+    <a href="{% url 'store_verification' store.id %}">Upload Verification</a>
+{% endif %}

@@ -1,0 +1,67 @@
+<h2>Verify Store – {{ store.name }}</h2>
+
+<p><strong>Owner:</strong> {{ store.owner.email }}</p>
+<p><strong>Address:</strong> {{ store.address }}</p>
+<p><strong>Current Status:</strong> {{ store.verification_status }}</p>
+
+<h3>Documents</h3>
+<ul>
+    <li>
+        <a href="{{ verification.owner_id_proof.url }}" target="_blank">
+            Owner ID Proof
+        </a>
+    </li>
+    <li>
+        <a href="{{ verification.business_license.url }}" target="_blank">
+            Business License
+        </a>
+    </li>
+    {% if verification.gst_certificate %}
+        <li>
+            <a href="{{ verification.gst_certificate.url }}" target="_blank">
+                GST Certificate
+            </a>
+        </li>
+    {% endif %}
+</ul>
+
+<hr>
+
+<form method="post">
+    {% csrf_token %}
+
+    <textarea
+        name="remarks"
+        placeholder="Remarks (optional)"
+        rows="3"
+        style="width: 100%;"
+    >{{ verification.remarks }}</textarea>
+
+    <br><br>
+
+    {% if store.verification_status == 'pending' %}
+        <!-- Normal flow -->
+        <button type="submit" name="action" value="approve">
+            Approve
+        </button>
+
+        <button type="submit" name="action" value="reject">
+            Reject
+        </button>
+
+    {% else %}
+        <!-- 🔁 Re-verify flow -->
+        <p style="color: #666;">
+            This store is already <strong>{{ store.verification_status }}</strong>.
+            You may re-verify if required.
+        </p>
+
+        <button type="submit" name="action" value="approve">
+            Re-Approve
+        </button>
+
+        <button type="submit" name="action" value="reject">
+            Re-Reject
+        </button>
+    {% endif %}
+</form>

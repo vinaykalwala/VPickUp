@@ -1,0 +1,21 @@
+<h2>Stores</h2>
+
+{% for store in stores %}
+  <div style="border:1px solid #ccc; padding:10px; margin:10px 0;">
+    
+    {% if store.store_image %}
+        <img src="{{ store.store_image.url }}" width="120" height="80">
+    {% endif %}
+
+    <h3>
+      <a href="{% url 'store_detail' store.id %}">
+        {{ store.name }}
+      </a>
+    </h3>
+
+    <p>{{ store.city }}</p>
+
+  </div>
+{% empty %}
+  <p>No stores found.</p>
+{% endfor %}

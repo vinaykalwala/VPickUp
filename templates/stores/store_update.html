@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Update Store</title>
+
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <style>
+        #map { height: 380px; margin: 10px 0; border: 1px solid #ccc; }
+        textarea[readonly] { background: #f5f5f5; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+
+<h2>Update Store – {{ store.name }}</h2>
+
+<form method="post" enctype="multipart/form-data" id="storeForm">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <!-- Hidden lat/lng -->
+    <input type="hidden" name="latitude" id="latitude">
+    <input type="hidden" name="longitude" id="longitude">
+
+    <label><strong>Store Location</strong></label>
+    <div id="map"></div>
+
+    <label>Detected Address</label><br>
+    <textarea id="autoAddress" rows="2" readonly></textarea><br><br>
+
+    <button type="submit" id="submitBtn">Update Store</button>
+</form>
+
+<p id="status"></p>
+
+{% if error %}
+    <p class="error">{{ error }}</p>
+{% endif %}
+
+<script>
+let map, marker;
+
+const latInput = document.getElementById("latitude");
+const lngInput = document.getElementById("longitude");
+const addressBox = document.getElementById("autoAddress");
+const statusEl = document.getElementById("status");
+
+function initMap(lat, lng) {
+    map = L.map("map").setView([lat, lng], 15);
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: "© OpenStreetMap"
+    }).addTo(map);
+
+    marker = L.marker([lat, lng], { draggable: true }).addTo(map);
+
+    setLocation(lat, lng);
+
+    map.on("click", function (e) {
+        marker.setLatLng(e.latlng);
+        setLocation(e.latlng.lat, e.latlng.lng);
+    });
+
+    marker.on("dragend", function () {
+        const pos = marker.getLatLng();
+        setLocation(pos.lat, pos.lng);
+    });
+}
+
+function setLocation(lat, lng) {
+    latInput.value = lat.toFixed(6);
+    lngInput.value = lng.toFixed(6);
+    statusEl.innerText = "Location selected";
+
+    fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`)
+        .then(res => res.json())
+        .then(data => {
+            addressBox.value = data.display_name || "Selected location";
+        })
+        .catch(() => {
+            addressBox.value = "Selected location";
+        });
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    initMap({{ latitude }}, {{ longitude }});
+});
+</script>
+
+</body>
+</html>
