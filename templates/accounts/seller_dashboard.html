@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'admin_base.html' %}
 
 {% block content %}
 <h2>Seller Dashboard</h2>
@@ -9,4 +9,6 @@
 
 <a href="{% url 'change_password' %}">Change Password</a> |
 <a href="{% url 'logout' %}">Logout</a>
+
+
 {% endblock %}
