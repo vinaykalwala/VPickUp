@@ -1,0 +1,389 @@
+{% load static %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+/* ================= RESET ================= */
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  padding-top: 56px;
+}
+
+/* ================= HEADER (UNCHANGED) ================= */
+.vp-header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 56px;
+  background: #0e7490;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem;
+  z-index: 1001;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+.vp-header-left,
+.vp-header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* ================= BUTTONS ================= */
+.vp-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+.vp-btn-ghost {
+  color: #ecfeff;
+  background: rgba(255,255,255,0.15);
+}
+.vp-btn-primary {
+  color: #0f766e;
+  background: #ecfeff;
+}
+.vp-btn-danger {
+  color: #fff;
+  background: linear-gradient(135deg,#ef4444,#dc2626);
+}
+
+/* ================= HAMBURGER ================= */
+.vp-hamburger {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.vp-hamburger span {
+  width: 26px;
+  height: 3px;
+  background: #fff;
+  border-radius: 3px;
+}
+
+/* ================= OVERLAY ================= */
+.vp-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.3s;
+  z-index: 1000;
+}
+.vp-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ================= SIDEBAR ================= */
+.vp-sidebar {
+  position: fixed;
+  top: 0;
+  left: -320px;
+  width: 300px;
+  height: 100vh;
+  background: #ffffff;
+  z-index: 1002;
+  display: flex;
+  flex-direction: column;
+  transition: 0.35s ease;
+  box-shadow: 12px 0 30px rgba(0,0,0,0.1);
+}
+.vp-sidebar.active { left: 0; }
+
+/* ===== Sidebar Header ===== */
+.vp-sidebar-top {
+  height: 56px;
+  padding: 0 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #e5e7eb;
+}
+.vp-sidebar-top strong {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #0e7490;
+}
+.vp-sidebar-top button {
+  background: #f1f5f9;
+  border: none;
+  border-radius: 8px;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+}
+
+/* ===== User ===== */
+.vp-sidebar-user {
+  padding: 1.4rem;
+  display: flex;
+  gap: 0.9rem;
+  align-items: center;
+  border-bottom: 1px solid #e5e7eb;
+}
+.vp-avatar {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: #0e7490;
+  color: #fff;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.vp-sidebar-user strong {
+  font-size: 0.95rem;
+}
+.vp-sidebar-user small {
+  font-size: 0.78rem;
+  color: #64748b;
+}
+
+/* ===== Menu Wrapper ===== */
+.vp-sidebar-menu {
+  flex: 1;
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+/* ===== Scrollbar ===== */
+.vp-sidebar-menu::-webkit-scrollbar {
+  width: 6px;
+}
+.vp-sidebar-menu::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+.vp-sidebar-menu::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+.vp-sidebar-menu {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+
+/* ===== Section Card ===== */
+.vp-section {
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+/* ===== Section Header ===== */
+.vp-menu-title {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: #64748b;
+  margin-bottom: 0.5rem;
+}
+.vp-menu-title i {
+  color: #0e7490;
+}
+
+/* ===== Menu Items ===== */
+.vp-sidebar-menu a {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.7rem 0.8rem;
+  border-radius: 10px;
+  text-decoration: none;
+  font-size: 0.92rem;
+  color: #334155;
+  transition: background 0.25s ease, transform 0.15s ease;
+}
+.vp-sidebar-menu a i {
+  width: 18px;
+  color: #0e7490;
+}
+.vp-sidebar-menu a:hover {
+  background: #eef2f7;
+  transform: translateX(3px);
+}
+
+/* ================= ACCOUNT – DIFFERENT DESIGN ================= */
+.vp-account-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 0.9rem;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  border: 1px solid #e5e7eb;
+}
+
+.vp-account-link {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.75rem;
+  border-radius: 12px;
+  text-decoration: none;
+  color: #0f172a;
+  transition: background 0.25s ease;
+}
+.vp-account-link i {
+  width: 18px;
+  color: #0e7490;
+}
+.vp-account-text strong {
+  font-size: 0.9rem;
+}
+.vp-account-text small {
+  font-size: 0.78rem;
+  color: #64748b;
+}
+.vp-account-link:hover {
+  background: #f1f5f9;
+}
+
+/* Logout special */
+.vp-account-link.logout {
+  margin-top: 0.3rem;
+  background: #fef2f2;
+}
+.vp-account-link.logout,
+.vp-account-link.logout i {
+  color: #ef4444;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
+  .hide-mobile { display: none; }
+  .vp-sidebar {
+ 
+  width: 270px;
+
+}
+.vp-avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 10%;
+  background: #0e7490;
+  color: #fff;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+}
+
+
+</style>
+
+<!-- ================= HEADER ================= -->
+<header class="vp-header">
+  <div class="vp-header-left">
+    <button class="vp-hamburger" onclick="toggleSidebar()">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="vp-header-right">
+    <a href="#" class="vp-btn vp-btn-ghost hide-mobile">
+      <i class="fa-solid fa-arrow-left"></i> Back
+    </a>
+    <a href="#" class="vp-btn vp-btn-primary hide-mobile">
+      <i class="fa-solid fa-user"></i> Profile
+    </a>
+    <a href="{% url 'logout' %}" class="vp-btn vp-btn-danger">
+      <i class="fa-solid fa-right-from-bracket"></i> Logout
+    </a>
+  </div>
+</header>
+
+<div class="vp-overlay" onclick="toggleSidebar()"></div>
+
+<!-- ================= SIDEBAR ================= -->
+<aside class="vp-sidebar">
+  <div class="vp-sidebar-top">
+    <strong>Menu</strong>
+    <button onclick="toggleSidebar()"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+
+  <div class="vp-sidebar-user">
+    <div class="vp-avatar">
+      {{ request.user.username|slice:":1"|upper }}
+    </div>
+    <div>
+      <strong>{{ request.user.username }}</strong><br>
+      <small>{{ request.user.email }}</small>
+    </div>
+  </div>
+
+  <nav class="vp-sidebar-menu">
+      <div class="vp-menu-title">General</div>
+
+    <div class="vp-section">
+      <a href="#"><i class="fa-solid fa-store"></i> Pickup</a>
+      <a href="{% url 'change_password' %}">
+        <i class="fa-solid fa-key"></i> Change Password
+      </a>
+    </div>
+
+    {% if request.user.is_authenticated and not request.user.is_staff %}
+          <div class="vp-menu-title"> Seller Features</div>
+
+    <div class="vp-section">
+      <a href="{% url 'store_list' %}"><i class="fa-solid fa-store"></i> Store List</a>
+      {% if not my_store %}
+        <a href="{% url 'store_create' %}">
+          <i class="fa-solid fa-plus"></i> Create Store
+        </a>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    {% if request.user.is_staff %}
+    <div class="vp-section">
+      <div class="vp-menu-title"><i class="fa-solid fa-shield-halved"></i> Features</div>
+      <a href="{% url 'admin_store_verification_list' %}">
+        <i class="fa-solid fa-check"></i> Store Verifications
+      </a>
+    </div>
+    {% endif %}
+              <div class="vp-menu-title">Account</div>
+
+    <div class="vp-account-card">
+
+      <a href="#" class="vp-account-link">
+        <i class="fa-solid fa-user"></i>
+        <div class="vp-account-text">
+          <strong>My Profile</strong><br>
+          <small>View and update profile</small>
+        </div>
+      </a>
+      <a href="{% url 'logout' %}" class="vp-account-link logout">
+        <i class="fa-solid fa-right-from-bracket"></i>
+        <div class="vp-account-text">
+          <strong>Logout</strong><br>
+          <small>Sign out safely</small>
+        </div>
+      </a>
+    </div>
+
+  </nav>
+</aside>
+
+<script>
+function toggleSidebar() {
+  document.querySelector('.vp-sidebar').classList.toggle('active');
+  document.querySelector('.vp-overlay').classList.toggle('active');
+}
+</script>
