@@ -1,0 +1,27 @@
+<h2>Inventory</h2>
+<a href="{% url 'inventory_create' %}">+ Add Inventory</a>
+
+<table border="1">
+<tr>
+    <th>Product</th>
+    <th>Variant</th>
+    <th>Price</th>
+    <th>Qty</th>
+    <th>Actions</th>
+</tr>
+{% for i in items %}
+<tr>
+    <td>{{ i.product_variant.product.name }}</td>
+    <td>{{ i.product_variant.variant_name }}</td>
+    <td>{{ i.price }}</td>
+    <td>{{ i.quantity_available }}</td>
+    <td>
+        <a href="{% url 'inventory_update' i.id %}">Edit</a>
+        <form method="post" action="{% url 'inventory_delete' i.id %}">
+            {% csrf_token %}
+            <button>Delete</button>
+        </form>
+    </td>
+</tr>
+{% endfor %}
+</table>

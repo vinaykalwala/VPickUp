@@ -1,0 +1,25 @@
+<h2>Pending SubCategory Approvals</h2>
+
+<table border="1">
+<tr>
+    <th>Name</th>
+    <th>Category</th>
+    <th>Store</th>
+    <th>Action</th>
+</tr>
+
+{% for s in subcategories %}
+<tr>
+    <td>{{ s.name }}</td>
+    <td>{{ s.category.name }}</td>
+    <td>{{ s.store.name }}</td>
+    <td>
+        <form method="post" action="{% url 'admin_subcategory_approve' s.slug %}">
+            {% csrf_token %}
+            <button name="action" value="approve">Approve & Make Global</button>
+            <button name="action" value="reject">Reject</button>
+        </form>
+    </td>
+</tr>
+{% endfor %}
+</table>

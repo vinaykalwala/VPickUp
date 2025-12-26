@@ -1,0 +1,25 @@
+<h2>Pending Category Approvals</h2>
+
+<table border="1">
+<tr>
+    <th>Name</th>
+    <th>Store</th>
+    <th>Created By</th>
+    <th>Action</th>
+</tr>
+
+{% for c in categories %}
+<tr>
+    <td>{{ c.name }}</td>
+    <td>{{ c.store.name }}</td>
+    <td>{{ c.created_by.email }}</td>
+    <td>
+        <form method="post" action="{% url 'admin_category_approve' c.slug %}">
+            {% csrf_token %}
+            <button name="action" value="approve">Approve & Make Global</button>
+            <button name="action" value="reject">Reject</button>
+        </form>
+    </td>
+</tr>
+{% endfor %}
+</table>

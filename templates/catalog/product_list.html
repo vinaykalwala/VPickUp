@@ -1,0 +1,28 @@
+<h2>Products</h2>
+<a href="{% url 'product_create' %}">+ Add Product</a>
+
+<ul>
+{% for p in products %}
+    <li>
+        {{ p.name }}
+        <form method="post" action="{% url 'product_delete' p.slug %}" style="display:inline;">
+            {% csrf_token %}
+            <button>Delete</button>
+        </form>
+
+        <ul>
+        {% for v in p.variants.all %}
+            <li>
+                {{ v.variant_name }}
+                <form method="post" action="{% url 'variant_delete' v.slug %}">
+                    {% csrf_token %}
+                    <button>Delete Variant</button>
+                </form>
+            </li>
+        {% endfor %}
+        </ul>
+
+        <a href="{% url 'variant_create' p.slug %}">+ Add Variant</a>
+    </li>
+{% endfor %}
+</ul>
