@@ -1,124 +1,1676 @@
-<h2>{{ store.name }}</h2>
+{% extends "base.html" %}
 
-{% if store.store_image %}
-    <img src="{{ store.store_image.url }}" width="300" alt="Store Image">
-{% else %}
-    <p><em>No store image uploaded</em></p>
-{% endif %}
+{% block title %}Store Details - {{ store.name }}{% endblock title %}
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
-<hr>
+<style>
+    :root {
+        --primary: #0f766e;
+        --primary-light: #14b8a6;
+        --secondary: #2563eb;
+        --accent: #9333ea;
+        --success: #10b981;
+        --warning: #f59e0b;
+        --danger: #ef4444;
+        --gradient-primary: linear-gradient(135deg, #0f766e 0%, #22c1a1 100%);
+        --gradient-secondary: linear-gradient(135deg, #2563eb 0%, #6366f1 100%);
+        --gradient-accent: linear-gradient(135deg, #9333ea 0%, #a855f7 100%);
 
-<h3>Store Information</h3>
-<p><strong>Description:</strong> {{ store.description|default:"N/A" }}</p>
-<p><strong>Address:</strong> {{ store.address }}</p>
-<p><strong>City:</strong> {{ store.city }}</p>
-<p><strong>State:</strong> {{ store.state }}</p>
-<p><strong>Pincode:</strong> {{ store.pincode }}</p>
+        --bg-main: #f8fafc;
+        --card-bg: #ffffff;
+        --surface: #f1f5f9;
 
-<p>
-    <strong>Location (Lat / Lng):</strong>
-    {{ store.latitude }}, {{ store.longitude }}
-</p>
+        --text: #0f172a;
+        --text-secondary: #64748b;
+        --border: #e2e8f0;
 
-<p>
-    <strong>Opening Time:</strong> {{ store.opening_time }} <br>
-    <strong>Closing Time:</strong> {{ store.closing_time }}
-</p>
+        --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.04);
+        --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.08);
+        --shadow-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.1);
+        --shadow-xl: 0 20px 25px -5px rgba(15, 23, 42, 0.12);
+        --shadow-primary: 0 10px 25px -3px rgba(15, 118, 110, 0.15);
+        --shadow-hover: 0 25px 50px -12px rgba(15, 118, 110, 0.25);
 
-<p>
-    <strong>Verification Status:</strong>
-    <span style="font-weight:bold;">
-        {{ store.verification_status|capfirst }}
-    </span>
-</p>
+        --radius-lg: 20px;
+        --radius-md: 12px;
+        --radius-sm: 8px;
 
-<p>
-    <strong>Is Active:</strong>
-    {{ store.is_active|yesno:"Yes,No" }}
-</p>
+        --transition-fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        --transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        --dark-card: #ffffff;
+        --dark-surface: #f1f5f9;
 
-<p>
-    <strong>Created At:</strong>
-    {{ store.created_at }}
-</p>
+    }
 
-<hr>
 
-<h3>Owner Details</h3>
-<p><strong>Name:</strong> {{ store.owner.first_name }} {{ store.owner.last_name }}</p>
-<p><strong>Email:</strong> {{ store.owner.email }}</p>
-<p><strong>Phone:</strong> {{ store.owner.phone_number }}</p>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
 
-<hr>
+    body {
+        background: var(--bg-main);
+        color: var(--text);
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+        line-height: 1.5;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
 
-<h3>Verification Details</h3>
+    .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 8px 24px 60px;
+        position: relative;
+    }
 
-{% if store.storeverification %}
-    <p>
-        <strong>KYC Status:</strong>
-        {{ store.storeverification.status|capfirst }}
-    </p>
+    .top-nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 28px 0;
+        margin-bottom: 0px;
+        position: relative;
+    }
 
-    <p>
-        <strong>Verified By:</strong>
-        {% if store.storeverification.verified_by %}
-            {{ store.storeverification.verified_by.email }}
-        {% else %}
-            Not verified yet
-        {% endif %}
-    </p>
+    .top-nav::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg,
+                transparent 0%,
+                var(--border) 20%,
+                var(--border) 80%,
+                transparent 100%);
+    }
 
-    <p>
-        <strong>Verified At:</strong>
-        {{ store.storeverification.verified_at|default:"—" }}
-    </p>
+    .nav-logo {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        font-size: 1.5rem;
+        font-weight: 700;
+        position: relative;
+        margin-bottom: 0px;
+    }
 
-    <p>
-        <strong>Admin Remarks:</strong>
-        {{ store.storeverification.remarks|default:"—" }}
-    </p>
+    .nav-logo i {
+        font-size: 1.8rem;
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: var(--radius-md);
+        background: var(--gradient-primary);
+        color: #ffffff;
+        /* ✅ IMPORTANT */
+        box-shadow: var(--shadow-md);
+    }
 
-    <ul>
-        <li>
-            <strong>Owner ID Proof:</strong>
-            <a href="{{ store.storeverification.owner_id_proof.url }}" target="_blank">
-                View Document
-            </a>
-        </li>
+    .nav-logo span {
+        background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: 0.5px;
+    }
 
-        <li>
-            <strong>Business License:</strong>
-            <a href="{{ store.storeverification.business_license.url }}" target="_blank">
-                View Document
-            </a>
-        </li>
+    /* Hero Section Enhancement */
+    .hero-section {
+        margin-bottom: 60px;
+        position: relative;
+    }
 
-        {% if store.storeverification.gst_certificate %}
-            <li>
-                <strong>GST Certificate:</strong>
-                <a href="{{ store.storeverification.gst_certificate.url }}" target="_blank">
-                    View Document
+    .store-profile {
+        background: linear-gradient(145deg, #ffffff, #f8fafc);
+        border-radius: 28px;
+        padding: 48px;
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        box-shadow:
+            var(--shadow-xl),
+            inset 0 1px 0 rgba(255, 255, 255, 0.8),
+            0 0 0 1px rgba(15, 118, 110, 0.05);
+        position: relative;
+        overflow: hidden;
+        backdrop-filter: blur(10px);
+        margin-top: -8px;
+    }
+
+    .store-profile::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 6px;
+        background: var(--gradient-primary);
+        border-radius: 28px 28px 0 0;
+    }
+
+    .store-profile::after {
+        content: '';
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(circle, rgba(20, 184, 166, 0.1) 0%, transparent 70%);
+        top: -150px;
+        right: -150px;
+        z-index: 0;
+    }
+
+    .store-hero {
+        display: grid;
+        grid-template-columns: 240px 1fr;
+        gap: 36px;
+        align-items: center;
+        position: relative;
+        z-index: 1;
+    }
+
+    .store-hero-image {
+        height: 220px;
+        border-radius: 20px;
+        overflow: hidden;
+        position: relative;
+        box-shadow:
+            var(--shadow-xl),
+            0 0 0 2px rgba(255, 255, 255, 0.5);
+        transition: var(--transition);
+    }
+
+    .store-hero-image:hover {
+        transform: translateY(-4px);
+        box-shadow:
+            var(--shadow-hover),
+            0 0 0 2px rgba(20, 184, 166, 0.2);
+    }
+
+    .store-hero-image::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to bottom,
+                transparent 60%,
+                rgba(0, 0, 0, 0.1));
+        pointer-events: none;
+    }
+
+    .store-hero-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+
+    .store-hero-image:hover img {
+        transform: scale(1.05);
+    }
+
+    .store-hero-image i {
+        font-size: 2.8rem;
+        color: var(--primary-light);
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 0.8;
+    }
+
+    .store-hero-content h1 {
+        font-size: 2.8rem;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+        line-height: 1.2;
+        margin-bottom: 16px;
+        background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: none;
+        /* 🔥 stop animation */
+        background-size: auto;
+        text-transform: none;
+        /* looks more premium */
+    }
+
+    @keyframes gradientShift {
+
+        0%,
+        100% {
+            background-position: 0% 50%;
+        }
+
+        50% {
+            background-position: 100% 50%;
+        }
+    }
+
+    .store-desc {
+        background: rgba(255, 255, 255, 0.8);
+        padding: 20px 24px;
+        border-radius: 16px;
+        margin: 24px 0 16px;
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow-sm);
+        backdrop-filter: blur(8px);
+        line-height: 1.6;
+        color: var(--text-secondary);
+    }
+
+    .store-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 24px;
+    }
+
+    .tag {
+        padding: 8px 20px;
+        border-radius: 24px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: var(--transition-fast);
+        border: 1px solid transparent;
+        backdrop-filter: blur(8px);
+    }
+
+    .tag:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+    }
+
+    .tag.verified {
+        background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+        color: #166534;
+        border-color: rgba(16, 185, 129, 0.3);
+    }
+
+    .tag.active {
+        background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+        color: #1e40af;
+        border-color: rgba(15, 118, 110, 0.3);
+    }
+
+    .tag.pending {
+        background: linear-gradient(135deg, #fef3c7, #fde68a);
+        color: #92400e;
+        border-color: rgba(245, 158, 11, 0.3);
+    }
+
+    /* Premium Dashboard Grid */
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+        gap: 32px;
+        margin-bottom: 48px;
+    }
+
+    .dashboard-card {
+        background: linear-gradient(145deg, #ffffff, #f8fafc);
+        border-radius: 24px;
+        padding: 36px;
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        box-shadow:
+            var(--shadow-lg),
+            inset 0 1px 0 rgba(255, 255, 255, 0.8),
+            0 0 0 1px rgba(15, 118, 110, 0.03);
+        position: relative;
+        overflow: hidden;
+        transition: var(--transition);
+        backdrop-filter: blur(10px);
+    }
+
+    .dashboard-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: var(--gradient-primary);
+        border-radius: 24px 24px 0 0;
+        opacity: 0.6;
+        transition: var(--transition);
+    }
+
+    .dashboard-card:hover {
+        transform: translateY(-8px);
+        box-shadow:
+            var(--shadow-xl),
+            inset 0 1px 0 rgba(255, 255, 255, 0.9),
+            0 0 0 1px rgba(15, 118, 110, 0.1);
+        outline: 1px solid rgba(20, 184, 166, 0.3);
+    }
+
+    .dashboard-card:hover::before {
+        opacity: 1;
+    }
+
+    .dashboard-card::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(120deg,
+                transparent,
+                rgba(255, 255, 255, 0.6),
+                transparent);
+        transform: translateX(-100%);
+        transition: transform 0.8s ease;
+    }
+
+    .dashboard-card:hover::after {
+        transform: translateX(100%);
+    }
+
+    .card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 32px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid var(--border);
+        position: relative;
+    }
+
+    .card-header::after {
+        content: '';
+        position: absolute;
+        bottom: -1px;
+        left: 0;
+        width: 48px;
+        height: 3px;
+        background: var(--gradient-primary);
+        border-radius: 3px;
+        transition: width 0.3s ease;
+    }
+
+    .dashboard-card:hover .card-header::after {
+        width: 100px;
+    }
+
+    .card-title {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--text);
+    }
+
+    .card-title i {
+        background: var(--gradient-primary);
+        color: white;
+        padding: 12px;
+        border-radius: 14px;
+        font-size: 1rem;
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: var(--shadow-md);
+    }
+
+    .business-badge {
+        background: linear-gradient(135deg, #f59e0b, #fbbf24);
+        color: #fff;
+        padding: 6px 14px;
+        border-radius: 999px;
+        font-weight: 700;
+        box-shadow: 0 6px 18px rgba(245, 158, 11, .4);
+    }
+
+
+    .card-badge {
+        padding: 8px 20px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        border: 1px solid var(--border);
+        background: #eef2ff;
+        color: #3730a3;
+        box-shadow: none;
+        transition: var(--transition-fast);
+    }
+
+    .card-badge {
+        background: linear-gradient(135deg, #9333ea, #d946ef);
+        color: #fff;
+        box-shadow: 0 6px 16px rgba(147, 51, 234, .4);
+    }
+
+    .dashboard-card:hover .card-badge {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-sm);
+    }
+
+    /* Enhanced Info List */
+    .info-list {
+        background: rgba(255, 255, 255, 0.6);
+        border-radius: 20px;
+        padding: 8px;
+        border: 1px solid var(--border);
+        backdrop-filter: blur(8px);
+        margin-top: 32px;
+      
+    }
+
+    .info-list li {
+        display: flex;
+        justify-content: space-between;
+        padding: 20px 24px;
+        border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+        transition: var(--transition-fast);
+    }
+
+    .info-list li:hover {
+        background: rgba(248, 250, 252, 0.6);
+        border-radius: 12px;
+    }
+
+    .info-list li:last-child {
+        border-bottom: none;
+    }
+
+    .info-label {
+        color: var(--text-secondary);
+        font-weight: 500;
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .info-label::before {
+        content: '•';
+        color: #94a3b8;
+        font-weight: bold;
+        font-size: 1.2rem;
+    }
+
+    .info-value {
+        font-weight: 600;
+        text-align: right;
+        color: var(--text);
+        max-width: 65%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        position: relative;
+        cursor: help;
+        word-break: break-word;
+    }
+
+    /* Hover tooltip */
+    .info-value:hover::after {
+        content: attr(data-full);
+        position: absolute;
+        right: 0;
+        top: 120%;
+        background: #0f172a;
+        color: #fff;
+        padding: 6px 10px;
+        border-radius: 6px;
+        font-size: 12px;
+        white-space: nowrap;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, .2);
+        z-index: 10;
+    }
+
+    .full-address {
+        text-align: right;
+        line-height: 1.6;
+        white-space: normal !important;
+
+        color: var(--text-secondary);
+    }
+
+    .timeline {
+        position: relative;
+        padding-left: 40px;
+    }
+
+    .timeline::before {
+        content: '';
+        position: absolute;
+        left: 20px;
+        top: 8px;
+        bottom: 8px;
+        width: 2px;
+        background: linear-gradient(to bottom, var(--primary-light), transparent);
+    }
+
+    .timeline-item {
+        position: relative;
+        margin-bottom: 28px;
+        padding-left: 24px;
+        background: rgba(255, 255, 255, 0.6);
+        padding: 20px 24px;
+        border-radius: 16px;
+        border: 1px solid var(--border);
+        transition: var(--transition);
+    }
+
+    .timeline-item:hover {
+        transform: translateX(4px);
+        border-color: var(--primary-light);
+        box-shadow: var(--shadow-md);
+    }
+
+    .timeline-item::before {
+        content: '';
+        position: absolute;
+        left: -12px;
+        top: 28px;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: var(--gradient-primary);
+        border: 3px solid white;
+        box-shadow: var(--shadow-sm);
+        z-index: 2;
+    }
+
+    .timeline-date {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        margin-bottom: 8px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .timeline-date::before {
+        content: '📅';
+        font-size: 0.75rem;
+    }
+
+    /* Documents Grid Enhancement */
+    .documents-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 24px;
+        margin-top: 24px;
+    }
+
+    .document-card {
+        background: linear-gradient(145deg, #ffffff, #f8fafc);
+        border-radius: 20px;
+        padding: 28px;
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow-md);
+        transition: var(--transition);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .document-card:hover {
+        transform: translateY(-6px);
+        box-shadow: var(--shadow-xl);
+        border-color: var(--primary-light);
+    }
+
+    .document-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--gradient-primary);
+        opacity: 0;
+        transition: var(--transition);
+    }
+
+    .document-card:hover::before {
+        opacity: 1;
+    }
+
+    .document-icon {
+        width: 72px;
+        height: 72px;
+        border-radius: 18px;
+        background: var(--gradient-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+        margin-bottom: 20px;
+        color: white;
+        box-shadow: var(--shadow-md);
+        transition: var(--transition);
+        filter: saturate(0.9);
+    }
+
+    .document-card:hover .document-icon {
+        transform: scale(1.1) rotate(5deg);
+    }
+
+    .document-name {
+        font-weight: 700;
+        font-size: 1.1rem;
+        margin-bottom: 8px;
+        color: var(--text);
+    }
+
+    .document-status {
+        font-size: 0.875rem;
+        color: var(--success);
+        font-weight: 600;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .document-status::before {
+        content: '✓';
+        background: var(--success);
+        color: white;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+    }
+
+    .document-action {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 24px;
+        color: white;
+        text-decoration: none;
+        border-radius: var(--radius-md);
+        font-weight: 600;
+        transition: var(--transition);
+        width: 100%;
+        justify-content: center;
+        border: none;
+        cursor: pointer;
+        box-shadow: var(--shadow-md);
+    }
+
+    .document-action {
+        background: linear-gradient(135deg, #5374bc, #3b82f6);
+    }
+
+    .document-action:hover {
+        background: linear-gradient(135deg, #1d4ed8, #2563eb);
+    }
+
+    .document-action:hover {
+
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+    }
+
+    /* Action Tiles Enhancement */
+    .action-tiles {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 28px;
+        margin-top: 48px;
+        margin-bottom: 10px;
+    }
+
+    .action-tile {
+        background: linear-gradient(145deg, #ffffff, #f8fafc);
+        border-radius: 24px;
+        padding: 36px;
+        text-align: center;
+        border: 1px solid var(--border);
+        transition: var(--transition);
+        cursor: pointer;
+        text-decoration: none;
+        color: inherit;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .action-tile:hover {
+        transform: translateY(-8px);
+        border-color: var(--primary-light);
+        box-shadow: var(--shadow-xl);
+    }
+
+    .action-tile::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--gradient-primary);
+        transition: var(--transition);
+    }
+
+    .action-tile.owner:nth-child(2) .tile-icon {
+        background: linear-gradient(135deg, #9333ea, #d946ef);
+    }
+
+    .action-tile.owner:nth-child(2)::before {
+        background: linear-gradient(135deg, #9333ea, #d946ef);
+    }
+
+    .action-tile.owner:nth-child(1) .tile-icon {
+        background: linear-gradient(135deg, #f59e0b, #f97316);
+    }
+
+    .action-tile.owner:nth-child(1)::before {
+        background: linear-gradient(135deg, #f59e0b, #f97316);
+    }
+
+
+    .action-tile.admin::before {
+        background: var(--gradient-secondary);
+    }
+
+    .action-tile:hover::before {
+        height: 6px;
+    }
+
+    .tile-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 24px;
+        background: var(--gradient-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 24px;
+        font-size: 2rem;
+        color: white;
+        box-shadow: var(--shadow-lg);
+        transition: var(--transition);
+    }
+
+    .action-tile:hover .tile-icon {
+        transform: scale(1.1) rotate(5deg);
+    }
+
+    .tile-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: 12px;
+        color: var(--text);
+    }
+
+    .tile-desc {
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+        margin-bottom: 24px;
+        line-height: 1.5;
+    }
+
+    .tile-badge {
+        display: inline-block;
+        padding: 8px 20px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        color: var(--text-secondary);
+        transition: var(--transition-fast);
+    }
+
+    .action-tile:hover .tile-badge {
+        background: var(--primary);
+        color: white;
+        border-color: var(--primary);
+    }
+
+    .action-tile[style*="border-top-color: var(--danger)"] .tile-icon {
+        background: linear-gradient(135deg, var(--danger), #dc2626);
+    }
+
+    .action-tile[style*="border-top-color: var(--danger)"]::before {
+        background: linear-gradient(135deg, var(--danger), #dc2626);
+    }
+
+    .action-tile[style*="border-top-color: var(--danger)"]:hover .tile-badge {
+        background: var(--danger);
+        color: white;
+        border-color: var(--danger);
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .animate {
+        opacity: 0;
+        animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    .delay-1 {
+        animation-delay: 0.1s;
+    }
+
+    .delay-2 {
+        animation-delay: 0.2s;
+    }
+
+    .delay-3 {
+        animation-delay: 0.3s;
+    }
+
+    .delay-4 {
+        animation-delay: 0.4s;
+    }
+
+    @keyframes float {
+
+        0%,
+        100% {
+            transform: translateY(0px);
+        }
+
+        50% {
+            transform: translateY(-8px);
+        }
+    }
+
+    .floating {
+        animation: float 3s ease-in-out infinite;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1024px) {
+        .store-hero {
+            grid-template-columns: 280px 1fr;
+            gap: 32px;
+        }
+
+        .dashboard-grid {
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 24px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .container {
+            padding: 0 16px 40px;
+        }
+
+        .top-nav {
+            flex-direction: column;
+            gap: 20px;
+            text-align: center;
+            padding: 24px 0;
+        }
+
+        .store-hero {
+            grid-template-columns: 1fr;
+            gap: 32px;
+        }
+
+        .store-hero-image {
+            height: 240px;
+        }
+
+        .dashboard-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .documents-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .action-tiles {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .store-profile,
+        .dashboard-card {
+            padding: 32px 24px;
+        }
+
+        .info-list li {
+            flex-direction: column;
+            gap: 8px;
+            text-align: left;
+        }
+
+        .info-value {
+            text-align: left;
+            max-width: 100%;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .store-hero-content h1 {
+            font-size: 2.2rem;
+        }
+
+        .store-profile,
+        .dashboard-card {
+            padding: 24px 20px;
+            border-radius: 20px;
+        }
+
+        .card-header {
+            flex-direction: column;
+            gap: 16px;
+            text-align: center;
+        }
+
+        .card-title {
+            justify-content: center;
+        }
+    }
+
+    /* Utility classes for better spacing */
+    .info-list li:not(:last-child) {
+        margin-bottom: 4px;
+    }
+
+    i[class^="fa-"] {
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .verification-summary {
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(16, 185, 129, 0.04));
+        border: 1px dashed rgba(16, 185, 129, 0.4);
+        padding: 18px 20px;
+        border-radius: 14px;
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        font-weight: 600;
+        color: var(--success);
+    }
+
+    .verification-summary i {
+        font-size: 1.4rem;
+    }
+
+    .verification-card-fill {
+        margin-top: 24px;
+        height: 120px;
+        border-radius: 16px;
+        background: linear-gradient(120deg,
+                rgba(20, 184, 166, 0.12),
+                rgba(255, 255, 255, 0.6),
+                rgba(20, 184, 166, 0.12));
+        background-size: 200% 200%;
+        animation: shimmer 4s ease infinite;
+    }
+
+    @keyframes shimmer {
+        0% {
+            background-position: 0% 50%;
+        }
+
+        50% {
+            background-position: 100% 50%;
+        }
+
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+
+    .verification-card-fill {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .verification-loader {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        color: var(--primary);
+        text-align: center;
+        z-index: 2;
+    }
+
+    .verification-loader i {
+        font-size: 2rem;
+        margin-bottom: 8px;
+        animation: rotate 2s linear infinite;
+    }
+
+    @keyframes rotate {
+        from {
+            transform: rotate(0deg);
+        }
+
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    .verification-summary::after {
+        content: "🎉";
+        margin-left: auto;
+        font-size: 1.2rem;
+    }
+
+    .map-cta {
+        margin-top: 20px;
+        display: flex;
+        gap: 12px;
+    }
+
+    .map-cta a {
+        flex: 1;
+        padding: 12px;
+        text-align: center;
+        border-radius: 12px;
+        font-weight: 600;
+        text-decoration: none;
+        color: #fff;
+        box-shadow: var(--shadow-md);
+        transition: var(--transition);
+    }
+
+    .map-cta a {
+        background: linear-gradient(135deg, #0f766e, #22d3ee);
+    }
+
+    .map-cta a:hover {
+        background: linear-gradient(135deg, #115e59, #06b6d4);
+    }
+
+
+    .map-cta a:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .gps-badge {
+        background: linear-gradient(135deg, #0284c7, #38bdf8);
+        /* 🔥 MATCHED */
+        color: #ffffff;
+        font-weight: 700;
+        letter-spacing: 0.4px;
+        padding: 10px 18px;
+        border-radius: 999px;
+        box-shadow: 0 10px 25px rgba(56, 189, 248, 0.45);
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        animation: pulse 2.5s infinite;
+    }
+
+    @keyframes pulse {
+        0% {
+            box-shadow: 0 0 0 0 rgba(20, 184, 166, 0.6);
+        }
+
+        70% {
+            box-shadow: 0 0 0 12px rgba(20, 184, 166, 0);
+        }
+
+        100% {
+            box-shadow: 0 0 0 0 rgba(20, 184, 166, 0);
+        }
+    }
+
+    /* STORE DETAILS TITLE UPGRADE */
+    .store-title {
+        font-weight: 900;
+        letter-spacing: 1.2px;
+        font-size: 28px;
+        position: relative;
+        padding-bottom: 14px;
+        margin-bottom: 30px;
+        background: linear-gradient(90deg, #0f766e, #2563eb, #9333ea);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .store-title::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 90px;
+        height: 5px;
+        background: linear-gradient(90deg, #0f766e, #2563eb);
+        border-radius: 6px;
+    }
+
+    /* icon glow */
+    .nav-logo i {
+        box-shadow: 0 0 0 6px rgba(20, 184, 166, 0.15),
+            0 12px 30px rgba(15, 118, 110, 0.35);
+    }
+
+    .bubble-wrap {
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+        display: flex;
+        gap: 8px;
+    }
+
+    .bubble-wrap span {
+        width: 10px;
+        height: 10px;
+        background: #14b8a6;
+        border-radius: 50%;
+        animation: bubble 1.5s infinite ease-in-out;
+        opacity: .6;
+    }
+
+    .bubble-wrap span:nth-child(2) {
+        animation-delay: .3s
+    }
+
+    .bubble-wrap span:nth-child(3) {
+        animation-delay: .6s
+    }
+
+    @keyframes bubble {
+
+        0%,
+        100% {
+            transform: translateY(0)
+        }
+
+        50% {
+            transform: translateY(-10px)
+        }
+    }
+
+
+
+    /* Force full text display (email, address etc.) */
+    .no-ellipsis {
+        white-space: normal !important;
+        overflow: visible !important;
+        text-overflow: unset !important;
+        max-width: 100% !important;
+        word-break: break-word;
+    }
+
+    /* Show only first line (flat / house no look) */
+    .address-short {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 200px;
+        /* 👈 control width */
+    }
+
+    .dashboard-card:nth-child(1) .card-title i,
+    .dashboard-card:nth-child(1)::before {
+        background: linear-gradient(135deg, #4f46e5, #6366f1);
+    }
+
+
+    .dashboard-card:nth-child(2) .card-title i,
+    .dashboard-card:nth-child(2)::before {
+        background: linear-gradient(135deg, #059669, #10b981);
+    }
+
+
+    .dashboard-card:nth-child(3) .card-title i,
+    .dashboard-card:nth-child(3)::before {
+        background: linear-gradient(135deg, #0284c7, #38bdf8);
+    }
+
+    .document-card:nth-child(1) .document-icon {
+        background: linear-gradient(135deg, #6366f1, #818cf8);
+    }
+
+    .document-card:nth-child(2) .document-icon {
+        background: linear-gradient(135deg, #f59e0b, #fbbf24);
+    }
+
+    .document-card:nth-child(3) .document-icon {
+        background: linear-gradient(135deg, #10b981, #34d399);
+    }
+
+    .action-tile.owner:hover .tile-badge {
+        background: linear-gradient(135deg, #6366f1, #818cf8);
+        color: #fff;
+    }
+
+    .action-tile.admin:hover .tile-badge {
+        background: linear-gradient(135deg, #2563eb, #7c3aed);
+        color: #fff;
+    }
+</style>
+
+<div class="container">
+    <!-- Top Navigation -->
+    <div class="top-nav animate">
+        <div class="nav-logo">
+            <i class="fa-solid fa-store"></i>
+            <h2 class="store-title"><span>STORE DETAILS</span></h2>
+
+        </div>
+
+    </div>
+
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <!-- Store Profile -->
+        <div class="store-profile animate">
+            <div class="store-hero">
+                <!-- LEFT IMAGE -->
+                <div class="store-hero-image">
+                    {% if store.store_image %}
+                    <img src="{{ store.store_image.url }}" alt="Store Image">
+                    {% else %}
+                    <i class="fa-solid fa-store"></i>
+                    {% endif %}
+                </div>
+
+                <!-- RIGHT DETAILS -->
+                <div class="store-hero-content">
+                    <h1>{{ store.name }}</h1>
+                    <p class="store-desc">
+                        {{ store.description|default:"No description available" }}
+                    </p>
+
+                    <div class="store-tags">
+                        <span class="tag {{ store.verification_status }}">
+                            <i class="fa-solid fa-shield"></i> {{ store.verification_status|upper }}
+                        </span>
+                        <span class="tag {% if store.is_active %}active{% endif %}">
+                            <i class="fa-solid fa-power-off"></i> {{ store.is_active|yesno:"ACTIVE,INACTIVE" }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-list">
+                <li>
+                    <span class="info-label">Created On</span>
+                    <span class="info-value">
+                        {{ store.created_at|date:"M d, Y" }}
+                    </span>
+                </li>
+
+                <li>
+                    <span class="info-label">Location</span>
+                    <span class="info-value">{{ store.city }}, {{ store.state }}</span>
+                </li>
+                <li>
+                    <span class="info-label">Address</span>
+                    <span class="info-value full-address">{{ store.address }}</span>
+
+                </li>
+                <li>
+                    <span class="info-label">Business Hours</span>
+                    <span class="business-badge">
+                        {{ store.opening_time }} - {{ store.closing_time }}
+                    </span>
+                </li>
+
+                <li>
+                    <span class="info-label">Coordinates</span>
+                    <span class="info-value">{{ store.latitude }}, {{ store.longitude }}</span>
+                </li>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Dashboard Grid -->
+    <div class="dashboard-grid">
+        <!-- Owner Information -->
+        <div class="dashboard-card animate delay-2">
+            <div class="card-header">
+                <div class="card-title">
+                    <i class="fa-solid fa-user-tie"></i>
+                    Owner Details
+                </div>
+                <span class="card-badge">REGISTERED</span>
+            </div>
+
+            <div class="info-list">
+                <li>
+                    <span class="info-label">Full Name</span>
+                    <span class="info-value">{{ store.owner.first_name }} {{ store.owner.last_name }}</span>
+                </li>
+                <li>
+                    <span class="info-label">Email</span>
+                    <span class="info-value no-ellipsis">
+                        {{ store.owner.email }}
+                    </span>
+
+
+
+                </li>
+                <li>
+                    <span class="info-label">Phone</span>
+                    <span class="info-value">{{ store.owner.phone_number|default:"Not provided" }}</span>
+                </li>
+                <li>
+                    <span class="info-label">Account Type</span>
+                    <span class="info-value">Store Owner</span>
+                </li>
+            </div>
+        </div>
+
+        <!-- Verification Status -->
+        <div class="dashboard-card animate delay-3">
+            <div class="card-header">
+                <div class="card-title">
+                    <i class="fa-solid fa-clipboard-check"></i>
+                    Verification Status
+                </div>
+                <span class="card-badge" style="background: rgba(16, 185, 129, 0.2); color: var(--success);">
+                    {{ store.storeverification.status|default:"PENDING"|upper }}
+                </span>
+            </div>
+
+            {% if store.storeverification %}
+            {% if store.storeverification.verified_at %}
+            <div class="verification-summary" style="background: rgba(16,185,129,0.15); color: var(--success);">
+                <i class="fa-solid fa-circle-check"></i>
+                Store verified successfully by admin.
+            </div>
+            {% else %}
+            <div class="verification-summary">
+                <i class="fa-solid fa-clock"></i>
+                Documents submitted. Waiting for admin approval.
+            </div>
+            {% endif %}
+
+            <div class="timeline">
+
+                <div class="timeline-item">
+                    <div class="timeline-date">Submitted</div>
+                    <div>Verification documents uploaded</div>
+                </div>
+
+                {% if store.storeverification.verified_at %}
+                <div class="timeline-item">
+                    <div class="timeline-date">{{ store.storeverification.verified_at|date:"M d, Y" }}</div>
+                    <div>Verified by {{ store.storeverification.verified_by.email|default:"Administrator" }}</div>
+                </div>
+                {% endif %}
+
+                {% if store.storeverification.remarks %}
+                <div class="timeline-item">
+                    <div class="timeline-date">Remarks</div>
+                    <div style="color: var(--text-secondary);">{{ store.storeverification.remarks }}</div>
+                </div>
+                {% endif %}
+            </div>
+            <div class="verification-card-fill">
+                <div class="bubble-wrap">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <div class="verification-loader">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                    <p>Verification in progress…</p>
+                </div>
+            </div>
+
+
+            {% else %}
+            <div style="text-align: center; padding: 40px 20px;">
+                <i class="fa-solid fa-upload"
+                    style="font-size: 3rem; color: var(--text-secondary); margin-bottom: 15px;"></i>
+                <p style="color: var(--text-secondary);">No verification submitted yet</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Location Map -->
+        <div class="dashboard-card animate delay-4">
+            <div class="card-header">
+                <div class="card-title">
+                    <i class="fa-solid fa-map-location-dot"></i>
+
+                    Store Location
+                </div>
+                <span class="gps-badge">
+                    <i class="fa-solid fa-location-dot"></i>
+                    {{ store.latitude }}, {{ store.longitude }}
+                </span>
+
+            </div>
+            <div class="map-cta">
+                <a href="https://www.google.com/maps?q={{ store.latitude }},{{ store.longitude }}" target="_blank">
+                    <i class="fa-solid fa-location-dot"></i> Open in Maps
                 </a>
-            </li>
+            </div>
+
+            <div class="info-list">
+                <li>
+                    <span class="info-label">Address</span>
+                    <span class="info-value address-short">
+                        {{ store.address }}
+                    </span>
+                </li>
+
+                <li>
+                    <span class="info-label">City</span>
+                    <span class="info-value">{{ store.city }}</span>
+                </li>
+                <li>
+                    <span class="info-label">State</span>
+                    <span class="info-value">{{ store.state }}</span>
+                </li>
+                <li>
+                    <span class="info-label">Pincode</span>
+                    <span class="info-value">{{ store.pincode }}</span>
+                </li>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Verification Documents -->
+    <div class="dashboard-card animate" style="margin-bottom: 40px;">
+        <div class="card-header">
+            <div class="card-title"><i class="fa-solid fa-file-contract"></i>
+                Verification Documents
+            </div>
+            <span class="card-badge">
+                {% if store.storeverification %}
+                {{ store.storeverification.gst_certificate|yesno:"3,2" }} DOCUMENTS
+                {% else %}
+                NO DOCUMENTS
+                {% endif %}
+            </span>
+
+        </div>
+
+        {% if store.storeverification %}
+        <div class="documents-grid">
+            <div class="document-card">
+                <div class="document-icon">
+                    <i class="fa-solid fa-id-card"></i>
+                </div>
+                <div class="document-name">Owner ID Proof</div>
+                <div class="document-status">UPLOADED ✓</div>
+                <a href="{{ store.storeverification.owner_id_proof.url }}" class="document-action" target="_blank">
+                    <i class="fa-solid fa-eye"></i> View Document
+                </a>
+            </div>
+
+            <div class="document-card">
+                <div class="document-icon">
+                    <i class="fa-solid fa-file-invoice"></i>
+
+                </div>
+                <div class="document-name">Business License</div>
+                <div class="document-status">UPLOADED ✓</div>
+                <a href="{{ store.storeverification.business_license.url }}" class="document-action" target="_blank">
+                    <i class="fa-solid fa-eye"></i> View Document
+                </a>
+            </div>
+
+            {% if store.storeverification.gst_certificate %}
+            <div class="document-card">
+                <div class="document-icon"><i class="fa-solid fa-receipt"></i>
+                </div>
+                <div class="document-name">GST Certificate</div>
+                <div class="document-status">UPLOADED ✓</div>
+                <a href="{{ store.storeverification.gst_certificate.url }}" class="document-action" target="_blank">
+                    <i class="fa-solid fa-eye"></i> View Document
+                </a>
+            </div>
+            {% endif %}
+        </div>
+        {% else %}
+        <div style="text-align: center; padding: 50px 20px;">
+            <i class="fa-solid fa-folder-open"
+                style="font-size: 4rem; color: var(--text-secondary); margin-bottom: 20px;"></i>
+            <h3 style="margin-bottom: 10px;">No Documents Uploaded</h3>
+            <p style="color: var(--text-secondary);">Verification documents are required for store approval</p>
+        </div>
         {% endif %}
-    </ul>
-{% else %}
-    <p><em>No verification details uploaded yet.</em></p>
-{% endif %}
+    </div>
 
-<hr>
+    <!-- Action Tiles -->
+    <div class="action-tiles">
+        {% if is_owner %}
+        <a href="{% url 'store_update' store.id %}" class="action-tile owner animate delay-2">
+            <div class="tile-icon">
+                <i class="fa-solid fa-edit"></i>
+            </div>
+            <div class="tile-title">Edit Store</div>
+            <div class="tile-desc">Update store information, hours, and settings</div>
+            <span class="tile-badge">OWNER ACTION</span>
+        </a>
 
-{% if is_owner %}
-    <h3>Owner Actions</h3>
-    <a href="{% url 'store_update' store.id %}">Edit Store</a> |
-    <a href="{% url 'store_delete' store.id %}">Delete Store</a> |
-    <a href="{% url 'store_verification' store.id %}">Upload / Update Verification</a>
-{% endif %}
+        <a href="{% url 'store_verification' store.id %}" class="action-tile owner animate delay-3">
+            <div class="tile-icon">
+                <i class="fa-solid fa-upload"></i>
+            </div>
+            <div class="tile-title">Upload Documents</div>
+            <div class="tile-desc">Submit verification documents for approval</div>
+            <span class="tile-badge">VERIFICATION</span>
+        </a>
 
-{% if is_admin %}
-    <hr>
-    <h3>Admin Actions</h3>
-    <a href="{% url 'admin_store_verify' store.id %}">
-        Review / Verify Store
-    </a>
-{% endif %}
+        <a href="{% url 'store_delete' store.id %}" class="action-tile owner animate delay-4"
+            style="border-top-color: var(--danger);">
+            <div class="tile-icon" style="background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);">
+                <i class="fa-solid fa-trash-alt"></i>
+            </div>
+            <div class="tile-title">Delete Store</div>
+            <div class="tile-desc">Permanently remove this store and all data</div>
+            <span class="tile-badge" style="background: rgba(239, 68, 68, 0.2); color: var(--danger);">DANGER
+                ZONE</span>
+        </a>
+        {% endif %}
+
+        {% if is_admin %}
+        <a href="{% url 'admin_store_verify' store.id %}" class="action-tile admin animate">
+            <div class="tile-icon" style="background: linear-gradient(135deg, var(--secondary) 0%, #7c3aed 100%);">
+                <i class="fa-solid fa-user-shield"></i>
+            </div>
+            <div class="tile-title">Admin Review</div>
+            <div class="tile-desc">Review and verify store documentation</div>
+            <span class="tile-badge" style="background: rgba(139, 92, 246, 0.2); color: var(--secondary);">ADMIN
+                ONLY</span>
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Initialize animations
+        const animateElements = document.querySelectorAll('.animate');
+        animateElements.forEach((el, index) => {
+            setTimeout(() => {
+                el.style.opacity = '1';
+            }, index * 100);
+        });
+
+        // Delete confirmation
+        const deleteLinks = document.querySelectorAll('a[href*="store_delete"]');
+        deleteLinks.forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                const modal = document.createElement('div');
+                modal.style.cssText = `
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        right: 0;
+                        bottom: 0;
+                        background: rgba(239, 68, 68, 0.1);
+                        backdrop-filter: blur(10px);
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        z-index: 1000;
+                    `;
+
+                modal.innerHTML = `
+                        <div style="background: var(--dark-card); padding: 40px; border-radius: 20px; max-width: 500px; width: 90%; border: 2px solid var(--danger);">
+                            <div style="text-align: center; margin-bottom: 30px;">
+                                <div style="width: 80px; height: 80px; background: rgba(239, 68, 68, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+                                    <i class="fa-solid fa-exclamation-triangle" style="font-size: 2.5rem; color: var(--danger);"></i>
+                                </div>
+                                <h2 style="color: var(--danger); margin-bottom: 15px;">Delete Store</h2>
+                                <p style="color: var(--text-secondary); line-height: 1.6;">
+                                    Are you sure you want to permanently delete <strong>{{ store.name }}</strong>? 
+                                    This action cannot be undone and all store data will be lost.
+                                </p>
+                            </div>
+                            <div style="display: flex; gap: 15px;">
+                                <button onclick="window.location.href='${link.href}'" 
+                                    style="flex: 1; padding: 15px; background: var(--danger); border: none; border-radius: 10px; color: white; font-weight: 600; cursor: pointer;">
+                                    Yes, Delete Store
+                                </button>
+                                <button onclick="this.closest('div[style*=\"position: fixed\"]').remove()" 
+                                    style="flex: 1; padding: 15px; background: var(--dark-surface); border: 1px solid var(--border); border-radius: 10px; color: white; font-weight: 600; cursor: pointer;">
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
+                    `;
+
+                document.body.appendChild(modal);
+            });
+        });
+
+        // Floating animation for stats
+        const floatingElements = document.querySelectorAll('.floating');
+        floatingElements.forEach((el, index) => {
+            el.style.animationDelay = `${index * 0.5}s`;
+        });
+    });
+</script>
+
+{% endblock content %}

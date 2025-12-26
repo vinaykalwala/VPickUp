@@ -1,5 +1,8 @@
+{% extends "base.html" %}
 
+{% load static %}
 {% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
 <style>
     *,
@@ -12,19 +15,18 @@
         margin: 0;
         font-family: "Inter", "Segoe UI", sans-serif;
         background: #eef6f7;
-        overflow: hidden;
-        /* removes scroll */
+
     }
 
-    /* ---------- PAGE CENTER ---------- */
     .page-center {
         min-height: calc(100vh);
         display: flex;
         align-items: flex-start;
-        /* center → flex-start */
+
         justify-content: center;
         padding-top: 40px;
-        background-color: #43888d;
+        background-color: white;
+        margin-bottom: 40px;
     }
 
     /* ---------- MAIN CARD ---------- */
@@ -38,7 +40,6 @@
         box-shadow: 0 40px 90px rgba(0, 0, 0, 0.15);
     }
 
-    /* ---------- IMAGE PANEL (LEFT) ---------- */
     .image-panel {
         width: 60%;
         position: relative;
@@ -50,7 +51,9 @@
         width: 99%;
         height: 100%;
         object-fit: cover;
-        filter: blur(0.2px);
+        filter:
+            brightness(1.15) contrast(1.08) saturate(1.1);
+        animation: floatImage 12s ease-in-out infinite;
     }
 
     /* Gradient overlay */
@@ -59,7 +62,7 @@
         position: absolute;
         inset: 0;
         background: linear-gradient(120deg,
-                rgba(15, 164, 175, 0.8),
+                rgba(21, 73, 78, 0.8),
                 rgba(255, 255, 255, 0.15));
     }
 
@@ -84,18 +87,46 @@
         box-shadow: 0 6px 18px rgba(255, 255, 255, 0.35);
     }
 
-
-    .hero-text h1 {
-        font-size: 46px;
-        font-weight: 900;
-        margin: 0;
-        letter-spacing: 0.5px;
-        text-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    .hero-text h1 i {
+        margin-left: 10px;
+        font-size: 42px;
+        color: #ffffff;
+        opacity: 0.95;
+        animation: wave 1.6s infinite;
+        transform-origin: 70% 70%;
     }
+
+    @keyframes wave {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        20% {
+            transform: rotate(14deg);
+        }
+
+        40% {
+            transform: rotate(-8deg);
+        }
+
+        60% {
+            transform: rotate(14deg);
+        }
+
+        80% {
+            transform: rotate(-4deg);
+        }
+
+        100% {
+            transform: rotate(0deg);
+        }
+    }
+
 
     .hero-text p {
         font-size: 16px;
         margin-top: 10px;
+        /* small controlled gap */
         opacity: 1;
     }
 
@@ -108,30 +139,27 @@
         width: 50%;
         position: relative;
         margin-left: -120px;
-        /* pulls into image */
         padding: 60px 60px 60px 80px;
-        /* space from curve */
-         background: linear-gradient(
-        180deg,
-        rgba(248, 253, 254, 0.98),
-        rgba(232, 246, 248, 0.98)
-    );
+        background: linear-gradient(180deg,
+                rgba(248, 253, 254, 0.98),
+                rgba(232, 246, 248, 0.98));
         backdrop-filter: blur(12px);
 
         border-top-left-radius: 140px;
         border-bottom-left-radius: 140px;
 
         z-index: 5;
-        /* ABOVE image */
         display: flex;
         flex-direction: column;
         justify-content: center;
-        box-shadow: -20px 0 40px rgba(0,0,0,0.06);
+        box-shadow: -20px 0 40px rgba(0, 0, 0, 0.06);
+        align-items: center;
+        /* 🔥 THIS IS KEY */
     }
 
     /* Form fields */
     form p {
-        margin-bottom: 22px;
+        margin-bottom: 20px;
     }
 
     form label {
@@ -143,7 +171,10 @@
     }
 
     .form-panel form {
-        max-width: 420px;
+        max-width: 520px;
+        width: 100%;
+        margin-left: 12px;
+        /* 🔥 small alignment nudge */
     }
 
     form input {
@@ -151,25 +182,28 @@
         height: 52px;
         padding: 0 22px;
         border-radius: 32px;
-        border: none;
+        border: 1.8px solid #cfe7ec;
+        /* 🔥 DEFAULT BORDER */
         background: #ffffff;
         font-size: 14px;
         box-shadow: 0 14px 30px rgba(0, 0, 0, 0.08);
         transition: 0.3s ease;
     }
-form input:hover {
-    box-shadow: 0 16px 36px rgba(15,164,175,0.18);
-}
+
+    form input:hover {
+        box-shadow: 0 16px 36px rgba(15, 164, 175, 0.18);
+    }
 
     form input:focus {
         outline: none;
         box-shadow: 0 18px 40px rgba(15, 164, 175, 0.35);
     }
 
-    /* Register button */
     form button {
         margin-top: 18px;
         height: 64px;
+        width: 100%;
+        max-width: 320px;
         border-radius: 40px;
         border: none;
         background: linear-gradient(135deg, #0fa4af, #22c1a1);
@@ -182,6 +216,8 @@ form input:hover {
         align-items: center;
         justify-content: center;
         gap: 12px;
+        margin-left: auto;
+        margin-right: auto;
     }
 
     form button:hover {
@@ -199,7 +235,7 @@ form input:hover {
 
     /* Common icon style */
     form p::before {
-        font-family: "Font Awesome 6 Free";
+
         font-weight: 900;
         position: absolute;
         left: 20px;
@@ -272,23 +308,44 @@ form input:hover {
         }
     }
 
+    .form-header {
+        text-align: center;
+        /* 🔥 */
+    }
+
+    .form-header h2 {
+        justify-content: center;
+        /* 🔥 icon + text center */
+    }
+
+    .form-header::after {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .form-accent {
+        display: none;
+    }
+
 
     /* ---------- FORM HEADER PREMIUM ---------- */
     .form-header {
         margin-bottom: 28px;
         position: relative;
         animation: fadeUp 0.6s ease;
+        padding-left: 6px;
     }
-.form-header::after {
-    content: "";
-    display: block;
-    margin-top: 16px;
-    width: 60px;
-    height: 3px;
-    background: linear-gradient(90deg, #0fa4af, #22c1a1);
-    border-radius: 10px;
-    opacity: 0.6;
-}
+
+    .form-header::after {
+        content: "";
+        display: block;
+        margin-top: 16px;
+        width: 60px;
+        height: 3px;
+        background: linear-gradient(90deg, #0fa4af, #22c1a1);
+        border-radius: 10px;
+        opacity: 0.6;
+    }
 
     .form-header h2 {
         font-size: 22px;
@@ -348,6 +405,183 @@ form input:hover {
             transform: translateY(0);
         }
     }
+
+    /* ==============================
+   LARGE DESKTOPS (1440px+)
+================================ */
+    @media (min-width: 1440px) {
+        .register-card {
+            width: 1320px;
+            height: 700px;
+        }
+
+        .hero-text h1 {
+            font-size: 52px;
+        }
+
+        .form-panel form {
+            max-width: 560px;
+        }
+    }
+
+
+    /* ==============================
+   LAPTOPS (1200px – 1439px)
+================================ */
+    @media (max-width: 1439px) {
+        .register-card {
+            width: 1100px;
+            height: 620px;
+        }
+
+        .hero-text h1 {
+            font-size: 44px;
+        }
+    }
+
+
+    /* ==============================
+   TABLETS (768px – 1024px)
+================================ */
+    @media (max-width: 1024px) {
+        body {
+            overflow: auto;
+        }
+
+        .page-center {
+            padding-top: 20px;
+        }
+
+        .register-card {
+            flex-direction: column;
+            height: auto;
+            width: 95%;
+            border-radius: 28px;
+        }
+
+        .image-panel {
+            width: 100%;
+            height: 360px;
+        }
+
+        .image-panel img {
+            width: 100%;
+        }
+
+        .hero-text {
+            top: 30px;
+            left: 30px;
+        }
+
+        .hero-text h1 {
+            font-size: 36px;
+        }
+
+        .form-panel {
+            width: 100%;
+            margin-left: 0;
+            padding: 50px 40px;
+            border-radius: 0 0 28px 28px;
+            box-shadow: none;
+        }
+
+        .form-panel form {
+            margin-left: 0;
+            max-width: 480px;
+        }
+    }
+
+
+    /* ==============================
+   MOBILES (≤767px)
+================================ */
+    @media (max-width: 767px) {
+        .page-center {
+            padding-top: 10px;
+        }
+
+        .image-panel {
+            height: 300px;
+        }
+
+        .hero-text {
+            top: 20px;
+            left: 20px;
+        }
+
+        .hero-text h1 {
+            font-size: 30px;
+        }
+
+        .badge {
+            font-size: 11px;
+            padding: 5px 12px;
+        }
+
+        .form-panel {
+            padding: 40px 24px;
+        }
+
+        .form-header h2 {
+            font-size: 20px;
+        }
+
+        form input {
+            height: 50px;
+            font-size: 13px;
+        }
+
+        form button {
+            height: 56px;
+            font-size: 16px;
+        }
+    }
+
+
+    /* ==============================
+   SMALL MOBILES (≤480px)
+================================ */
+    @media (max-width: 480px) {
+        .image-panel {
+            height: 240px;
+        }
+
+        .hero-text h1 {
+            font-size: 26px;
+        }
+
+        .form-panel {
+            padding: 32px 20px;
+        }
+
+        .form-header h2 {
+            font-size: 18px;
+        }
+
+        .form-panel form {
+            max-width: 100%;
+        }
+
+        form button {
+            width: 100%;
+        }
+    }
+
+    .hero-text h1 {
+        margin: 0;
+        line-height: 1.1;
+    }
+
+    .hero-text p {
+        margin: 6px 0 8px;
+        /* small controlled gap */
+        font-size: 16px;
+        opacity: 1;
+    }
+
+    .hero-text .badge {
+        margin-top: 0;
+    }
 </style>
 
 <div class="page-center">
@@ -358,8 +592,11 @@ form input:hover {
             <img src="/static/pickup.jpg" alt="Pickup Illustration">
 
             <div class="hero-text">
-
-                <h1>Welcome 👋</h1>
+                <h1>
+                    Welcome
+                    <i class="fa-solid fa-hand"></i>
+                </h1>
+                <p>Your journey to seamless pickups starts here.</p>
                 <span class="badge">Fast • Secure • Local</span>
 
             </div>
