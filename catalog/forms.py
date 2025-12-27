@@ -5,13 +5,13 @@ from .models import Category, SubCategory, Product, ProductVariant
 class CategoryForm(forms.ModelForm):
     class Meta:
         model = Category
-        fields = ['name', 'image']  # Added image field
+        fields = ['name', 'image','is_active']  # Added image field
 
 
 class SubCategoryForm(forms.ModelForm):
     class Meta:
         model = SubCategory
-        fields = ['category', 'name', 'image']  # Added image field
+        fields = ['category', 'name', 'image','is_active']  # Added image field
 
 
 class ProductForm(forms.ModelForm):
