@@ -8,6 +8,14 @@ User = settings.AUTH_USER_MODEL
 class Category(models.Model):
     name = models.CharField(max_length=100)
     slug = models.SlugField(max_length=120, unique=True, blank=True)
+    
+    # Add image field for category
+    image = models.ImageField(
+        upload_to="categories/",
+        null=True,
+        blank=True,
+        help_text="Category image (optional)"
+    )
 
     created_by = models.ForeignKey(
         User, on_delete=models.SET_NULL, null=True, blank=True
@@ -33,10 +41,19 @@ class Category(models.Model):
                 count += 1
             self.slug = slug
 
-        if self.created_by and (self.created_by.role == "admin" or self.created_by.is_superuser):
-            self.is_global = True
-            self.is_approved = True
-            self.store = None
+        # IMPORTANT: Only auto-set global/approved for admin/superuser during creation
+        # This prevents overriding store owner settings during updates
+        if self._state.adding and self.created_by:  # Only on creation
+            if self.created_by.role == "admin" or self.created_by.is_superuser:
+                self.is_global = True
+                self.is_approved = True
+                self.store = None
+                self.is_active = True
+            elif self.created_by.role == "store_owner":
+                # Store owners create non-global, unapproved categories
+                self.is_global = False
+                self.is_approved = False
+                self.is_active = True  # But active so it shows in approval list
 
         super().save(*args, **kwargs)
 
@@ -46,6 +63,14 @@ class Category(models.Model):
 class SubCategory(models.Model):
     name = models.CharField(max_length=100)
     slug = models.SlugField(max_length=150, unique=True, blank=True)
+    
+    # Add image field for subcategory
+    image = models.ImageField(
+        upload_to="subcategories/",
+        null=True,
+        blank=True,
+        help_text="Subcategory image (optional)"
+    )
 
     category = models.ForeignKey(
         Category, on_delete=models.CASCADE, related_name="subcategories"
@@ -75,17 +100,23 @@ class SubCategory(models.Model):
                 count += 1
             self.slug = slug
 
-        if self.created_by and (self.created_by.role == "admin" or self.created_by.is_superuser):
-            self.is_global = True
-            self.is_approved = True
-            self.store = None
+        # IMPORTANT: Only auto-set global/approved for admin/superuser during creation
+        if self._state.adding and self.created_by:  # Only on creation
+            if self.created_by.role == "admin" or self.created_by.is_superuser:
+                self.is_global = True
+                self.is_approved = True
+                self.store = None
+                self.is_active = True
+            elif self.created_by.role == "store_owner":
+                # Store owners create non-global, unapproved subcategories
+                self.is_global = False
+                self.is_approved = False
+                self.is_active = True  # But active so it shows in approval list
 
         super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.name} → {self.category.name}"
-
-
 class Product(models.Model):
     name = models.CharField(max_length=255)
     slug = models.SlugField(max_length=300, unique=True, blank=True)
@@ -161,6 +192,7 @@ class ProductVariant(models.Model):
     barcode = models.CharField(max_length=100, blank=True)
 
     is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         unique_together = ("product", "variant_name")

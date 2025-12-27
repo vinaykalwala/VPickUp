@@ -1,38 +1,499 @@
 {% extends "base.html" %}
 
-{% block title %}Privacy Policy{% endblock %}
+{% block title %}Privacy Policy | VPickup{% endblock %}
 
 {% block content %}
-<section class="page-content">
-  <h1>Privacy Policy</h1>
 
-  <p>
-    Your privacy is important to us. This Privacy Policy explains how VPickup
-    collects, uses, and protects your information.
-  </p>
+<style>
+    .privacy-page {
+        background: linear-gradient(135deg, #ecfeff 0%, #f0fdfa 50%, #ccfbf1 100%);
+        color: #134e4a;
+        line-height: 1.7;
+        min-height: 100vh;
+        font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    }
 
-  <h3>Information We Collect</h3>
-  <p>
-    We collect basic personal information such as name, contact details, and
-    order-related data to provide our services effectively.
-  </p>
+    /* Enhanced Header Section */
+    .privacy-hero {
+        background: linear-gradient(to right, #0e7490, #0891b2);
+        color: white;
+        padding: 5rem 2rem 4rem;
+        text-align: center;
+        margin-bottom: 3rem;
+        position: relative;
+        overflow: hidden;
+    }
 
-  <h3>How We Use Information</h3>
-  <p>
-    Your information is used to process orders, communicate updates, improve
-    platform performance, and ensure service security.
-  </p>
+    .privacy-hero::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 100%;
+        background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%2306b6d4' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+        opacity: 0.3;
+    }
 
-  <h3>Data Protection</h3>
-  <p>
-    We do not sell personal data. Information is shared only with partner stores
-    when required to fulfill your order.
-  </p>
+    .privacy-hero h1 {
+        font-size: 3.2rem;
+        margin-bottom: 1rem;
+        position: relative;
+        z-index: 2;
+        font-weight: 700;
+    }
 
-  <h3>Your Rights</h3>
-  <p>
-    You may request access, correction, or deletion of your personal data by
-    contacting our support team.
-  </p>
-</section>
+    .privacy-hero p {
+        font-size: 1.2rem;
+        max-width: 700px;
+        margin: 0 auto;
+        opacity: 0.95;
+        position: relative;
+        z-index: 2;
+    }
+
+    /* Enhanced Content Layout */
+    .privacy-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem 4rem;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    @media (min-width: 1024px) {
+        .privacy-content {
+            grid-template-columns: 280px 1fr;
+        }
+    }
+
+    /* Navigation Sidebar */
+    .privacy-nav {
+        background: white;
+        padding: 2rem;
+        border-radius: 16px;
+        box-shadow: 0 8px 30px rgba(6, 182, 212, 0.12);
+        height: fit-content;
+        position: sticky;
+        top: 2rem;
+    }
+
+    .privacy-nav h4 {
+        color: #0e7490;
+        font-size: 1.1rem;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.8rem;
+        border-bottom: 2px solid #a5f3fc;
+    }
+
+    .privacy-nav ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .privacy-nav li {
+        margin-bottom: 1rem;
+    }
+
+    .privacy-nav a {
+        color: #155e75;
+        text-decoration: none;
+        padding: 0.6rem 1rem;
+        border-radius: 8px;
+        display: block;
+        transition: all 0.3s ease;
+        font-weight: 500;
+        border-left: 3px solid transparent;
+    }
+
+    .privacy-nav a:hover {
+        background: #f0f9ff;
+        color: #0e7490;
+        border-left-color: #06b6d4;
+        transform: translateX(5px);
+    }
+
+    /* Enhanced Sections */
+    .privacy-section {
+        background: white;
+        padding: 2.5rem;
+        border-radius: 16px;
+        margin-bottom: 2rem;
+        box-shadow: 0 8px 30px rgba(6, 182, 212, 0.12);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: 1px solid #e0f2fe;
+        scroll-margin-top: 2rem;
+    }
+
+    .privacy-section:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 40px rgba(6, 182, 212, 0.18);
+    }
+
+    .privacy-section h3 {
+        color: #0e7490;
+        font-size: 1.5rem;
+        margin: 0 0 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #a5f3fc;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .privacy-section h3::before {
+        content: "✓";
+        background: #06b6d4;
+        color: white;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9rem;
+        font-weight: bold;
+    }
+
+    .privacy-section p {
+        font-size: 1.08rem;
+        margin-bottom: 1.5rem;
+        line-height: 1.8;
+        color: #164e63;
+    }
+
+    .info-detail {
+        background: #f0f9ff;
+        padding: 1.5rem;
+        border-radius: 12px;
+        margin: 1.5rem 0;
+        border-left: 4px solid #06b6d4;
+    }
+
+    .info-detail strong {
+        color: #0e7490;
+        display: block;
+        margin-bottom: 0.5rem;
+        font-size: 1rem;
+    }
+
+    /* Contact Card */
+    .privacy-contact {
+        background: linear-gradient(135deg, #0e7490, #0891b2);
+        color: white;
+        padding: 2.5rem;
+        border-radius: 16px;
+        margin-top: 3rem;
+        text-align: center;
+        box-shadow: 0 8px 30px rgba(6, 182, 212, 0.25);
+    }
+
+    .privacy-contact h4 {
+        font-size: 1.4rem;
+        margin-bottom: 1rem;
+    }
+
+    .contact-btn {
+        display: inline-block;
+        background: white;
+        color: #0e7490;
+        padding: 1rem 2rem;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: 600;
+        margin-top: 1rem;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+    }
+
+    .contact-btn:hover {
+        background: transparent;
+        color: white;
+        border-color: white;
+        transform: translateY(-2px);
+    }
+
+    /* Last Updated */
+    .last-updated {
+        text-align: center;
+        padding: 2rem;
+        color: #64748b;
+        font-size: 0.95rem;
+        border-top: 1px solid #e2e8f0;
+        margin-top: 2rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .privacy-hero {
+            padding: 3rem 1.5rem;
+        }
+        
+        .privacy-hero h1 {
+            font-size: 2.2rem;
+        }
+        
+        .privacy-content {
+            padding: 0 1.5rem 3rem;
+        }
+        
+        .privacy-section {
+            padding: 2rem;
+        }
+        
+        .privacy-nav {
+            position: static;
+            margin-bottom: 2rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .privacy-hero h1 {
+            font-size: 1.8rem;
+        }
+        
+        .privacy-section {
+            padding: 1.5rem;
+        }
+        
+        .privacy-section h3 {
+            font-size: 1.3rem;
+        }
+    }
+</style>
+
+<div class="privacy-page">
+    <div class="privacy-hero">
+        <h1>Privacy Policy</h1>
+        <p>Transparency, Security, and Trust in How We Handle Your Information</p>
+    </div>
+
+    <div class="privacy-content">
+        <nav class="privacy-nav" aria-label="Privacy Policy Sections">
+            <h4>Quick Navigation</h4>
+            <ul>
+                <li><a href="#information-collection">Information We Collect</a></li>
+                <li><a href="#data-usage">How We Use Your Data</a></li>
+                <li><a href="#data-protection">Data Protection & Security</a></li>
+                <li><a href="#third-parties">Third-Party Sharing</a></li>
+                <li><a href="#your-rights">Your Privacy Rights</a></li>
+                <li><a href="#cookies">Cookies & Tracking</a></li>
+                <li><a href="#contact">Contact Us</a></li>
+            </ul>
+        </nav>
+
+        <main>
+            <section id="introduction" class="privacy-section">
+                <p>
+                    At VPickup, we are committed to protecting your privacy and ensuring the security of your personal information. 
+                    This Privacy Policy outlines how we collect, use, disclose, and safeguard your data when you use our grocery 
+                    delivery platform and services.
+                </p>
+                <p>
+                    We believe in transparency and want you to feel confident about how we handle your information. 
+                    This policy applies to all services offered by VPickup through our website, mobile applications, 
+                    and any other platforms where this policy is posted.
+                </p>
+            </section>
+
+            <section id="information-collection" class="privacy-section">
+                <h3>Information We Collect</h3>
+                <p>
+                    To provide you with exceptional service, we collect various types of information:
+                </p>
+                <div class="info-detail">
+                    <strong>Personal Information</strong>
+                    <p>Name, email address, phone number, delivery address, and payment information necessary for order processing.</p>
+                </div>
+                <div class="info-detail">
+                    <strong>Order Information</strong>
+                    <p>Order history, preferences, special instructions, and any communication regarding your orders.</p>
+                </div>
+                <div class="info-detail">
+                    <strong>Technical Data</strong>
+                    <p>IP address, device information, browser type, operating system, and usage patterns through cookies and similar technologies.</p>
+                </div>
+                <div class="info-detail">
+                    <strong>Location Information</strong>
+                    <p>With your consent, we may collect precise or approximate location data to improve delivery accuracy and provide store recommendations.</p>
+                </div>
+            </section>
+
+            <section id="data-usage" class="privacy-section">
+                <h3>How We Use Your Information</h3>
+                <p>
+                    Your information helps us provide, improve, and personalize our services:
+                </p>
+                <div class="info-detail">
+                    <strong>Service Delivery</strong>
+                    <p>Processing orders, coordinating deliveries, communicating order status, and handling customer support.</p>
+                </div>
+                <div class="info-detail">
+                    <strong>Personalization</strong>
+                    <p>Tailoring product recommendations, remembering preferences, and creating a personalized shopping experience.</p>
+                </div>
+                <div class="info-detail">
+                    <strong>Service Improvement</strong>
+                    <p>Analyzing usage patterns to enhance platform functionality, optimize delivery routes, and develop new features.</p>
+                </div>
+                <div class="info-detail">
+                    <strong>Security & Compliance</strong>
+                    <p>Detecting and preventing fraudulent activities, ensuring platform security, and complying with legal obligations.</p>
+                </div>
+            </section>
+
+            <section id="data-protection" class="privacy-section">
+                <h3>Data Protection & Security</h3>
+                <p>
+                    We implement comprehensive security measures to protect your information:
+                </p>
+                <div class="info-detail">
+                    <strong>Encryption</strong>
+                    <p>All sensitive data, including payment information, is encrypted using industry-standard protocols (SSL/TLS).</p>
+                </div>
+                <div class="info-detail">
+                    <strong>Access Controls</strong>
+                    <p>Strict access controls limit employee access to your personal information to only those who need it to perform their duties.</p>
+                </div>
+                <div class="info-detail">
+                    <strong>Regular Audits</strong>
+                    <p>We conduct regular security assessments and vulnerability testing to maintain the highest security standards.</p>
+                </div>
+                <div class="info-detail">
+                    <strong>Data Retention</strong>
+                    <p>We retain your information only as long as necessary to fulfill the purposes outlined in this policy or as required by law.</p>
+                </div>
+            </section>
+
+            <section id="third-parties" class="privacy-section">
+                <h3>Third-Party Sharing</h3>
+                <p>
+                    We may share your information in the following limited circumstances:
+                </p>
+                <div class="info-detail">
+                    <strong>Partner Stores</strong>
+                    <p>Necessary order details are shared with retail partners to fulfill your grocery orders.</p>
+                </div>
+                <div class="info-detail">
+                    <strong>Service Providers</strong>
+                    <p>Trusted third parties who assist in payment processing, delivery services, and technical support (under strict confidentiality agreements).</p>
+                </div>
+                <div class="info-detail">
+                    <strong>Legal Requirements</strong>
+                    <p>When required by law, court order, or governmental authority to protect our rights, property, or safety.</p>
+                </div>
+                <p>
+                    <strong>Important:</strong> We <strong>do not sell</strong> your personal information to third parties for marketing purposes.
+                </p>
+            </section>
+
+            <section id="your-rights" class="privacy-section">
+                <h3>Your Privacy Rights</h3>
+                <p>
+                    You have control over your personal information:
+                </p>
+                <div class="info-detail">
+                    <strong>Access & Correction</strong>
+                    <p>Request access to or correction of your personal information through your account settings or by contacting us.</p>
+                </div>
+                <div class="info-detail">
+                    <strong>Data Deletion</strong>
+                    <p>Request deletion of your personal information, subject to legal and contractual restrictions.</p>
+                </div>
+                <div class="info-detail">
+                    <strong>Opt-Out Rights</strong>
+                    <p>Opt out of marketing communications at any time using the unsubscribe link in our emails or through account settings.</p>
+                </div>
+                <div class="info-detail">
+                    <strong>Data Portability</strong>
+                    <p>Request a copy of your data in a structured, commonly used format for transfer to another service.</p>
+                </div>
+            </section>
+
+            <section id="cookies" class="privacy-section">
+                <h3>Cookies & Tracking Technologies</h3>
+                <p>
+                    We use cookies and similar technologies to enhance your experience:
+                </p>
+                <div class="info-detail">
+                    <strong>Essential Cookies</strong>
+                    <p>Required for basic platform functionality, such as maintaining your shopping cart and user session.</p>
+                </div>
+                <div class="info-detail">
+                    <strong>Analytical Cookies</strong>
+                    <p>Help us understand how users interact with our platform to improve performance and user experience.</p>
+                </div>
+                <div class="info-detail">
+                    <strong>Preference Cookies</strong>
+                    <p>Remember your settings and preferences for a personalized experience.</p>
+                </div>
+                <p>
+                    You can manage cookie preferences through your browser settings. Note that disabling certain cookies may affect platform functionality.
+                </p>
+            </section>
+
+            <div class="privacy-contact" id="contact">
+                <h4>Questions About Our Privacy Policy?</h4>
+                <p>
+                    We're here to help you understand our privacy practices. Contact our Privacy Team with any questions or concerns.
+                </p>
+                <a href="mailto:privacy@vpickup.com" class="contact-btn">Contact Privacy Team</a>
+            </div>
+
+            <div class="last-updated">
+                <p><strong>Last Updated:</strong> December 2023</p>
+                <p>We may update this policy periodically. Significant changes will be communicated through our platform or via email.</p>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script>
+    // Smooth scrolling for navigation links
+    document.querySelectorAll('.privacy-nav a').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            const targetElement = document.querySelector(targetId);
+            
+            if (targetElement) {
+                window.scrollTo({
+                    top: targetElement.offsetTop - 20,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+
+    // Highlight current section in navigation
+    const sections = document.querySelectorAll('.privacy-section');
+    const navLinks = document.querySelectorAll('.privacy-nav a');
+
+    window.addEventListener('scroll', () => {
+        let current = '';
+        
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.clientHeight;
+            
+            if (scrollY >= (sectionTop - 100)) {
+                current = section.getAttribute('id');
+            }
+        });
+
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === `#${current}`) {
+                link.classList.add('active');
+                link.style.background = '#f0f9ff';
+                link.style.color = '#0e7490';
+                link.style.borderLeftColor = '#06b6d4';
+            }
+        });
+    });
+</script>
+
 {% endblock %}
