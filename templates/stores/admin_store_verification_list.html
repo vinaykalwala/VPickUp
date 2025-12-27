@@ -1,34 +1,1179 @@
-<h2>Store Verifications</h2>
+{% extends 'admin_base.html' %}
 
-<table border="1" cellpadding="8" cellspacing="0">
-    <thead>
-        <tr>
-            <th>Store Name</th>
-            <th>Owner</th>
-            <th>Status</th>
-            <th>Active</th>
-            <th>Created</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for store in stores %}
-        <tr>
-            <td>{{ store.name }}</td>
-            <td>{{ store.owner.email }}</td>
-            <td>{{ store.verification_status }}</td>
-            <td>{{ store.is_active }}</td>
-            <td>{{ store.created_at }}</td>
-            <td>
-                <a href="{% url 'admin_store_verify' store.id %}">
-                    Review
-                </a>
-            </td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="6">No stores found.</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+{% block content %}
+{% load static %}
+
+<style>
+    /* Base Styles */
+    :root {
+        --primary-color: #0e7490;
+        --primary-light: #f0f9ff;
+        --secondary-color: #0891b2;
+        --text-primary: #1e293b;
+        --text-secondary: #64748b;
+        --bg-white: #ffffff;
+        --bg-light: #f8fafc;
+        --border-color: #e2e8f0;
+        --success-color: #10b981;
+        --warning-color: #f59e0b;
+        --error-color: #ef4444;
+        --card-1-bg: #f0f9ff;
+        --card-2-bg: #fffbeb;
+        --card-3-bg: #fef2f2;
+        --card-4-bg: #f8fafc;
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        --radius-sm: 0.375rem;
+        --radius-md: 0.5rem;
+        --radius-lg: 0.75rem;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        color: var(--text-primary);
+        background-color: var(--bg-light);
+        line-height: 1.5;
+    }
+
+    .store-verifications-container {
+        padding: 2rem;
+        max-width: 100%;
+        margin: 0 auto;
+    }
+/* ===== HEADER WITH IMAGE + TRANSPARENT OVERLAY ===== */
+.header-bg {
+  position: relative;
+  background: url("{% static 'storebanner.jpg' %}") center;
+  border-radius: 18px;
+  padding: 2.5rem 2.8rem;
+  margin-bottom: 2.5rem;
+  overflow: hidden;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.15);
+}
+
+/* TRANSPARENT COLOR OVERLAY */
+.header-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(15, 23, 42, 0.65),
+    rgba(14, 116, 144, 0.55)
+  );
+  z-index: 0;
+}
+
+/* KEEP CONTENT ABOVE OVERLAY */
+.header-section {
+  position: relative;
+  z-index: 1;
+}
+
+/* TEXT COLOR FIX FOR IMAGE BACKGROUND */
+.header-bg .title-section h1 {
+  color: #ffffff;
+}
+
+.header-bg .subtitle {
+  color: rgba(255,255,255,0.85);
+}
+
+/* SEARCH BOX ON IMAGE */
+.header-bg .search-wrapper {
+  background: rgba(255,255,255,0.92);
+  border: none;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+}
+
+.header-bg .search-icon {
+  color: #475569;
+}
+
+    /* Header Section */
+    .header-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+    }
+
+    .title-section h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+        letter-spacing: -0.025em;
+    }
+
+    .subtitle {
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+    }
+
+    .search-section {
+        flex: 1;
+        min-width: 300px;
+        max-width: 500px;
+    }
+
+    .search-wrapper {
+        display: flex;
+        align-items: center;
+        background: var(--bg-white);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-lg);
+        padding: 0.5rem;
+        box-shadow: var(--shadow-sm);
+        transition: all 0.2s ease;
+    }
+
+    .search-wrapper:focus-within {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(14, 116, 144, 0.1);
+    }
+
+    .search-icon {
+        width: 1.25rem;
+        height: 1.25rem;
+        color: var(--text-secondary);
+        margin: 0 0.75rem;
+    }
+
+    .search-input {
+        flex: 1;
+        border: none;
+        outline: none;
+        font-size: 0.95rem;
+        padding: 0.5rem 0;
+        color: var(--text-primary);
+        background: transparent;
+    }
+
+    .search-input::placeholder {
+        color: var(--text-secondary);
+    }
+
+    .search-btn {
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: var(--radius-md);
+        padding: 0.625rem 1.25rem;
+        font-size: 0.95rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        margin-left: 0.5rem;
+    }
+
+    .search-btn:hover {
+        background: #0c6a81;
+        transform: translateY(-1px);
+    }
+
+    /* Stats Cards */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background: var(--bg-white);
+        border-radius: var(--radius-lg);
+        padding: 1.5rem;
+        box-shadow: var(--shadow-md);
+        transition: all 0.3s ease;
+        border: 2px dashed;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+    }
+
+    .card-1 {
+        background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+        border-color: var(--primary-color);
+    }
+
+    .card-2 {
+        background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+        border-color: var(--warning-color);
+    }
+
+    .card-3 {
+        background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+        border-color: var(--error-color);
+    }
+
+    .card-4 {
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        border-color: #64748b;
+    }
+
+    .stat-card-content {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .stat-icon {
+        width: 3rem;
+        height: 3rem;
+        border-radius: var(--radius-md);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+        flex-shrink: 0;
+    }
+
+    .card-1 .stat-icon {
+        background: rgba(14, 116, 144, 0.1);
+        color: var(--primary-color);
+    }
+
+    .card-2 .stat-icon {
+        background: rgba(245, 158, 11, 0.1);
+        color: var(--warning-color);
+    }
+
+    .card-3 .stat-icon {
+        background: rgba(239, 68, 68, 0.1);
+        color: var(--error-color);
+    }
+
+    .card-4 .stat-icon {
+        background: rgba(100, 116, 139, 0.1);
+        color: #64748b;
+    }
+
+    .stat-icon svg {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+
+    .stat-info {
+        flex: 1;
+    }
+
+    .stat-count {
+        font-size: 2rem;
+        font-weight: 700;
+        line-height: 1;
+        margin-bottom: 0.25rem;
+        color: var(--text-primary);
+    }
+
+    .stat-label {
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+
+    .stat-card-footer {
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+        padding-top: 0.75rem;
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+    }
+
+    /* Filters Section */
+    .filters-section {
+        background: var(--bg-white);
+        border-radius: var(--radius-lg);
+        padding: 1.25rem;
+        margin-bottom: 1.5rem;
+        box-shadow: var(--shadow-sm);
+    }
+
+    .filters-wrapper {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+    }
+
+    .filter-group {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .filter-group label {
+        font-weight: 500;
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+    }
+
+    .filter-select {
+        padding: 0.5rem 2rem 0.5rem 0.75rem;
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        background: var(--bg-white);
+        color: var(--text-primary);
+        font-size: 0.875rem;
+        cursor: pointer;
+        outline: none;
+        transition: all 0.2s ease;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+        background-position: right 0.5rem center;
+        background-repeat: no-repeat;
+        background-size: 1.5em 1.5em;
+        padding-right: 2.5rem;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+    }
+
+    .filter-select:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(14, 116, 144, 0.1);
+    }
+
+    .reset-filters {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        background: transparent;
+        color: var(--text-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        font-size: 0.875rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        margin-left: auto;
+    }
+
+    .reset-filters:hover {
+        background: var(--bg-light);
+        color: var(--text-primary);
+    }
+
+    .reset-filters svg {
+        width: 1rem;
+        height: 1rem;
+    }
+
+    /* Table Section */
+    .table-section {
+        background: var(--bg-white);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        box-shadow: var(--shadow-md);
+    }
+
+    .table-header {
+        padding: 1.5rem 1.5rem 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .table-header h3 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+
+    .table-info {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+    }
+
+    .table-container {
+        overflow-x: auto;
+        padding: 0 1.5rem 1.5rem;
+    }
+
+    .modern-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        min-width: 800px;
+    }
+
+    .modern-table thead {
+        background: var(--bg-light);
+    }
+
+    .modern-table th {
+        padding: 1rem;
+        text-align: left;
+        font-weight: 600;
+        color: var(--text-secondary);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        border-bottom: 2px solid var(--border-color);
+        white-space: nowrap;
+    }
+
+    .modern-table td {
+        padding: 1rem;
+        border-bottom: 1px solid var(--border-color);
+        vertical-align: middle;
+    }
+
+    .modern-table tbody tr {
+        transition: all 0.2s ease;
+    }
+
+    .modern-table tbody tr:hover {
+        background: var(--primary-light);
+    }
+
+    /* Custom Cells */
+    .store-name-cell, .owner-cell {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .store-avatar, .owner-avatar {
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: var(--radius-md);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+        font-size: 1rem;
+        flex-shrink: 0;
+    }
+
+    .store-details, .owner-details {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .store-details strong, .owner-details strong {
+        font-weight: 500;
+        color: var(--text-primary);
+        margin-bottom: 0.125rem;
+    }
+
+    .store-details span, .owner-details span {
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+    }
+
+    /* Status Badges */
+    .status-badge, .active-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+        padding: 0.375rem 0.75rem;
+        border-radius: 1rem;
+        font-size: 0.75rem;
+        font-weight: 500;
+        white-space: nowrap;
+    }
+
+    .status-verified {
+        background: rgba(16, 185, 129, 0.1);
+        color: var(--success-color);
+    }
+
+    .status-pending {
+        background: rgba(245, 158, 11, 0.1);
+        color: var(--warning-color);
+    }
+
+    .status-rejected {
+        background: rgba(239, 68, 68, 0.1);
+        color: var(--error-color);
+    }
+
+    .status-dot, .active-dot {
+        width: 0.5rem;
+        height: 0.5rem;
+        border-radius: 50%;
+    }
+
+    .status-verified .status-dot {
+        background: var(--success-color);
+    }
+
+    .status-pending .status-dot {
+        background: var(--warning-color);
+    }
+
+    .status-rejected .status-dot {
+        background: var(--error-color);
+    }
+
+    .active-true {
+        background: rgba(16, 185, 129, 0.1);
+        color: var(--success-color);
+    }
+
+    .active-true .active-dot {
+        background: var(--success-color);
+    }
+
+    .active-false {
+        background: rgba(100, 116, 139, 0.1);
+        color: #64748b;
+    }
+
+    .active-false .active-dot {
+        background: #64748b;
+    }
+
+    /* Date Cell */
+    .date-cell {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .date-cell small {
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+        margin-top: 0.125rem;
+    }
+
+    /* Review Button */
+    .review-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        background: var(--primary-color);
+        color: white;
+        border-radius: var(--radius-md);
+        font-size: 0.875rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        border: none;
+        cursor: pointer;
+        white-space: nowrap;
+    }
+
+    .review-btn:hover {
+        background: #0c6a81;
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-md);
+    }
+
+    .review-btn svg {
+        width: 1rem;
+        height: 1rem;
+    }
+
+    /* Empty State */
+    .empty-row td {
+        padding: 4rem 1rem;
+        text-align: center;
+    }
+
+    .empty-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .empty-icon {
+        width: 4rem;
+        height: 4rem;
+        color: var(--border-color);
+    }
+
+    .empty-state h4 {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+    }
+
+    .empty-state p {
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+        max-width: 20rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .store-verifications-container {
+            padding: 1rem;
+        }
+        
+        .header-section {
+            flex-direction: column;
+        }
+        
+        .search-section {
+            max-width: 100%;
+            width: 100%;
+        }
+        
+        .search-wrapper {
+            flex-wrap: wrap;
+        }
+        
+        .search-btn {
+            width: 100%;
+            margin: 0.5rem 0 0 0;
+        }
+        
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        .filters-wrapper {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 1rem;
+        }
+        
+        .filter-group {
+            justify-content: space-between;
+        }
+        
+        .reset-filters {
+            width: 100%;
+            justify-content: center;
+            margin-left: 0;
+        }
+        
+        .table-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+        
+        .table-container {
+            padding: 0 1rem 1rem;
+        }
+        
+        .modern-table td, .modern-table th {
+            padding: 0.75rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .store-name-cell, .owner-cell {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+        
+        .store-avatar, .owner-avatar {
+            margin-bottom: 0.25rem;
+        }
+    }
+    /* ================= LARGE SCREENS (1400px+) ================= */
+@media (min-width: 1400px) {
+
+  /* Page width control */
+  .store-verifications-container {
+    max-width: 1580px;
+    margin: 0 auto;
+    padding: 3rem 3.5rem;
+  }
+
+  /* Header spacing */
+  .header-section {
+    margin-bottom: 2.5rem;
+  }
+
+  .title-section h1 {
+    font-size: 2.2rem;
+  }
+
+  /* Search bar refinement */
+  .search-section {
+    max-width: 560px;
+  }
+
+  .search-wrapper {
+    padding: 0.65rem;
+  }
+
+  /* Stats cards: more breathing room */
+  .stats-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .stat-card {
+    padding: 2rem;
+  }
+
+  .stat-count {
+    font-size: 2.3rem;
+  }
+
+  /* Filters spacing */
+  .filters-section {
+    padding: 1.75rem 2rem;
+    margin-bottom: 2rem;
+  }
+
+  /* Table section */
+  .table-section {
+    border-radius: 1rem;
+  }
+
+  .table-header {
+    padding: 2rem 2rem 0;
+  }
+
+  .table-header h3 {
+    font-size: 1.35rem;
+  }
+
+  .table-container {
+    padding: 0 2rem 2rem;
+  }
+
+  /* Table density */
+  .modern-table th {
+    font-size: 0.7rem;
+    padding: 1.1rem 1.25rem;
+  }
+
+  .modern-table td {
+    padding: 1.1rem 1.25rem;
+  }
+
+  /* Avatars slightly bigger */
+  .store-avatar,
+  .owner-avatar {
+    width: 2.75rem;
+    height: 2.75rem;
+    font-size: 1.1rem;
+  }
+
+  /* Action button refinement */
+  .review-btn {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+  }
+
+  /* Status badges */
+  .status-badge,
+  .active-badge {
+    font-size: 0.72rem;
+    padding: 0.45rem 0.85rem;
+  }
+}
+
+</style>
+
+<div class="store-verifications-container">
+    <!-- Header Section -->
+     <div class="header-bg">
+  <div class="header-overlay"></div>
+    <div class="header-section">
+        <div class="title-section">
+            <h1>Store Verifications</h1>
+            <p class="subtitle">Manage and review store verification requests</p>
+        </div>
+        
+        <!-- Search Bar -->
+        <div class="search-section">
+            <div class="search-wrapper">
+                <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" id="storeSearch" placeholder="Search stores by name, owner email, or status..." class="search-input">
+                <button class="search-btn">Search</button>
+            </div>
+        </div>
+    </div>
+     </div>
+     
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+        <div class="stat-card card-1">
+            <div class="stat-card-content">
+                <div class="stat-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                </div>
+                <div class="stat-info">
+                    <h3 class="stat-count" id="verifiedCount">0</h3>
+                    <p class="stat-label">Verified Stores</p>
+                </div>
+            </div>
+            <div class="stat-card-footer">
+                <span>Successfully verified stores</span>
+            </div>
+        </div>
+
+        <div class="stat-card card-2">
+            <div class="stat-card-content">
+                <div class="stat-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                </div>
+                <div class="stat-info">
+                    <h3 class="stat-count" id="pendingCount">0</h3>
+                    <p class="stat-label">Pending Review</p>
+                </div>
+            </div>
+            <div class="stat-card-footer">
+                <span>Awaiting verification</span>
+            </div>
+        </div>
+
+        <div class="stat-card card-3">
+            <div class="stat-card-content">
+                <div class="stat-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="15" y1="9" x2="9" y2="15"></line>
+                        <line x1="9" y1="9" x2="15" y2="15"></line>
+                    </svg>
+                </div>
+                <div class="stat-info">
+                    <h3 class="stat-count" id="rejectedCount">0</h3>
+                    <p class="stat-label">Rejected Stores</p>
+                </div>
+            </div>
+            <div class="stat-card-footer">
+                <span>Verification rejected</span>
+            </div>
+        </div>
+
+        <div class="stat-card card-4">
+            <div class="stat-card-content">
+                <div class="stat-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                    </svg>
+                </div>
+                <div class="stat-info">
+                    <h3 class="stat-count" id="totalCount">0</h3>
+                    <p class="stat-label">Total Stores</p>
+                </div>
+            </div>
+            <div class="stat-card-footer">
+                <span>All stores in system</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters-section">
+        <div class="filters-wrapper">
+            <div class="filter-group">
+                <label for="statusFilter">Status:</label>
+                <select id="statusFilter" class="filter-select">
+                    <option value="all">All Statuses</option>
+                    <option value="pending">Pending</option>
+                    <option value="verified">Verified</option>
+                    <option value="rejected">Rejected</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label for="activeFilter">Active:</label>
+                <select id="activeFilter" class="filter-select">
+                    <option value="all">All</option>
+                    <option value="true">Active</option>
+                    <option value="false">Inactive</option>
+                </select>
+            </div>
+            
+            <button class="reset-filters" id="resetFilters">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 6h18"></path>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path>
+                    <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    <line x1="10" y1="11" x2="10" y2="17"></line>
+                    <line x1="14" y1="11" x2="14" y2="17"></line>
+                </svg>
+                Reset Filters
+            </button>
+        </div>
+    </div>
+
+    <!-- Table Section -->
+    <div class="table-section">
+        <div class="table-header">
+            <h3>All Stores</h3>
+            <div class="table-info">
+                <span id="showingCount">Showing {{ stores|length }} stores</span>
+            </div>
+        </div>
+        
+        <div class="table-container">
+            <table class="modern-table" id="storesTable">
+                <thead>
+                    <tr>
+                        <th>Store Name</th>
+                        <th>Owner</th>
+                        <th>Status</th>
+                        <th>Active</th>
+                        <th>Created</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for store in stores %}
+                    <tr class="store-row" 
+                        data-status="{{ store.verification_status|lower }}" 
+                        data-active="{{ store.is_active|yesno:'true,false' }}"
+                        data-name="{{ store.name|lower }}"
+                        data-owner="{{ store.owner.email|lower }}">
+                        <td>
+                            <div class="store-name-cell">
+                                <div class="store-avatar" style="background-color: #0e7490;">
+                                    {{ store.name|slice:":1"|upper }}
+                                </div>
+                                <div class="store-details">
+                                    <strong>{{ store.name }}</strong>
+                                    <span>ID: #{{ store.id }}</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="owner-cell">
+                                <div class="owner-avatar" style="background-color: #0891b2;">
+                                    {{ store.owner.email|slice:":1"|upper }}
+                                </div>
+                                <div class="owner-details">
+                                    <strong>{{ store.owner.email }}</strong>
+                                    <span>Store Owner</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            {% if store.verification_status == 'verified' %}
+                            <span class="status-badge status-verified">
+                                <span class="status-dot"></span>
+                                {{ store.verification_status|title }}
+                            </span>
+                            {% elif store.verification_status == 'pending' %}
+                            <span class="status-badge status-pending">
+                                <span class="status-dot"></span>
+                                {{ store.verification_status|title }}
+                            </span>
+                            {% elif store.verification_status == 'rejected' %}
+                            <span class="status-badge status-rejected">
+                                <span class="status-dot"></span>
+                                {{ store.verification_status|title }}
+                            </span>
+                            {% else %}
+                            <span class="status-badge">
+                                {{ store.verification_status|title }}
+                            </span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if store.is_active %}
+                            <span class="active-badge active-true">
+                                <span class="active-dot"></span>
+                                Active
+                            </span>
+                            {% else %}
+                            <span class="active-badge active-false">
+                                <span class="active-dot"></span>
+                                Inactive
+                            </span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="date-cell">
+                                {{ store.created_at|date:"M d, Y" }}
+                                <small>{{ store.created_at|date:"h:i A" }}</small>
+                            </div>
+                        </td>
+                        <td>
+                            <a href="{% url 'admin_store_verify' store.id %}" class="review-btn">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                                Review
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr class="empty-row">
+                        <td colspan="6">
+                            <div class="empty-state">
+                                <div class="empty-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                        <line x1="9" y1="9" x2="15" y2="15"></line>
+                                        <line x1="15" y1="9" x2="9" y2="15"></line>
+                                    </svg>
+                                </div>
+                                <h4>No stores found</h4>
+                                <p>There are no stores to display at the moment.</p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Elements
+        const searchInput = document.getElementById('storeSearch');
+        const statusFilter = document.getElementById('statusFilter');
+        const activeFilter = document.getElementById('activeFilter');
+        const resetFiltersBtn = document.getElementById('resetFilters');
+        const storeRows = document.querySelectorAll('.store-row');
+        
+        // Stat count elements
+        const verifiedCountEl = document.getElementById('verifiedCount');
+        const pendingCountEl = document.getElementById('pendingCount');
+        const rejectedCountEl = document.getElementById('rejectedCount');
+        const totalCountEl = document.getElementById('totalCount');
+        const showingCountEl = document.getElementById('showingCount');
+        
+        // Initialize counts
+        let verifiedCount = 0;
+        let pendingCount = 0;
+        let rejectedCount = 0;
+        let totalCount = storeRows.length;
+        
+        // Calculate initial counts
+        storeRows.forEach(row => {
+            const status = row.dataset.status;
+            if (status === 'verified') verifiedCount++;
+            if (status === 'pending') pendingCount++;
+            if (status === 'rejected') rejectedCount++;
+        });
+        
+        // Update stat cards
+        verifiedCountEl.textContent = verifiedCount;
+        pendingCountEl.textContent = pendingCount;
+        rejectedCountEl.textContent = rejectedCount;
+        totalCountEl.textContent = totalCount;
+        
+        // Filter function
+        function filterStores() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const statusValue = statusFilter.value;
+            const activeValue = activeFilter.value;
+            
+            let visibleCount = 0;
+            
+            storeRows.forEach(row => {
+                const storeName = row.dataset.name;
+                const ownerEmail = row.dataset.owner;
+                const status = row.dataset.status;
+                const active = row.dataset.active;
+                
+                // Check search term
+                const matchesSearch = searchTerm === '' || 
+                    storeName.includes(searchTerm) || 
+                    ownerEmail.includes(searchTerm);
+                
+                // Check status filter
+                const matchesStatus = statusValue === 'all' || status === statusValue;
+                
+                // Check active filter
+                const matchesActive = activeValue === 'all' || active === activeValue;
+                
+                // Show/hide row
+                if (matchesSearch && matchesStatus && matchesActive) {
+                    row.style.display = '';
+                    visibleCount++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+            
+            // Update showing count
+            showingCountEl.textContent = `Showing ${visibleCount} stores`;
+            
+            // Show/hide empty state
+            const emptyRow = document.querySelector('.empty-row');
+            if (emptyRow) {
+                emptyRow.style.display = visibleCount === 0 ? '' : 'none';
+            }
+        }
+        
+        // Event listeners
+        searchInput.addEventListener('input', filterStores);
+        statusFilter.addEventListener('change', filterStores);
+        activeFilter.addEventListener('change', filterStores);
+        
+        // Reset filters
+        resetFiltersBtn.addEventListener('click', function() {
+            searchInput.value = '';
+            statusFilter.value = 'all';
+            activeFilter.value = 'all';
+            filterStores();
+        });
+        
+        // Add search button functionality
+        document.querySelector('.search-btn').addEventListener('click', filterStores);
+        
+        // Initialize filter
+        filterStores();
+        
+        // Add keyboard shortcut for search (Ctrl/Cmd + K)
+        document.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                searchInput.focus();
+            }
+        });
+        
+        // Add animation to cards on load
+        document.querySelectorAll('.stat-card').forEach((card, index) => {
+            card.style.animationDelay = `${index * 0.1}s`;
+            card.classList.add('animate-in');
+        });
+        
+        // Add loading animation
+        setTimeout(() => {
+            document.querySelectorAll('.store-row').forEach((row, index) => {
+                row.style.animationDelay = `${index * 0.05}s`;
+                row.classList.add('animate-in');
+            });
+        }, 300);
+    });
+</script>
+{% endblock %}
