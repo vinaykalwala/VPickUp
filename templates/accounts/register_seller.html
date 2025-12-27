@@ -1,4 +1,283 @@
-{% extends 'base.html' %}
+{% load static %}
+
 {% block content %}
-<form method="post">{% csrf_token %}{{ form.as_p }}<button>Register</button></form>
+<style>
+*{
+    box-sizing:border-box;
+    font-family:'Segoe UI', sans-serif;
+}
+
+body{
+    margin:0;
+    background:#f6f8ff;
+}
+
+/* PAGE CENTER */
+.page-wrapper{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:30px 15px;
+}
+
+/* MAIN BOX */
+.auth-box{
+    width:100%;
+    max-width:1200px;
+    background:#ffffff;
+    border-radius:20px;
+    box-shadow:0 20px 40px rgba(0,0,0,.15);
+    display:flex;
+    overflow:hidden;
+}
+
+/* LEFT PANEL */
+.left-panel{
+    width:42%;
+    padding:60px;
+}
+
+.logo{
+    font-weight:600;
+    margin-bottom:40px;
+    color:#06b6d4;
+}
+
+.title{
+    font-size:32px;
+    font-weight:600;
+    color:#06b6d4;
+}
+
+.subtitle{
+    color:#777;
+    margin-bottom:30px;
+}
+
+/* FORM GRID */
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:18px 20px;
+}
+
+.form-field{
+    display:flex;
+    flex-direction:column;
+}
+
+.form-field label{
+    font-size:13px;
+    font-weight:600;
+    color:black;
+    margin-bottom:6px;
+}
+
+.form-field input{
+    
+    padding:14px 35px;
+    border:0.5px solid #4edcf5;
+    border-radius:10px;
+    background:#ffffff;
+    font-size:14px;
+    outline:none;
+    transition:0.3s ease;
+}
+
+.form-field input:focus{
+    box-shadow:0 0 0 3px rgba(6,182,212,.25);
+}
+
+/* FULL WIDTH */
+.full-width{
+    grid-column:span 2;
+}
+
+/* BUTTON */
+.btn-submit{
+    display:block;                 /* important */
+    width:50%;                     /* adjust if needed */
+    margin:22px auto 0 auto;       /* center horizontally */
+
+    padding:14px;
+    border:none;
+    border-radius:30px;
+    background:linear-gradient(90deg,#06b6d4,#3b82f6);
+    color:#fff;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+}
+
+/* RIGHT PANEL */
+.right-panel{
+    width:58%;
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+/* CURVE */
+.curve-svg{
+    position:absolute;
+    inset:0;
+}
+
+.curve-svg svg{
+    width:100%;
+    height:100%;
+}
+
+/* IMAGE */
+.image-wrapper{
+    position:relative;
+    z-index:2;
+    padding:40px;
+    transform:translateX(-30px);
+}
+
+.image-wrapper img{
+    width:100%;
+    max-width:520px;
+    height:auto;
+    object-fit:contain;
+    filter:drop-shadow(0 20px 30px rgba(0,0,0,.25));
+}
+
+/* ---------------- RESPONSIVE ---------------- */
+
+/* Tablets */
+@media(max-width:1024px){
+    .left-panel{
+        width:50%;
+        padding:40px;
+    }
+    .right-panel{
+        width:50%;
+    }
+}
+
+/* Mobile & Small Tablets */
+@media(max-width:900px){
+    .auth-box{
+        flex-direction:column;
+    }
+    .right-panel{
+        display:none;
+    }
+    .left-panel{
+        width:100%;
+    }
+}
+
+/* Small screens */
+@media(max-width:768px){
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+    .full-width{
+        grid-column:span 1;
+    }
+}
+
+/* Extra small */
+@media(max-width:480px){
+    .left-panel{
+        padding:30px 20px;
+    }
+    .title{
+        font-size:26px;
+    }
+}
+</style>
+
+<div class="page-wrapper">
+    <div class="auth-box">
+
+        <!-- LEFT -->
+        <div class="left-panel">
+            <div class="logo">🔵 System logo</div>
+
+            <div class="title">Seller Register System</div>
+            <div class="subtitle">
+                Create your seller account to start selling
+            </div>
+
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="form-grid">
+
+                    <div class="form-field">
+                        <label>First Name</label>
+                        <input type="text" name="first_name" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label>Last Name</label>
+                        <input type="text" name="last_name" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label>Email Address</label>
+                        <input type="email" name="email" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label>Phone Number</label>
+                        <input type="text" name="phone_number" required>
+                    </div>
+
+                    <div class="form-field full-width">
+                        <label>Business Name</label>
+                        <input type="text" name="business_name" required>
+                    </div>
+
+                    <div class="form-field full-width">
+                        <label>Password</label>
+                        <input type="password" name="password" required>
+                    </div>
+
+                </div>
+
+                <button type="submit" class="btn-submit">Register</button>
+            </form>
+        </div>
+
+        <!-- RIGHT -->
+        <div class="right-panel">
+
+            <div class="curve-svg">
+                <svg viewBox="0 0 600 600" preserveAspectRatio="none">
+                    <defs>
+                        <linearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0%" stop-color="#06b6d4"/>
+                            <stop offset="100%" stop-color="#9f5cff"/>
+                        </linearGradient>
+                    </defs>
+
+                    <path d="
+                        M 600 0
+                        L 220 0
+                        C 140 40, 80 140, 140 260
+                        C 200 340, 200 420, 150 500
+                        C 100 580, 200 680, 340 600
+                        L 600 600
+                        Z"
+                        fill="url(#grad)"
+                    />
+                </svg>
+            </div>
+
+            <div class="image-wrapper">
+                <img src="{% static 'images/shopbg.jpeg' %}" alt="Seller Registration">
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
 {% endblock %}

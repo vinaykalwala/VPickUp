@@ -1,172 +1,341 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Create Store</title>
+{% extends "base.html" %}
+{% load static %}
 
-    <!-- Leaflet CSS -->
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    />
-    <!-- Leaflet JS -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+{% block content %}
 
-    <style>
-        #map {
-            height: 380px;
-            border: 1px solid #ccc;
-            margin-bottom: 10px;
-        }
-        textarea[readonly] {
-            background: #f5f5f5;
-        }
-        .hint {
-            font-size: 13px;
-            color: #555;
-        }
-        .error {
-            color: red;
-        }
-        .search-box {
-            margin-bottom: 10px;
-        }
-    </style>
-</head>
-<body>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-<h2>Create Store</h2>
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:'Poppins','Segoe UI',sans-serif;
+}
 
-<form method="post" enctype="multipart/form-data" id="storeForm">
-    {% csrf_token %}
-    {{ form.as_p }}
+body{
+    background:#f1f5f9;
+    color:#0f172a;
+}
 
-    <!-- 🔍 LOCATION SEARCH -->
-    <div class="search-box">
-        <label><strong>Search Location</strong></label><br>
-        <input
-            type="text"
-            id="locationSearch"
-            placeholder="Search area, landmark, city"
-            style="width:100%; padding:8px;"
-        >
-        <button type="button" onclick="searchLocation()">Search</button>
+/* ===== PAGE ===== */
+.page-overlay{
+    background:rgba(241,245,249,0.85);
+    backdrop-filter:blur(6px);
+    min-height:100vh;
+    padding-bottom:40px;
+}
+
+/* ===== BANNER ===== */
+.banner{
+    height:360px;
+    background:url("{% static 'images/store.jpeg' %}") center/cover no-repeat;
+}
+
+.banner-overlay{
+    height:100%;
+    background:linear-gradient(90deg,rgba(30, 30, 20, 0.7),rgba(0,0,0,0.3));
+    display:flex;
+    align-items:center;
+}
+
+.banner-content{
+    max-width:560px;
+    margin-left:6vw;
+    color:#fff;
+}
+
+/* ===== MAIN ===== */
+.main-container{
+    max-width:1200px;
+    margin:40px auto;
+    padding:0 18px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:32px;
+}
+
+/* ===== CARD ===== */
+.glass-card{
+    background:rgba(255,255,255,0.35);
+    backdrop-filter:blur(22px);
+    border-radius:22px;
+    padding:30px;
+    border:1px solid rgba(255,255,255,0.35);
+    box-shadow:0 25px 60px rgba(0,0,0,0.18);
+}
+
+.glass-card h2{
+    margin-bottom:18px;
+    color: white;
+    text-align: center;
+    align-items: center;
+}
+
+/* ===== FULL WIDTH BLUE TITLE BAR ===== */
+.section-title{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:10px;
+
+    margin:-30px -30px 22px -30px; /* stretch to card edges */
+    padding:16px 20px;
+
+    background:#0e7490;           /* solid blue */
+    color:#ffffff;
+
+    font-size:22px;
+    font-weight:600;
+
+    border-radius:22px 22px 0 0;  /* match card top */
+}
+
+/* icon style */
+.section-title i{
+    font-size:18px;
+    color:#ffffff;
+}
+
+
+
+/* ===== FORM ===== */
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:18px 22px;
+}
+
+.form-group{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.form-group.full{
+    grid-column:1 / -1;
+}
+
+label{
+    font-size:13px;
+    font-weight:600;
+}
+
+/* ===== INPUTS ===== */
+input, select, textarea{
+    width:100%;
+    height:46px;
+    padding:10px 12px;
+    border-radius:12px;
+    border:1px solid #cbd5e1;
+    font-size:14px;
+}
+
+textarea[name="description"]{
+    min-height:120px;
+    resize:vertical;
+}
+
+/* ===== SUBMIT BUTTON ===== */
+.submit-wrapper{
+    display:flex;
+    justify-content:center;
+    margin-top:26px;
+}
+
+#submitBtn{
+    width:220px;
+    height:50px;
+    border:none;
+    border-radius:18px;
+    background:linear-gradient(135deg,#0e7490,#0891b2);
+    color:#fff;
+    font-size:16px;
+    font-weight:600;
+    cursor:pointer;
+}
+
+#submitBtn:disabled{
+    opacity:0.6;
+    cursor:not-allowed;
+}
+
+/* ===== LOCATION SEARCH ===== */
+.location-search{
+    display:flex;
+    gap:10px;
+    margin-bottom:14px;
+}
+
+.location-search input{
+    flex:1;
+}
+
+.location-search button{
+    padding:0 18px;
+    border:none;
+    border-radius:12px;
+    background:#0284c7;
+    color:#fff;
+    font-weight:600;
+    cursor:pointer;
+}
+
+/* ===== MAP ===== */
+#map{
+    min-height:435px;
+    border-radius:18px;
+    margin-bottom:12px;
+}
+
+/* ===== DETECTED ADDRESS ===== */
+#autoAddress{
+    min-height:46px;
+    resize:none;
+    margin-bottom:0;
+}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:1024px){
+    .main-container{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:700px){
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .location-search{
+        flex-direction:column;
+    }
+}
+</style>
+
+<div class="page-overlay">
+
+<section class="banner">
+    <div class="banner-overlay">
+        <div class="banner-content">
+            <h1>Register Your Store</h1>
+            <p>Add store details & accurate location</p>
+        </div>
     </div>
+</section>
 
-    <!-- 🔒 Hidden location fields -->
-    <input type="hidden" name="latitude" id="latitude">
-    <input type="hidden" name="longitude" id="longitude">
+<div class="main-container">
 
-    <!-- 🗺️ MAP -->
-    <label><strong>Select Store Location</strong></label>
-    <div id="map"></div>
+<!-- STORE DETAILS -->
+<div class="glass-card">
+<h2 class="section-title">
+    Store Details <i class="fa-solid fa-store"></i>
+</h2>
 
-    <p class="hint">Search, click on map, or drag marker to set exact location</p>
 
-    <!-- Auto address -->
-    <label>Detected Address</label><br>
-    <textarea id="autoAddress" rows="2" readonly></textarea><br><br>
+<form method="post" enctype="multipart/form-data">
+{% csrf_token %}
 
-    <button type="submit" id="submitBtn" disabled>Create Store</button>
+<div class="form-grid">
+{% for field in form %}
+<div class="form-group {% if field.name == 'description' %}full{% endif %}">
+    {{ field.label_tag }}
+    {{ field }}
+</div>
+{% endfor %}
+</div>
+
+<div class="submit-wrapper">
+    <button id="submitBtn" disabled>Create Store</button>
+</div>
+
 </form>
+</div>
 
-<p id="status"></p>
+<!-- STORE LOCATION -->
+<div class="glass-card">
+<h2 class="section-title">
+    Store Location <i class="fa-solid fa-location-dot"></i>
+</h2>
 
-{% if error %}
-    <p class="error">{{ error }}</p>
-{% endif %}
+
+<div class="location-search">
+    <input type="text" id="locationSearch" placeholder="Search area, landmark, city">
+    <button type="button" onclick="searchLocation()">Search</button>
+</div>
+
+<div id="map"></div>
+
+<label>Detected Address</label>
+<textarea id="autoAddress" readonly></textarea>
+
+<input type="hidden" id="latitude">
+<input type="hidden" id="longitude">
+</div>
+
+</div>
+</div>
 
 <script>
 let map, marker;
+const btn = document.getElementById("submitBtn");
+const lat = document.getElementById("latitude");
+const lng = document.getElementById("longitude");
+const addr = document.getElementById("autoAddress");
 
-const submitBtn = document.getElementById("submitBtn");
-const statusEl = document.getElementById("status");
-const latInput = document.getElementById("latitude");
-const lngInput = document.getElementById("longitude");
-const addressBox = document.getElementById("autoAddress");
+function initMap(latv=20.5937, lngv=78.9629){
+    map = L.map("map").setView([latv, lngv], 13);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+    marker = L.marker([latv, lngv], {draggable:true}).addTo(map);
+    setLoc(latv, lngv);
 
-/* ---------- INIT MAP ---------- */
-function initMap(lat = 20.5937, lng = 78.9629) {
-    map = L.map("map").setView([lat, lng], 13);
-
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: "© OpenStreetMap"
-    }).addTo(map);
-
-    marker = L.marker([lat, lng], { draggable: true }).addTo(map);
-
-    setLocation(lat, lng);
-
-    map.on("click", function (e) {
-        const { lat, lng } = e.latlng;
-        marker.setLatLng([lat, lng]);
-        setLocation(lat, lng);
+    map.on("click", e=>{
+        marker.setLatLng(e.latlng);
+        setLoc(e.latlng.lat, e.latlng.lng);
     });
 
-    marker.on("dragend", function () {
-        const pos = marker.getLatLng();
-        setLocation(pos.lat, pos.lng);
+    marker.on("dragend", ()=>{
+        const p = marker.getLatLng();
+        setLoc(p.lat, p.lng);
     });
 }
 
-/* ---------- SET LOCATION ---------- */
-function setLocation(lat, lng) {
-    latInput.value = lat.toFixed(6);
-    lngInput.value = lng.toFixed(6);
-    submitBtn.disabled = false;
-    statusEl.innerText = "Location selected";
-    reverseGeocode(lat, lng);
+function setLoc(a,b){
+    lat.value = a;
+    lng.value = b;
+    btn.disabled = false;
+
+    fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${a}&lon=${b}`)
+    .then(r=>r.json())
+    .then(d=>addr.value = d.display_name || "Selected location");
 }
 
-/* ---------- REVERSE GEOCODE ---------- */
-function reverseGeocode(lat, lng) {
-    fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`)
-    .then(res => res.json())
-    .then(data => {
-        addressBox.value = data.display_name || "Selected location";
-    })
-    .catch(() => {
-        addressBox.value = "Selected location";
-    });
-}
+function searchLocation(){
+    const q = document.getElementById("locationSearch").value.trim();
+    if(!q) return;
 
-/* ---------- SEARCH LOCATION ---------- */
-function searchLocation() {
-    const query = document.getElementById("locationSearch").value;
-    if (!query) return;
-
-    statusEl.innerText = "Searching location...";
-
-    fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`)
-    .then(res => res.json())
-    .then(data => {
-        if (data.length === 0) {
-            statusEl.innerText = "Location not found";
+    fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}`)
+    .then(res=>res.json())
+    .then(data=>{
+        if(!data.length){
+            alert("Location not found");
             return;
         }
-
-        const lat = parseFloat(data[0].lat);
-        const lng = parseFloat(data[0].lon);
-
-        map.setView([lat, lng], 15);
-        marker.setLatLng([lat, lng]);
-        setLocation(lat, lng);
-    })
-    .catch(() => {
-        statusEl.innerText = "Error searching location";
+        const a = parseFloat(data[0].lat);
+        const b = parseFloat(data[0].lon);
+        map.setView([a,b],15);
+        marker.setLatLng([a,b]);
+        setLoc(a,b);
     });
 }
 
-/* ---------- AUTO-DETECT (OPTIONAL) ---------- */
-if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-        pos => initMap(pos.coords.latitude, pos.coords.longitude),
-        () => initMap()
-    );
-} else {
-    initMap();
-}
+navigator.geolocation ?
+navigator.geolocation.getCurrentPosition(
+    p=>initMap(p.coords.latitude, p.coords.longitude),
+    ()=>initMap()
+) : initMap();
 </script>
 
-</body>
-</html>
+{% endblock %}
