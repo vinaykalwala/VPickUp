@@ -4,233 +4,241 @@
 {% block content %}
 
 <style>
-/* ===== MODERN TERMS PAGE ===== */
+/* ================= BASE ================= */
+*{
+  box-sizing: border-box;
+  font-family: 'Poppins','Segoe UI',sans-serif;
+}
 
-.terms-hero {
-  background: linear-gradient(135deg, #0ea5e9, #0284c7);
-  min-height: 280px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 40px 20px;
+/* ================= HERO ================= */
+.terms-hero{
+  background: #0e7490;
   color: #ffffff;
+  padding: 80px 20px;
+  border-bottom-left-radius: 48px;
+  border-bottom-right-radius: 48px;
 }
 
-.terms-hero h1 {
-  font-size: 44px;
-  font-weight: 700;
-  margin-bottom: 12px;
-}
-
-.terms-hero p {
-  font-size: 17px;
-  max-width: 700px;
-  line-height: 1.7;
-  opacity: 0.95;
+.terms-hero-inner{
+  max-width: 1200px;
   margin: auto;
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 50px;
+  align-items: center;
 }
 
-/* responsive */
-@media (max-width: 768px) {
-  .terms-hero h1 {
-    font-size: 32px;
-  }
+.terms-hero h1{
+  font-size: 52px;
+  font-weight: 800;
+  margin-bottom: 16px;
+  line-height: 1.2;
 }
 
-.terms-wrapper {
+.terms-hero p{
+  font-size: 18px;
+  line-height: 1.8;
+  color: #cbd5f5;
+  max-width: 520px;
+}
+
+/* Right accent panel */
+.hero-accent{
+  background: linear-gradient(135deg,#38bdf8,#2563eb);
+  border-radius: 20px;
+  padding: 50px;
+  text-align: left;
+}
+
+.hero-accent h4{
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 14px;
+}
+
+.hero-accent ul{
+  padding-left: 18px;
+}
+
+.hero-accent li{
+  margin-bottom: 10px;
+  font-size: 15px;
+}
+
+/* ================= CONTENT ================= */
+.terms-wrapper{
   background: #f8fafc;
-  padding: 70px 20px;
+  padding: 80px 20px;
 }
 
-.terms-container {
-  max-width: 960px;
-  margin: auto;
-}
-
-/* Section blocks */
-
-/* Main wrapper */
-.terms-wrapper {
-  background: #f1f5f9;
-  padding: 70px 20px;
-}
-
-/* Single white content panel */
-.terms-container {
-  max-width: 960px;
+.terms-container{
+  max-width: 900px;
   margin: auto;
   background: #ffffff;
   padding: 60px;
-  border-radius: 16px;
-  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  box-shadow: 0 10px 35px rgba(0,0,0,0.08);
 }
 
-/* Section styling (NO cards) */
-.terms-section {
-  padding: 35px 0;
-  border-bottom: 1px solid #e5e7eb;
+/* Sections */
+.terms-section{
+  margin-bottom: 45px;
 }
 
-.terms-section:last-child {
-  border-bottom: none;
-}
-
-.terms-section h3 {
+.terms-section h3{
   font-size: 22px;
   font-weight: 600;
   color: #0f172a;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
-.terms-section p {
+.terms-section p{
   font-size: 16px;
   line-height: 1.9;
-  color: #374151;
+  color: #334155;
 }
 
-/* Highlight box stays */
-.terms-highlight {
-  background: #eff6ff;
-  border-left: 4px solid #2563eb;
+/* Highlight */
+.terms-highlight{
+  margin-top: 18px;
+  background: #f1f5f9;
   padding: 16px 20px;
-  margin-top: 20px;
+  border-left: 4px solid #2563eb;
+  color: #1e293b;
   font-size: 15px;
-  color: #1e3a8a;
 }
 
 /* Footer */
-.terms-footer {
-  text-align: center;
-  padding-top: 40px;
-  margin-top: 40px;
+.terms-footer{
+  margin-top: 50px;
+  padding-top: 30px;
   border-top: 1px solid #e5e7eb;
-  font-size: 15px;
-  color: #475569;
+  text-align: center;
+  font-size: 14px;
+  color: #64748b;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .terms-container {
-    padding: 35px 25px;
+/* ================= RESPONSIVE ================= */
+@media (max-width: 900px){
+  .terms-hero-inner{
+    grid-template-columns: 1fr;
+    gap: 35px;
   }
 
-  .terms-section h3 {
-    font-size: 20px;
+  .terms-hero h1{
+    font-size: 38px;
   }
 
-  .terms-section p {
-    font-size: 15px;
-  }
-}
-
-
-/* Responsive */
-
-@media (max-width: 768px) {
-  .terms-hero h1 {
-    font-size: 32px;
+  .hero-accent{
+    padding: 35px;
   }
 
-  .terms-section {
-    padding: 26px;
+  .terms-container{
+    padding: 40px 30px;
   }
 }
 </style>
 
-<!-- HERO -->
+<!-- ================= HERO ================= -->
 <section class="terms-hero">
-  <div>
-    <h1>Terms & Conditions</h1>
-    <p>
-      Please read these terms carefully before using the VPickup platform.
-      By accessing our services, you agree to be legally bound by these terms.
-    </p>
+  <div class="terms-hero-inner">
+
+    <!-- LEFT -->
+    <div>
+      <h1>Terms & Conditions</h1>
+      <p>
+        These terms govern your access to and use of the VPickup platform.
+        Please review them carefully to understand your rights and obligations.
+      </p>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="hero-accent">
+      <h4>What this means</h4>
+      <ul>
+        <li>Clear usage rules</li>
+        <li>Secure account responsibility</li>
+        <li>Fair ordering & pickup policies</li>
+        <li>Privacy & data protection</li>
+      </ul>
+    </div>
+
   </div>
 </section>
 
-
-<!-- CONTENT -->
+<!-- ================= CONTENT ================= -->
 <section class="terms-wrapper">
   <div class="terms-container">
 
     <div class="terms-section">
       <h3>1. Platform Overview</h3>
       <p>
-        VPickup is a pickup-based commerce platform that enables users to browse
-        products, place orders, and collect them from nearby partner stores.
-        VPickup does not manufacture, store, or deliver products directly.
+        VPickup is a pickup-based commerce platform that allows users to browse
+        products and collect them from nearby partner stores. VPickup does not
+        manufacture or deliver products.
       </p>
     </div>
 
     <div class="terms-section">
       <h3>2. Eligibility & Account Security</h3>
       <p>
-        You must be at least 18 years old to use the VPickup platform. You are
-        responsible for safeguarding your login credentials and all activities
-        performed under your account.
+        Users must be at least 18 years old. You are responsible for maintaining
+        the confidentiality of your account credentials.
       </p>
 
       <div class="terms-highlight">
-        Any unauthorized use of your account must be reported to VPickup
-        immediately.
+        Report any unauthorized account activity immediately.
       </div>
     </div>
 
     <div class="terms-section">
       <h3>3. Orders, Pricing & Payments</h3>
       <p>
-        Prices displayed on VPickup are determined by partner stores and may vary
-        by location. All payments must be completed through authorized payment
-        methods available on the platform.
+        Pricing is determined by partner stores and may vary. Payments must be
+        completed through approved methods available on the platform.
       </p>
     </div>
 
     <div class="terms-section">
       <h3>4. Cancellations & Pickups</h3>
       <p>
-        Orders once confirmed may be subject to cancellation limits. Users are
-        required to collect orders within the specified pickup window. Failure
-        to do so may result in order cancellation without refund.
+        Orders must be collected within the pickup window. Failure to do so may
+        result in cancellation without refund.
       </p>
     </div>
 
     <div class="terms-section">
       <h3>5. User Conduct</h3>
       <p>
-        Users agree not to misuse the platform, interfere with its operations,
-        submit false information, or engage in fraudulent or unlawful activities.
+        Misuse of the platform, fraudulent activities, or unlawful behavior is
+        strictly prohibited.
       </p>
     </div>
 
     <div class="terms-section">
       <h3>6. Limitation of Liability</h3>
       <p>
-        VPickup shall not be liable for indirect, incidental, or consequential
-        damages arising from the use or inability to use the platform, including
-        delays or inaccuracies caused by partner stores.
+        VPickup is not responsible for indirect or consequential damages arising
+        from platform usage or partner store actions.
       </p>
     </div>
 
     <div class="terms-section">
       <h3>7. Privacy & Data Protection</h3>
       <p>
-        Your personal information is handled in accordance with our Privacy
-        Policy. By using VPickup, you consent to the collection and use of your
-        data as described therein.
+        User data is handled in accordance with our Privacy Policy.
       </p>
     </div>
 
     <div class="terms-section">
       <h3>8. Governing Law</h3>
       <p>
-        These Terms & Conditions shall be governed by and interpreted in
-        accordance with the laws of India.
+        These terms are governed by the laws of India.
       </p>
     </div>
 
     <div class="terms-footer">
-      Last updated: September 2025 · Questions? Contact VPickup Support
+      Last updated: September 2025 · © VPickup
     </div>
 
   </div>
