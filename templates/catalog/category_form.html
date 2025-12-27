@@ -1,6 +1,6 @@
 <h2>{% if edit %}Edit{% else %}Create{% endif %} Category</h2>
 
-<form method="post">
+<form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit">Save</button>

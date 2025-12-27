@@ -42,10 +42,62 @@ class SmartInventorySerializer(serializers.Serializer):
     )
 
     def validate(self, data):
-        if not data.get('category') and not data.get('new_category_name'):
-            raise serializers.ValidationError("Category is required")
+        # Check if either existing category or new category is provided
+        has_existing_category = bool(data.get('category'))
+        has_new_category = bool(data.get('new_category_name') and data['new_category_name'].strip())
+        
+        if not has_existing_category and not has_new_category:
+            raise serializers.ValidationError({
+                'category': 'Either select an existing category or enter a new category name'
+            })
 
+        # Validate variants
         if not data.get('variants'):
-            raise serializers.ValidationError("At least one variant is required")
+            raise serializers.ValidationError({
+                'variants': 'At least one variant is required'
+            })
+
+        # Validate each variant
+        for i, variant in enumerate(data['variants']):
+            if not variant.get('variant_name'):
+                raise serializers.ValidationError({
+                    f'variants[{i}].variant_name': 'Variant name is required'
+                })
+            
+            if not variant.get('price'):
+                raise serializers.ValidationError({
+                    f'variants[{i}].price': 'Price is required'
+                })
+            
+            try:
+                # Convert price to float
+                price = float(variant['price'])
+                if price < 0:
+                    raise serializers.ValidationError({
+                        f'variants[{i}].price': 'Price must be positive'
+                    })
+                variant['price'] = price
+            except (ValueError, TypeError):
+                raise serializers.ValidationError({
+                    f'variants[{i}].price': 'Price must be a valid number'
+                })
+            
+            if not variant.get('quantity'):
+                raise serializers.ValidationError({
+                    f'variants[{i}].quantity': 'Quantity is required'
+                })
+            
+            try:
+                # Convert quantity to int
+                quantity = int(variant['quantity'])
+                if quantity < 0:
+                    raise serializers.ValidationError({
+                        f'variants[{i}].quantity': 'Quantity must be 0 or greater'
+                    })
+                variant['quantity'] = quantity
+            except (ValueError, TypeError):
+                raise serializers.ValidationError({
+                    f'variants[{i}].quantity': 'Quantity must be a valid integer'
+                })
 
         return data

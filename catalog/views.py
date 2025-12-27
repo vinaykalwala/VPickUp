@@ -1,10 +1,13 @@
+from django.db import models
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import SessionAuthentication
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
 from .models import *
 from . serializers import *
 from .forms import *
+
 class CategoryListView(APIView):
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
@@ -28,7 +31,7 @@ class CategoryCreateView(APIView):
         return render(request, 'catalog/category_form.html', {'form': CategoryForm()})
 
     def post(self, request):
-        form = CategoryForm(request.POST)
+        form = CategoryForm(request.POST, request.FILES)  # Add request.FILES for image
         serializer = CategorySerializer(data=request.POST)
 
         if not serializer.is_valid():
@@ -37,17 +40,41 @@ class CategoryCreateView(APIView):
                 'error': serializer.errors
             })
 
+        # Create category with initial data
         category = serializer.save(created_by=request.user)
-
+        
+        # Set image if provided
+        if request.FILES.get('image'):
+            category.image = request.FILES['image']
+        
+        # Set is_active=True for ALL creators (admin, superuser, store_owner)
+        category.is_active = True
+        
         if request.user.role == 'store_owner':
-            category.store = request.user.stores.first()
-            category.is_global = False
-            category.is_approved = False
-        else:
+            store = request.user.stores.first()
+            if store:
+                category.store = store
+                category.is_global = False
+                category.is_approved = False  # Needs admin approval
+            else:
+                messages.error(request, 'No store assigned to user')
+                category.delete()
+                return render(request, 'catalog/category_form.html', {
+                    'form': form,
+                    'error': 'No store assigned to user'
+                })
+        else:  # admin or superuser
             category.is_global = True
-            category.is_approved = True
-
+            category.is_approved = True  # Auto-approved for admin/superuser
+            category.store = None  # Global categories don't belong to a store
+        
         category.save()
+        messages.success(request, f'Category "{category.name}" created successfully!')
+        
+        # For store owners, inform about approval process
+        if request.user.role == 'store_owner' and not category.is_approved:
+            messages.info(request, 'Your category has been submitted for admin approval.')
+        
         return redirect('category_list')
 
 class CategoryUpdateView(APIView):
@@ -62,15 +89,24 @@ class CategoryUpdateView(APIView):
 
     def post(self, request, slug):
         obj = get_object_or_404(Category, slug=slug)
+        # Include request.FILES for image updates
         serializer = CategorySerializer(obj, data=request.POST)
-        form = CategoryForm(request.POST, instance=obj)
+        form = CategoryForm(request.POST, request.FILES, instance=obj)
 
         if not serializer.is_valid():
             return render(request, 'catalog/category_form.html', {
                 'form': form, 'edit': True, 'error': serializer.errors
             })
 
+        # Handle image update
+        if 'image' in request.FILES:
+            obj.image = request.FILES['image']
+        # Handle image clear if requested
+        elif 'image-clear' in request.POST:
+            obj.image = None
+        
         serializer.save()
+        messages.success(request, f'Category "{obj.name}" updated successfully!')
         return redirect('category_list')
 
 
@@ -79,7 +115,10 @@ class CategoryDeleteView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, slug):
-        get_object_or_404(Category, slug=slug).delete()
+        category = get_object_or_404(Category, slug=slug)
+        category_name = category.name
+        category.delete()
+        messages.success(request, f'Category "{category_name}" deleted successfully!')
         return redirect('category_list')
 
 class SubCategoryListView(APIView):
@@ -102,10 +141,33 @@ class SubCategoryCreateView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        return render(request, 'catalog/subcategory_form.html', {'form': SubCategoryForm()})
+        # Filter categories based on user role
+        if request.user.role == 'admin' or request.user.is_superuser:
+            categories = Category.objects.filter(is_active=True)
+        else:
+            store = request.user.stores.first()
+            categories = Category.objects.filter(
+                models.Q(is_global=True) | models.Q(store=store),
+                is_active=True
+            )
+        
+        form = SubCategoryForm()
+        form.fields['category'].queryset = categories
+        return render(request, 'catalog/subcategory_form.html', {'form': form})
 
     def post(self, request):
-        form = SubCategoryForm(request.POST)
+        # Filter categories for the form
+        if request.user.role == 'admin' or request.user.is_superuser:
+            categories = Category.objects.filter(is_active=True)
+        else:
+            store = request.user.stores.first()
+            categories = Category.objects.filter(
+                models.Q(is_global=True) | models.Q(store=store),
+                is_active=True
+            )
+        
+        form = SubCategoryForm(request.POST, request.FILES)  # Add request.FILES
+        form.fields['category'].queryset = categories
         serializer = SubCategorySerializer(data=request.POST)
 
         if not serializer.is_valid():
@@ -113,15 +175,97 @@ class SubCategoryCreateView(APIView):
                 'form': form, 'error': serializer.errors
             })
 
+        # Create subcategory
         subcat = serializer.save(created_by=request.user)
-
+        
+        # Set image if provided
+        if request.FILES.get('image'):
+            subcat.image = request.FILES['image']
+        
+        # Set is_active=True for ALL creators
+        subcat.is_active = True
+        
         if request.user.role == 'store_owner':
-            subcat.store = request.user.stores.first()
-        else:
+            store = request.user.stores.first()
+            if store:
+                subcat.store = store
+                subcat.is_global = False
+                subcat.is_approved = False  # Needs admin approval
+            else:
+                messages.error(request, 'No store assigned to user')
+                subcat.delete()
+                return render(request, 'catalog/subcategory_form.html', {
+                    'form': form,
+                    'error': 'No store assigned to user'
+                })
+        else:  # admin or superuser
             subcat.is_global = True
-            subcat.is_approved = True
-
+            subcat.is_approved = True  # Auto-approved for admin/superuser
+            subcat.store = None  # Global subcategories don't belong to a store
+        
         subcat.save()
+        messages.success(request, f'Subcategory "{subcat.name}" created successfully!')
+        
+        # For store owners, inform about approval process
+        if request.user.role == 'store_owner' and not subcat.is_approved:
+            messages.info(request, 'Your subcategory has been submitted for admin approval.')
+        
+        return redirect('subcategory_list')
+
+class SubCategoryUpdateView(APIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, slug):
+        obj = get_object_or_404(SubCategory, slug=slug)
+        
+        # Filter categories based on user role
+        if request.user.role == 'admin' or request.user.is_superuser:
+            categories = Category.objects.filter(is_active=True)
+        else:
+            store = request.user.stores.first()
+            categories = Category.objects.filter(
+                models.Q(is_global=True) | models.Q(store=store),
+                is_active=True
+            )
+        
+        form = SubCategoryForm(instance=obj)
+        form.fields['category'].queryset = categories
+        return render(request, 'catalog/subcategory_form.html', {
+            'form': form, 'edit': True
+        })
+
+    def post(self, request, slug):
+        obj = get_object_or_404(SubCategory, slug=slug)
+        
+        # Filter categories based on user role
+        if request.user.role == 'admin' or request.user.is_superuser:
+            categories = Category.objects.filter(is_active=True)
+        else:
+            store = request.user.stores.first()
+            categories = Category.objects.filter(
+                models.Q(is_global=True) | models.Q(store=store),
+                is_active=True
+            )
+        
+        form = SubCategoryForm(request.POST, request.FILES, instance=obj)
+        form.fields['category'].queryset = categories
+        serializer = SubCategorySerializer(obj, data=request.POST)
+
+        if not serializer.is_valid():
+            return render(request, 'catalog/subcategory_form.html', {
+                'form': form, 'edit': True, 'error': serializer.errors
+            })
+
+        # Handle image update
+        if 'image' in request.FILES:
+            obj.image = request.FILES['image']
+        # Handle image clear if requested
+        elif 'image-clear' in request.POST:
+            obj.image = None
+        
+        serializer.save()
+        messages.success(request, f'Subcategory "{obj.name}" updated successfully!')
         return redirect('subcategory_list')
 
 class SubCategoryDeleteView(APIView):
@@ -129,15 +273,22 @@ class SubCategoryDeleteView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, slug):
-        get_object_or_404(SubCategory, slug=slug).delete()
+        subcat = get_object_or_404(SubCategory, slug=slug)
+        subcat_name = subcat.name
+        subcat.delete()
+        messages.success(request, f'Subcategory "{subcat_name}" deleted successfully!')
         return redirect('subcategory_list')
-
 class ProductListView(APIView):
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        qs = Product.objects.filter(store=request.user.stores.first())
+        store = request.user.stores.first()
+        if store:
+            qs = Product.objects.filter(store=store, is_active=True)
+        else:
+            qs = Product.objects.none()
+            messages.error(request, 'No store assigned to user')
         return render(request, 'catalog/product_list.html', {'products': qs})
 
 class ProductCreateView(APIView):
@@ -145,13 +296,49 @@ class ProductCreateView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
+        store = request.user.stores.first()
+        if not store:
+            messages.error(request, 'No store assigned to user')
+            return redirect('product_list')
+        
+        # Get categories and subcategories for this store
+        categories = Category.objects.filter(
+            models.Q(is_global=True) | models.Q(store=store),
+            is_active=True
+        )
+        subcategories = SubCategory.objects.filter(
+            models.Q(is_global=True) | models.Q(store=store),
+            is_active=True
+        )
+        
+        form = ProductForm()
+        form.fields['category'].queryset = categories
+        form.fields['subcategory'].queryset = subcategories
+        
         return render(request, 'catalog/product_form.html', {
-            'form': ProductForm(),
+            'form': form,
             'variant_form': ProductVariantForm()
         })
 
     def post(self, request):
+        store = request.user.stores.first()
+        if not store:
+            messages.error(request, 'No store assigned to user')
+            return redirect('product_list')
+        
+        # Get categories and subcategories for this store
+        categories = Category.objects.filter(
+            models.Q(is_global=True) | models.Q(store=store),
+            is_active=True
+        )
+        subcategories = SubCategory.objects.filter(
+            models.Q(is_global=True) | models.Q(store=store),
+            is_active=True
+        )
+        
         form = ProductForm(request.POST, request.FILES)
+        form.fields['category'].queryset = categories
+        form.fields['subcategory'].queryset = subcategories
         vform = ProductVariantForm(request.POST, request.FILES)
 
         ps = ProductSerializer(data=request.POST)
@@ -165,10 +352,12 @@ class ProductCreateView(APIView):
             })
 
         product = ps.save(
-            store=request.user.stores.first(),
-            created_by=request.user
+            store=store,
+            created_by=request.user,
+            is_active=True  # Products are always active when created
         )
         vs.save(product=product)
+        messages.success(request, f'Product "{product.name}" created successfully!')
         return redirect('product_list')
 
 class ProductDeleteView(APIView):
@@ -176,7 +365,10 @@ class ProductDeleteView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, slug):
-        get_object_or_404(Product, slug=slug).delete()
+        product = get_object_or_404(Product, slug=slug)
+        product_name = product.name
+        product.delete()
+        messages.success(request, f'Product "{product_name}" deleted successfully!')
         return redirect('product_list')
 
 class VariantCreateView(APIView):
@@ -200,7 +392,8 @@ class VariantCreateView(APIView):
                 'form': form, 'product': product, 'error': serializer.errors
             })
 
-        serializer.save(product=product)
+        variant = serializer.save(product=product)
+        messages.success(request, f'Variant "{variant.variant_name}" created successfully!')
         return redirect('product_list')
 
 class VariantDeleteView(APIView):
@@ -208,7 +401,10 @@ class VariantDeleteView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, slug):
-        get_object_or_404(ProductVariant, slug=slug).delete()
+        variant = get_object_or_404(ProductVariant, slug=slug)
+        variant_name = variant.variant_name
+        variant.delete()
+        messages.success(request, f'Variant "{variant_name}" deleted successfully!')
         return redirect('product_list')
 
 class AdminCategoryApprovalListView(APIView):
@@ -217,12 +413,15 @@ class AdminCategoryApprovalListView(APIView):
 
     def get(self, request):
         if not (request.user.role == 'admin' or request.user.is_superuser):
+            messages.error(request, 'Access denied')
             return redirect('dashboard')
 
+        # Get categories created by store owners that need approval
         categories = Category.objects.filter(
             is_approved=False,
-            is_active=True
-        )
+            is_active=True,
+            created_by__role='store_owner'  # Only store owner created categories
+        ).select_related('store', 'created_by')
 
         return render(
             request,
@@ -236,6 +435,7 @@ class AdminCategoryApproveView(APIView):
 
     def post(self, request, slug):
         if not (request.user.role == 'admin' or request.user.is_superuser):
+            messages.error(request, 'Access denied')
             return redirect('dashboard')
 
         category = get_object_or_404(Category, slug=slug)
@@ -243,13 +443,19 @@ class AdminCategoryApproveView(APIView):
 
         if action == 'approve':
             category.is_approved = True
-            category.is_global = True
-            category.store = None
-
+            category.is_global = True  # Make it global
+            category.store = None  # Remove store association
+            category.save()
+            messages.success(request, f'Category "{category.name}" approved and made global!')
+            
         elif action == 'reject':
             category.is_active = False
+            category.save()
+            messages.warning(request, f'Category "{category.name}" rejected and deactivated.')
+            
+        else:
+            messages.error(request, 'Invalid action')
 
-        category.save()
         return redirect('admin_category_approval_list')
 
 class AdminSubCategoryApprovalListView(APIView):
@@ -258,12 +464,15 @@ class AdminSubCategoryApprovalListView(APIView):
 
     def get(self, request):
         if not (request.user.role == 'admin' or request.user.is_superuser):
+            messages.error(request, 'Access denied')
             return redirect('dashboard')
 
+        # Get subcategories created by store owners that need approval
         subcategories = SubCategory.objects.filter(
             is_approved=False,
-            is_active=True
-        )
+            is_active=True,
+            created_by__role='store_owner'  # Only store owner created subcategories
+        ).select_related('store', 'created_by', 'category')
 
         return render(
             request,
@@ -277,6 +486,7 @@ class AdminSubCategoryApproveView(APIView):
 
     def post(self, request, slug):
         if not (request.user.role == 'admin' or request.user.is_superuser):
+            messages.error(request, 'Access denied')
             return redirect('dashboard')
 
         subcat = get_object_or_404(SubCategory, slug=slug)
@@ -284,12 +494,17 @@ class AdminSubCategoryApproveView(APIView):
 
         if action == 'approve':
             subcat.is_approved = True
-            subcat.is_global = True
-            subcat.store = None
-
+            subcat.is_global = True  # Make it global
+            subcat.store = None  # Remove store association
+            subcat.save()
+            messages.success(request, f'Subcategory "{subcat.name}" approved and made global!')
+            
         elif action == 'reject':
             subcat.is_active = False
+            subcat.save()
+            messages.warning(request, f'Subcategory "{subcat.name}" rejected and deactivated.')
+            
+        else:
+            messages.error(request, 'Invalid action')
 
-        subcat.save()
         return redirect('admin_subcategory_approval_list')
-
