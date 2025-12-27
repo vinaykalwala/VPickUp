@@ -322,7 +322,7 @@ body {
       {{ request.user.username|slice:":1"|upper }}
     </div>
     <div>
-      <strong>{{ request.user.username }}</strong><br>
+      <strong>{{ request.user.first_name }}</strong><br>
       <small>{{ request.user.email }}</small>
     </div>
   </div>
@@ -346,6 +346,23 @@ body {
         <a href="{% url 'store_create' %}">
           <i class="fa-solid fa-plus"></i> Create Store
         </a>
+        <a href="{% url 'category_list' %}">
+  <i class="fa-solid fa-tags"></i> Categories List
+</a>
+
+<a href="{% url 'subcategory_list' %}">
+  <i class="fa-solid fa-layer-group"></i> SubCategories List
+</a>
+
+<a href="{% url 'product_list' %}">
+  <i class="fa-solid fa-box-open"></i> Products List
+</a>
+
+<a href="{% url 'inventory_list' %}">
+  <i class="fa-solid fa-warehouse"></i>Store Inventory
+</a>
+
+
       {% endif %}
     </div>
     {% endif %}
@@ -356,6 +373,22 @@ body {
       <a href="{% url 'admin_store_verification_list' %}">
         <i class="fa-solid fa-check"></i> Store Verifications
       </a>
+      <a href="{% url 'category_list' %}">
+  <i class="fa-solid fa-tags"></i> Categories List
+</a>
+
+<a href="{% url 'subcategory_list' %}">
+  <i class="fa-solid fa-layer-group"></i> SubCategories List
+</a>
+
+<a href="{% url 'admin_category_approval_list' %}">
+  <i class="fa-solid fa-circle-check"></i> Categories Approvals
+</a>
+
+<a href="{% url 'admin_subcategory_approval_list' %}">
+  <i class="fa-solid fa-clipboard-check"></i> SubCategories Approvals
+</a>
+
     </div>
     {% endif %}
               <div class="vp-menu-title">Account</div>
