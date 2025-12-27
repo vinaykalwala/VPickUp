@@ -14,6 +14,21 @@ class StoreForm(forms.ModelForm):
             'created_at'
         ]
 
+        widgets = {
+            "opening_time": forms.TimeInput(
+                attrs={
+                    "type": "time",
+                    "class": "form-control"
+                }
+            ),
+            "closing_time": forms.TimeInput(
+                attrs={
+                    "type": "time",
+                    "class": "form-control"
+                }
+            ),
+        }
+
 
 class StoreVerificationForm(forms.ModelForm):
     class Meta:

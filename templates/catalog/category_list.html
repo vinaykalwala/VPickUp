@@ -1,0 +1,15 @@
+<h2>Categories</h2>
+<a href="{% url 'category_create' %}">+ Add Category</a>
+
+<ul>
+{% for c in categories %}
+    <li>
+        {{ c.name }} ({{ c.slug }})
+        <a href="{% url 'category_update' c.slug %}">Edit</a>
+        <form method="post" action="{% url 'category_delete' c.slug %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit">Delete</button>
+        </form>
+    </li>
+{% endfor %}
+</ul>

@@ -1,0 +1,14 @@
+<h2>SubCategories</h2>
+<a href="{% url 'subcategory_create' %}">+ Add SubCategory</a>
+
+<ul>
+{% for s in subcategories %}
+    <li>
+        {{ s.name }} → {{ s.category.name }}
+        <form method="post" action="{% url 'subcategory_delete' s.slug %}" style="display:inline;">
+            {% csrf_token %}
+            <button>Delete</button>
+        </form>
+    </li>
+{% endfor %}
+</ul>

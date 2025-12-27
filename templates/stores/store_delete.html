@@ -1,9 +1,276 @@
-<h2>Delete Store</h2>
+{% extends "base.html" %}
+{% load static %}
 
-<p>Are you sure you want to delete <strong>{{ store.name }}</strong>?</p>
+{% block content %}
 
-<form method="post">
-    {% csrf_token %}
-    <button type="submit">Yes, Delete</button>
-    <a href="{% url 'store_detail' store.id %}">Cancel</a>
-</form>
+<style>
+*{
+    box-sizing:border-box;
+    font-family:'Poppins','Segoe UI',sans-serif;
+}
+
+body{
+    margin:0;
+    background:#f6f8ff;
+}
+
+/* ================= HERO ================= */
+.delete-hero{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:40px 20px;
+    background:linear-gradient(135deg,#06b6d4,#3b82f6);
+    position:relative;
+    overflow:hidden;
+}
+
+/* floating shapes */
+.delete-hero::before,
+.delete-hero::after{
+    content:"";
+    position:absolute;
+    width:380px;
+    height:380px;
+    background:rgba(255,255,255,0.15);
+    border-radius:50%;
+}
+
+.delete-hero::before{
+    top:-120px;
+    right:-120px;
+}
+
+.delete-hero::after{
+    bottom:-140px;
+    left:-140px;
+}
+
+/* ================= CONTAINER ================= */
+.delete-container{
+    width:100%;
+    max-width:1100px;
+    background:#ffffff;
+    border-radius:26px;
+    display:flex;
+    overflow:hidden;
+    box-shadow:0 30px 70px rgba(0,0,0,0.25);
+    animation:fadeUp 0.5s ease;
+}
+
+@keyframes fadeUp{
+    from{opacity:0;transform:translateY(20px)}
+    to{opacity:1;transform:translateY(0)}
+}
+
+/* ================= LEFT ================= */
+.delete-left{
+    width:55%;
+    padding:35px;
+}
+
+.delete-left h1{
+    font-size:36px;
+    font-weight:700;
+    margin-bottom:18px;
+    line-height:1.2;
+
+    background:linear-gradient(90deg,#0e7490,#3b82f6);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+
+    position:relative;
+}
+
+/* underline accent */
+.delete-left h1::after{
+    content:"";
+    display:block;
+    width:60px;
+    height:4px;
+    margin-top:10px;
+    background:linear-gradient(90deg,#06b6d4,#3b82f6);
+    border-radius:4px;
+}
+
+
+.delete-left p{
+    font-size:17px;
+    color:#334155;
+    line-height:1.7;
+    margin-bottom:28px;
+    max-width:520px;
+}
+
+/* make first sentence stand out slightly */
+.delete-left p strong{
+    color:#0e7490;
+    font-weight:600;
+}
+
+
+/* STORE DETAILS */
+.store-details{
+    background:#f8fafc;
+    border-radius:16px;
+    padding:20px;
+    border:1px solid #e2e8f0;
+    margin-bottom:24px;
+}
+
+.store-details-title{
+    font-size:13px;
+    font-weight:600;
+    color:#475569;
+    text-transform:uppercase;
+    margin-bottom:10px;
+}
+
+.store-name{
+    font-size:18px;
+    font-weight:600;
+    color:#0f172a;
+}
+
+.store-id{
+    font-size:14px;
+    color:#64748b;
+    margin-top:6px;
+}
+
+/* WARNING MESSAGE */
+.warning-message{
+    background:#fff7ed;
+    border-left:4px solid #f97316;
+    padding:18px;
+    border-radius:12px;
+    margin-bottom:30px;
+    font-size:15px;
+    color:#9a3412;
+}
+
+/* ACTIONS */
+.delete-actions{
+    display:flex;
+    gap:16px;
+}
+
+/* BUTTONS */
+.btn-danger{
+    padding:14px 30px;
+    border:none;
+    border-radius:30px;
+    background:linear-gradient(90deg,#ef4444,#dc2626);
+    color:#fff;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.25s;
+}
+
+.btn-danger:hover{
+    transform:translateY(-2px);
+    box-shadow:0 10px 20px rgba(239,68,68,.35);
+}
+
+.btn-cancel{
+    padding:14px 30px;
+    border-radius:30px;
+    background:#e2e8f0;
+    color:#0f172a;
+    text-decoration:none;
+    font-weight:600;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:.25s;
+}
+
+.btn-cancel:hover{
+    background:#cbd5e1;
+}
+
+/* ================= RIGHT ================= */
+.delete-right{
+    width:45%;
+    background:#c9dfef;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:40px;
+}
+
+.delete-right img{
+    width:100%;
+    max-width:420px;
+    filter:drop-shadow(0 20px 30px rgba(0,0,0,.2));
+}
+
+/* ================= RESPONSIVE ================= */
+@media(max-width:900px){
+    .delete-container{
+        flex-direction:column;
+    }
+    .delete-left,
+    .delete-right{
+        width:100%;
+    }
+    .delete-left{
+        padding:40px;
+        text-align:center;
+    }
+    .delete-actions{
+        justify-content:center;
+        flex-wrap:wrap;
+    }
+}
+</style>
+
+<section class="delete-hero">
+
+<div class="delete-container">
+
+    <!-- LEFT -->
+    <div class="delete-left">
+        <h1>Delete Store</h1>
+
+        <p>
+            Please confirm that you want to permanently delete this store.
+            This action is irreversible.
+        </p>
+
+        <div class="store-details">
+            <div class="store-details-title">Store to be deleted</div>
+            <div class="store-name">🏬Store name: {{ store.name }}</div>
+            <div class="store-id">Store ID: <strong>#{{ store.id|stringformat:"04d" }}</strong></div>
+        </div>
+
+        <div class="warning-message">
+            ⚠️ <strong>This action cannot be undone.</strong><br>
+            All products, inventory, orders, and store settings will be permanently removed.
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="delete-actions">
+                <button type="submit" class="btn-danger">
+                    Delete Store Permanently
+                </button>
+                <a href="{% url 'store_detail' store.id %}" class="btn-cancel">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="delete-right">
+        <img src="{% static 'images/delete.jpeg' %}" alt="Delete Illustration">
+    </div>
+
+</div>
+
+</section>
+
+{% endblock %}

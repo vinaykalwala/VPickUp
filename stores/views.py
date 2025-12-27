@@ -154,7 +154,7 @@ class StoreListView(APIView):
             )
         elif user.is_authenticated and user.role == 'store_owner':
             stores = Store.objects.filter(owner=user)
-        elif user.is_authenticated and user.role == 'admin':
+        elif user.is_authenticated and (user.role == 'admin' or user.is_superuser):
             stores = Store.objects.all()
         else:
             stores = Store.objects.filter(
@@ -172,6 +172,7 @@ class StoreDetailView(APIView):
 
         user = request.user
         is_owner = user.is_authenticated and user.id == store.owner_id
+        is_admin = user.is_authenticated and (user.role == 'admin' or user.is_superuser)
 
         if user.is_authenticated and user.role == 'store_owner' and not is_owner:
             return redirect('store_list')
@@ -185,7 +186,8 @@ class StoreDetailView(APIView):
             'stores/store_detail.html',
             {
                 'store': store,
-                'is_owner': is_owner
+                'is_owner': is_owner,
+                'is_admin': is_admin
             }
         )
 
