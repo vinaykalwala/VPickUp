@@ -1,3 +1,4 @@
+from pyexpat.errors import messages
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import SessionAuthentication
@@ -87,40 +88,33 @@ class SmartInventoryCreateView(APIView):
     def get_context(self, request, errors=None):
         store = request.user.stores.first()
         
-        if not store:
-            messages.error(request, 'No store assigned to user. Please contact administrator.')
-            return {
-                'categories': Category.objects.none(),
-                'subcategories': SubCategory.objects.none(),
-                'products': Product.objects.none(),
-                'errors': ['No store assigned to user. Please contact administrator.'],
-                'post': request.POST if request.method == 'POST' else None
-            }
+        print(f"DEBUG: User store: {store}")
+        print(f"DEBUG: User: {request.user}, Role: {getattr(request.user, 'role', 'N/A')}, Superuser: {request.user.is_superuser}")
         
-        # Get all active categories
-        all_categories = Category.objects.filter(is_active=True)
-        print(f"Debug: Total active categories: {all_categories.count()}")
-        
-        # Get categories for this store OR global categories
+        # FIXED: Get categories - admin/superuser created categories have is_global=True and store=None
         categories = Category.objects.filter(
-            models.Q(is_global=True) | models.Q(store=store),
             is_active=True
+        ).filter(
+            models.Q(is_global=True) | 
+            models.Q(store=store)
         ).distinct().order_by('-is_global', 'name')
         
-        print(f"Debug: Filtered categories: {categories.count()}")
+        print(f"DEBUG: Categories count: {categories.count()}")
         for cat in categories:
-            print(f"  - {cat.name} (Global: {cat.is_global}, Store: {cat.store})")
+            print(f"  - {cat.name}: is_global={cat.is_global}, store={cat.store}")
         
-        # Get subcategories for this store OR global subcategories
+        # FIXED: Same logic for subcategories
         subcategories = SubCategory.objects.filter(
-            models.Q(is_global=True) | models.Q(store=store),
             is_active=True
+        ).filter(
+            models.Q(is_global=True) | 
+            models.Q(store=store)
         ).distinct().order_by('-is_global', 'name')
         
-        print(f"Debug: Filtered subcategories: {subcategories.count()}")
+        print(f"DEBUG: Subcategories count: {subcategories.count()}")
         
-        # Get products for current store
-        products = Product.objects.filter(store=store, is_active=True).order_by('name')
+        # Get products for current store only
+        products = Product.objects.filter(store=store, is_active=True).order_by('name') if store else Product.objects.none()
         
         return {
             'categories': categories,
@@ -139,16 +133,47 @@ class SmartInventoryCreateView(APIView):
         )
 
     def post(self, request):
+        from django.contrib import messages
+        
         store = request.user.stores.first()
         if not store:
             messages.error(request, 'No store assigned to user. Please contact administrator.')
             return redirect('inventory_list')
         
-        serializer = SmartInventorySerializer(
-            data={**request.POST, "variants": self.extract_variants(request)}
-        )
+        print("\n=== DEBUG: Form Submission ===")
+        print("POST data:")
+        for key, value in request.POST.items():
+            print(f"  {key}: {repr(value)}")
+        
+        print("\nFILES data:")
+        for key, value in request.FILES.items():
+            print(f"  {key}: {value}")
+        
+        # Extract variants first
+        variants = self.extract_variants(request)
+        print(f"\nExtracted variants: {variants}")
+        
+        # Create data dict for serializer
+        data_dict = {}
+        for key, value in request.POST.items():
+            # Convert empty strings to None for certain fields
+            if value == '':
+                if key in ['category', 'subcategory', 'existing_product']:
+                    data_dict[key] = None
+                else:
+                    data_dict[key] = value
+            else:
+                data_dict[key] = value
+        
+        # Add variants
+        data_dict['variants'] = variants
+        
+        print(f"\nData dict for serializer: {data_dict}")
+        
+        serializer = SmartInventorySerializer(data=data_dict)
 
         if not serializer.is_valid():
+            print(f"\nSerializer errors: {serializer.errors}")
             context = self.get_context(request, errors=serializer.errors)
             return render(
                 request,
@@ -157,125 +182,162 @@ class SmartInventoryCreateView(APIView):
             )
 
         data = serializer.validated_data
+        print(f"\nValidated data: {data}")
 
-        # CATEGORY
-        if data.get('category'):
-            try:
-                category = Category.objects.get(id=data['category'])
-            except Category.DoesNotExist:
-                messages.error(request, 'Selected category does not exist')
-                context = self.get_context(request, errors={'category': ['Category not found']})
-                return render(
-                    request,
-                    'inventory/smart_inventory_form.html',
-                    context
-                )
-        else:
-            if not data.get('new_category_name'):
-                messages.error(request, 'Category is required')
-                context = self.get_context(request, errors={'category': ['Category is required']})
-                return render(
-                    request,
-                    'inventory/smart_inventory_form.html',
-                    context
-                )
+        try:
+            # CATEGORY
+            category_id = data.get('category')
+            new_category_name = data.get('new_category_name', '') or ''
+            new_category_name = new_category_name.strip() if new_category_name else ''
             
-            category = Category.objects.create(
-                name=data['new_category_name'],
-                created_by=request.user,
-                store=store,
-                is_approved=False
-            )
+            print(f"\nCategory processing:")
+            print(f"  category_id: {category_id}")
+            print(f"  new_category_name: {repr(new_category_name)}")
+            
+            if category_id:
+                category = Category.objects.get(id=category_id)
+                print(f"  Using existing category: {category.name}")
+            else:
+                if not new_category_name:
+                    raise ValueError("Category name is required when creating new category")
+                
+                category = Category.objects.create(
+                    name=new_category_name,
+                    created_by=request.user,
+                    store=store,
+                    is_approved=False,
+                    is_active=True
+                )
+                print(f"  Created new category: {category.name}")
 
-        # SUBCATEGORY
-        if data.get('subcategory'):
-            try:
-                subcategory = SubCategory.objects.get(id=data['subcategory'])
-            except SubCategory.DoesNotExist:
+            # SUBCATEGORY
+            subcategory_id = data.get('subcategory')
+            new_subcategory_name = data.get('new_subcategory_name', '') or ''
+            new_subcategory_name = new_subcategory_name.strip() if new_subcategory_name else ''
+            
+            print(f"\nSubcategory processing:")
+            print(f"  subcategory_id: {subcategory_id}")
+            print(f"  new_subcategory_name: {repr(new_subcategory_name)}")
+            
+            if subcategory_id:
+                subcategory = SubCategory.objects.get(id=subcategory_id)
+                print(f"  Using existing subcategory: {subcategory.name}")
+            elif new_subcategory_name:
+                subcategory = SubCategory.objects.create(
+                    name=new_subcategory_name,
+                    category=category,
+                    created_by=request.user,
+                    store=store,
+                    is_approved=False,
+                    is_active=True
+                )
+                print(f"  Created new subcategory: {subcategory.name}")
+            else:
                 subcategory = None
-        elif data.get('new_subcategory_name'):
-            subcategory = SubCategory.objects.create(
-                name=data['new_subcategory_name'],
-                category=category,
-                created_by=request.user,
-                store=store,
-                is_approved=False
-            )
-        else:
-            subcategory = None
+                print(f"  No subcategory selected or created")
 
-        # PRODUCT
-        existing_product_id = request.POST.get('existing_product')
-        if existing_product_id and existing_product_id != '':
-            try:
+            # PRODUCT
+            existing_product_id = request.POST.get('existing_product')
+            product_name = data.get('product_name', '') or ''
+            product_name = product_name.strip() if product_name else ''
+            
+            print(f"\nProduct processing:")
+            print(f"  existing_product_id: {existing_product_id}")
+            print(f"  product_name: {repr(product_name)}")
+            
+            if existing_product_id:
                 product = Product.objects.get(id=existing_product_id)
-            except Product.DoesNotExist:
-                messages.error(request, 'Selected product does not exist')
-                context = self.get_context(request, errors={'existing_product': ['Product not found']})
-                return render(
-                    request,
-                    'inventory/smart_inventory_form.html',
-                    context
+                print(f"  Using existing product: {product.name}")
+            else:
+                if not product_name:
+                    raise ValueError("Product name is required when creating new product")
+                
+                # Handle other optional fields
+                brand = data.get('brand', '') or ''
+                description = data.get('description', '') or ''
+                
+                brand = brand.strip() if brand else ''
+                description = description.strip() if description else ''
+                
+                product = Product.objects.create(
+                    name=product_name,
+                    category=category,
+                    subcategory=subcategory,
+                    store=store,
+                    brand=brand,
+                    description=description,
+                    image=request.FILES.get('product_image'),
+                    created_by=request.user,
+                    is_active=True
                 )
-        else:
-            if not data.get('product_name'):
-                messages.error(request, 'Product name is required')
-                context = self.get_context(request, errors={'product_name': ['Product name is required']})
-                return render(
-                    request,
-                    'inventory/smart_inventory_form.html',
-                    context
+                print(f"  Created new product: {product.name}")
+
+            # VARIANTS + INVENTORY
+            created_variants = []
+            for i, v in enumerate(data['variants']):
+                print(f"\nCreating variant {i+1}:")
+                print(f"  Variant data: {v}")
+                
+                variant = ProductVariant.objects.create(
+                    product=product,
+                    variant_name=v['variant_name'],
+                    sku=v.get('sku', '') or '',
+                    barcode=v.get('barcode', '') or '',
+                    image=request.FILES.get(f'variants[{i}][image]'),
+                    is_active=True
                 )
+                
+                created_variants.append(variant)
+                print(f"  Created variant: {variant.variant_name}")
+
+                StoreInventory.objects.create(
+                    store=store,
+                    product_variant=variant,
+                    price=v['price'],
+                    quantity_available=v['quantity']
+                )
+                print(f"  Created inventory for variant")
+
+            messages.success(
+                request, 
+                f'Successfully created product "{product.name}" with {len(created_variants)} variant(s)'
+            )
+            return redirect('inventory_list')
             
-            product = Product.objects.create(
-                name=data['product_name'],
-                category=category,
-                subcategory=subcategory,
-                store=store,
-                brand=data.get('brand'),
-                description=data.get('description'),
-                image=request.FILES.get('product_image'),
-                created_by=request.user
-            )
-
-        # VARIANTS + INVENTORY
-        created_variants = []
-        for i, v in enumerate(data['variants']):
-            variant = ProductVariant.objects.create(
-                product=product,
-                variant_name=v['variant_name'],
-                sku=v.get('sku'),
-                barcode=v.get('barcode'),
-                image=request.FILES.get(f'variants[{i}][image]')
-            )
+        except Exception as e:
+            print(f"\nERROR during processing: {str(e)}")
+            import traceback
+            traceback.print_exc()
             
-            created_variants.append(variant)
-
-            StoreInventory.objects.create(
-                store=store,
-                product_variant=variant,
-                price=v['price'],
-                quantity_available=v['quantity']
+            messages.error(request, f'Error: {str(e)}')
+            context = self.get_context(request, errors={'error': [str(e)]})
+            return render(
+                request,
+                'inventory/smart_inventory_form.html',
+                context
             )
-
-        messages.success(
-            request, 
-            f'Successfully created product "{product.name}" with {len(created_variants)} variant(s)'
-        )
-        return redirect('inventory_list')
 
     def extract_variants(self, request):
         variants = []
         index = 0
 
         while f"variants[{index}][variant_name]" in request.POST:
-            variants.append({
-                "variant_name": request.POST[f"variants[{index}][variant_name]"],
-                "sku": request.POST.get(f"variants[{index}][sku]"),
-                "barcode": request.POST.get(f"variants[{index}][barcode]"),
-                "price": request.POST.get(f"variants[{index}][price]"),
-                "quantity": request.POST.get(f"variants[{index}][quantity]"),
-            })
+            variant_name = request.POST[f"variants[{index}][variant_name]"]
+            sku = request.POST.get(f"variants[{index}][sku]", '')
+            barcode = request.POST.get(f"variants[{index}][barcode]", '')
+            price = request.POST.get(f"variants[{index}][price]")
+            quantity = request.POST.get(f"variants[{index}][quantity]")
+            
+            # Ensure we have valid values
+            variant_data = {
+                "variant_name": variant_name.strip() if variant_name else '',
+                "sku": sku.strip() if sku else '',
+                "barcode": barcode.strip() if barcode else '',
+                "price": price,
+                "quantity": quantity,
+            }
+            
+            variants.append(variant_data)
             index += 1
 
         return variants

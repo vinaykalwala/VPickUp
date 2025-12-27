@@ -173,14 +173,6 @@
 <div class="container">
     <h2>Smart Product + Inventory Creation</h2>
     
-    <!-- Debug Information -->
-    <div class="debug-info">
-        <strong>Debug Info:</strong>
-        <br>Categories loaded: {{ categories.count }}
-        <br>Subcategories loaded: {{ subcategories.count }}
-        <br>Products loaded: {{ products.count }}
-    </div>
-    
     {% if messages %}
     <div class="messages">
         {% for message in messages %}
@@ -314,17 +306,17 @@
 
                 <div class="row">
                     <div>
-                        <label>Brand</label>
+                        <label>Brand (Optional)</label>
                         <input name="brand" value="{{ post.brand|default:'' }}">
                     </div>
                     <div>
-                        <label>Product Image</label>
+                        <label>Product Image (Optional)</label>
                         <input type="file" name="product_image" accept="image/*">
                     </div>
                 </div>
 
                 <div class="field-group">
-                    <label>Description</label>
+                    <label>Description (Optional)</label>
                     <textarea name="description">{{ post.description|default:'' }}</textarea>
                 </div>
             </div>
@@ -426,69 +418,17 @@ function removeVariant(btn) {
     const variantCards = document.querySelectorAll('.variant-card');
     if (variantCards.length > 1) {
         btn.parentElement.remove();
-        // Re-index the remaining variants
-        reindexVariants();
     } else {
         alert('At least one variant is required');
     }
 }
 
-function reindexVariants() {
-    const variantCards = document.querySelectorAll('.variant-card');
-    variantIndex = 0;
-    
-    variantCards.forEach((card, index) => {
-        card.querySelectorAll('input, select, textarea').forEach(input => {
-            const oldName = input.name;
-            if (oldName && oldName.includes('[variants[')) {
-                const newName = oldName.replace(/variants\[\d+\]/, `variants[${index}]`);
-                input.name = newName;
-            }
-        });
-        variantIndex = index + 1;
-    });
-}
-
-// JavaScript to show/hide new product fields based on selection
+// Auto-clear fields logic
 document.addEventListener('DOMContentLoaded', function() {
-    const existingProductSelect = document.getElementById('existing_product_select');
-    const newProductFields = document.getElementById('new_product_fields');
-    
-    function toggleProductFields() {
-        if (existingProductSelect.value) {
-            // If existing product is selected, disable (not hide) new product fields
-            const inputs = newProductFields.querySelectorAll('input, textarea');
-            inputs.forEach(input => {
-                input.disabled = true;
-                input.required = false;
-            });
-        } else {
-            // If creating new product, enable fields
-            const inputs = newProductFields.querySelectorAll('input, textarea');
-            inputs.forEach(input => {
-                input.disabled = false;
-                if (input.id === 'product_name') {
-                    input.required = true;
-                }
-            });
-        }
-    }
-    
-    if (existingProductSelect) {
-        existingProductSelect.addEventListener('change', toggleProductFields);
-        // Initial state
-        toggleProductFields();
-    }
-    
-    // Auto-focus on new category field when user types in it
     const newCategoryField = document.getElementById('new_category_name');
     const categorySelect = document.getElementById('category_select');
     
     if (newCategoryField && categorySelect) {
-        newCategoryField.addEventListener('focus', function() {
-            categorySelect.value = '';
-        });
-        
         newCategoryField.addEventListener('input', function() {
             if (this.value.trim() !== '') {
                 categorySelect.value = '';
@@ -502,15 +442,10 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Same for subcategory
     const newSubcategoryField = document.getElementById('new_subcategory_name');
     const subcategorySelect = document.getElementById('subcategory_select');
     
     if (newSubcategoryField && subcategorySelect) {
-        newSubcategoryField.addEventListener('focus', function() {
-            subcategorySelect.value = '';
-        });
-        
         newSubcategoryField.addEventListener('input', function() {
             if (this.value.trim() !== '') {
                 subcategorySelect.value = '';

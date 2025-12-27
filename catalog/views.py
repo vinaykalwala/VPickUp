@@ -77,37 +77,6 @@ class CategoryCreateView(APIView):
         
         return redirect('category_list')
 
-class CategoryUpdateView(APIView):
-    authentication_classes = [SessionAuthentication]
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request, slug):
-        obj = get_object_or_404(Category, slug=slug)
-        return render(request, 'catalog/category_form.html', {
-            'form': CategoryForm(instance=obj), 'edit': True
-        })
-
-    def post(self, request, slug):
-        obj = get_object_or_404(Category, slug=slug)
-        # Include request.FILES for image updates
-        serializer = CategorySerializer(obj, data=request.POST)
-        form = CategoryForm(request.POST, request.FILES, instance=obj)
-
-        if not serializer.is_valid():
-            return render(request, 'catalog/category_form.html', {
-                'form': form, 'edit': True, 'error': serializer.errors
-            })
-
-        # Handle image update
-        if 'image' in request.FILES:
-            obj.image = request.FILES['image']
-        # Handle image clear if requested
-        elif 'image-clear' in request.POST:
-            obj.image = None
-        
-        serializer.save()
-        messages.success(request, f'Category "{obj.name}" updated successfully!')
-        return redirect('category_list')
 
 
 class CategoryDeleteView(APIView):
@@ -120,6 +89,178 @@ class CategoryDeleteView(APIView):
         category.delete()
         messages.success(request, f'Category "{category_name}" deleted successfully!')
         return redirect('category_list')
+
+class CategoryUpdateView(APIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, slug):
+        category = get_object_or_404(Category, slug=slug)
+        form = CategoryForm(instance=category)
+
+        return render(
+            request,
+            'catalog/category_form.html',
+            {
+                'form': form,
+                'edit': True,
+                'category': category
+            }
+        )
+
+    def post(self, request, slug):
+        category = get_object_or_404(Category, slug=slug)
+
+        # 🔥 PRESERVE ALL SYSTEM FIELDS
+        prev_image = category.image
+        prev_is_global = category.is_global
+        prev_is_approved = category.is_approved
+        prev_store = category.store
+        prev_is_active = category.is_active
+        prev_created_by = category.created_by
+
+        form = CategoryForm(request.POST, request.FILES, instance=category)
+        serializer = CategorySerializer(category, data=request.POST)
+
+        # Serializer validation (business rules)
+        if not serializer.is_valid():
+            return render(
+                request,
+                'catalog/category_form.html',
+                {
+                    'form': form,
+                    'edit': True,
+                    'error': serializer.errors
+                }
+            )
+
+        # Form validation (files + fields)
+        if not form.is_valid():
+            return render(
+                request,
+                'catalog/category_form.html',
+                {
+                    'form': form,
+                    'edit': True,
+                    'error': form.errors
+                }
+            )
+
+        category = form.save(commit=False)
+
+        # 🔥 RESTORE PROTECTED VALUES
+        category.is_global = prev_is_global
+        category.is_approved = prev_is_approved
+        category.store = prev_store
+        category.is_active = prev_is_active
+        category.created_by = prev_created_by
+
+        # 🔥 IMAGE PRESERVATION LOGIC
+        if 'image' not in request.FILES:
+            category.image = prev_image
+
+        category.save()
+        messages.success(request, f'Category "{category.name}" updated successfully')
+
+        return redirect('category_list')
+
+
+class SubCategoryUpdateView(APIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, slug):
+        subcategory = get_object_or_404(SubCategory, slug=slug)
+
+        # Filter categories user can access
+        if request.user.role == 'admin' or request.user.is_superuser:
+            categories = Category.objects.filter(is_active=True)
+        else:
+            store = request.user.stores.first()
+            categories = Category.objects.filter(
+                models.Q(is_global=True) | models.Q(store=store),
+                is_active=True
+            )
+
+        form = SubCategoryForm(instance=subcategory)
+        form.fields['category'].queryset = categories
+
+        return render(
+            request,
+            'catalog/subcategory_form.html',
+            {
+                'form': form,
+                'edit': True,
+                'subcategory': subcategory
+            }
+        )
+
+    def post(self, request, slug):
+        subcategory = get_object_or_404(SubCategory, slug=slug)
+
+        # 🔥 PRESERVE ALL SYSTEM FIELDS
+        prev_image = subcategory.image
+        prev_is_global = subcategory.is_global
+        prev_is_approved = subcategory.is_approved
+        prev_store = subcategory.store
+        prev_is_active = subcategory.is_active
+        prev_created_by = subcategory.created_by
+
+        if request.user.role == 'admin' or request.user.is_superuser:
+            categories = Category.objects.filter(is_active=True)
+        else:
+            store = request.user.stores.first()
+            categories = Category.objects.filter(
+                models.Q(is_global=True) | models.Q(store=store),
+                is_active=True
+            )
+
+        form = SubCategoryForm(request.POST, request.FILES, instance=subcategory)
+        form.fields['category'].queryset = categories
+        serializer = SubCategorySerializer(subcategory, data=request.POST)
+
+        if not serializer.is_valid():
+            return render(
+                request,
+                'catalog/subcategory_form.html',
+                {
+                    'form': form,
+                    'edit': True,
+                    'error': serializer.errors
+                }
+            )
+
+        if not form.is_valid():
+            return render(
+                request,
+                'catalog/subcategory_form.html',
+                {
+                    'form': form,
+                    'edit': True,
+                    'error': form.errors
+                }
+            )
+
+        subcategory = form.save(commit=False)
+
+        # 🔥 RESTORE PROTECTED VALUES
+        subcategory.is_global = prev_is_global
+        subcategory.is_approved = prev_is_approved
+        subcategory.store = prev_store
+        subcategory.is_active = prev_is_active
+        subcategory.created_by = prev_created_by
+
+        # 🔥 IMAGE PRESERVATION
+        if 'image' not in request.FILES:
+            subcategory.image = prev_image
+
+        subcategory.save()
+        messages.success(
+            request,
+            f'Subcategory "{subcategory.name}" updated successfully'
+        )
+
+        return redirect('subcategory_list')
 
 class SubCategoryListView(APIView):
     authentication_classes = [SessionAuthentication]
@@ -212,61 +353,6 @@ class SubCategoryCreateView(APIView):
         
         return redirect('subcategory_list')
 
-class SubCategoryUpdateView(APIView):
-    authentication_classes = [SessionAuthentication]
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request, slug):
-        obj = get_object_or_404(SubCategory, slug=slug)
-        
-        # Filter categories based on user role
-        if request.user.role == 'admin' or request.user.is_superuser:
-            categories = Category.objects.filter(is_active=True)
-        else:
-            store = request.user.stores.first()
-            categories = Category.objects.filter(
-                models.Q(is_global=True) | models.Q(store=store),
-                is_active=True
-            )
-        
-        form = SubCategoryForm(instance=obj)
-        form.fields['category'].queryset = categories
-        return render(request, 'catalog/subcategory_form.html', {
-            'form': form, 'edit': True
-        })
-
-    def post(self, request, slug):
-        obj = get_object_or_404(SubCategory, slug=slug)
-        
-        # Filter categories based on user role
-        if request.user.role == 'admin' or request.user.is_superuser:
-            categories = Category.objects.filter(is_active=True)
-        else:
-            store = request.user.stores.first()
-            categories = Category.objects.filter(
-                models.Q(is_global=True) | models.Q(store=store),
-                is_active=True
-            )
-        
-        form = SubCategoryForm(request.POST, request.FILES, instance=obj)
-        form.fields['category'].queryset = categories
-        serializer = SubCategorySerializer(obj, data=request.POST)
-
-        if not serializer.is_valid():
-            return render(request, 'catalog/subcategory_form.html', {
-                'form': form, 'edit': True, 'error': serializer.errors
-            })
-
-        # Handle image update
-        if 'image' in request.FILES:
-            obj.image = request.FILES['image']
-        # Handle image clear if requested
-        elif 'image-clear' in request.POST:
-            obj.image = None
-        
-        serializer.save()
-        messages.success(request, f'Subcategory "{obj.name}" updated successfully!')
-        return redirect('subcategory_list')
 
 class SubCategoryDeleteView(APIView):
     authentication_classes = [SessionAuthentication]
