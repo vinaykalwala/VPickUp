@@ -370,12 +370,26 @@ class ProductListView(APIView):
 
     def get(self, request):
         store = request.user.stores.first()
-        if store:
-            qs = Product.objects.filter(store=store, is_active=True)
-        else:
-            qs = Product.objects.none()
+
+        if not store:
             messages.error(request, 'No store assigned to user')
-        return render(request, 'catalog/product_list.html', {'products': qs})
+            return render(
+                request,
+                'catalog/product_list.html',
+                {'products': []}
+            )
+
+        products = (
+            Product.objects
+            .filter(store=store, is_active=True)
+            .prefetch_related('variants')
+        )
+
+        return render(
+            request,
+            'catalog/product_list.html',
+            {'products': products}
+        )
 
 class ProductCreateView(APIView):
     authentication_classes = [SessionAuthentication]
