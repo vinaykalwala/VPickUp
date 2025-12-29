@@ -1,96 +1,1491 @@
+{% extends 'admin_base.html' %}
+
+{% block content %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <title>Update Store</title>
-
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        #map { height: 380px; margin: 10px 0; border: 1px solid #ccc; }
-        textarea[readonly] { background: #f5f5f5; }
-        .error { color: red; }
+            :root {
+                --primary: #0e7490;
+                --primary-light: #0891b2;
+                --primary-dark: #155e75;
+                --gradient-start: #0e7490;
+                --gradient-end: #0891b2;
+                --text-dark: #134e4a;
+                --text-light: #64748b;
+                --bg-light: #f8fafc;
+                --bg-card: #ffffff;
+                --shadow-soft: 0 4px 20px rgba(14, 116, 144, 0.08);
+                --shadow-hover: 0 12px 40px rgba(14, 116, 144, 0.15);
+                --border-light: #e2e8f0;
+                --success: #059669;
+                --warning: #d97706;
+                --error: #dc2626;
+                --border-radius: 16px;
+                --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f0f9ff 0%, #f0fdfa 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            padding-top: 45px;
+            max-width: 1400px;
+            margin: 0 auto;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .page-header {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            color: white;
+            padding: 40px 50px;
+            border-radius: var(--border-radius);
+            margin-bottom: 40px;
+            box-shadow: var(--shadow-hover);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .page-header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            transform: translate(30%, -30%);
+        }
+        
+        .page-header::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 150px;
+            height: 150px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 50%;
+            transform: translate(-30%, 30%);
+        }
+        
+        .page-header h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .page-header h2 i {
+            font-size: 2.2rem;
+            opacity: 0.9;
+        }
+        
+        .page-header .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.95;
+            font-weight: 400;
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+        }
+        
+        .store-info-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 8px 18px;
+            border-radius: 50px;
+            font-size: 0.95rem;
+            margin-top: 15px;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        .left-section, .right-section {
+            background: var(--bg-card);
+            border-radius: var(--border-radius);
+            padding: 40px;
+            box-shadow: var(--shadow-soft);
+            transition: var(--transition);
+            border: 1px solid rgba(14, 116, 144, 0.05);
+        }
+        
+        .left-section:hover, .right-section:hover {
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-3px);
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(8, 145, 178, 0.1);
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .section-title i {
+            color: var(--primary);
+            font-size: 1.3rem;
+        }
+        
+        .section-badge {
+            background: linear-gradient(135deg, rgba(14, 116, 144, 0.1), rgba(8, 145, 178, 0.1));
+            color: var(--primary);
+            padding: 6px 15px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .form-group label {
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+            gap: 8px;
+        }
+        
+        .form-group label i {
+            color: var(--primary-light);
+            font-size: 0.9rem;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 15px 18px;
+            border: 2px solid var(--border-light);
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            transition: var(--transition);
+            background: white;
+            color: var(--text-dark);
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 4px rgba(8, 145, 178, 0.15);
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+            line-height: 1.5;
+        }
+        
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: #94a3b8;
+        }
+        
+        textarea[readonly] {
+            background: var(--bg-light);
+            cursor: default;
+            font-weight: 500;
+        }
+        
+        /* ===== Fixed Address Field ===== */
+        .form-group textarea[name*="address"],
+        .form-group textarea[id*="address"] {
+            min-height: 140px;
+            max-height: 140px;
+            resize: none;                /* ⛔ Disable resizing */
+            overflow-y: auto;            /* ✅ Scroll if content is long */
+            line-height: 1.6;
+        }
+
+        /* Subtle scrollbar for textarea */
+        .form-group textarea::-webkit-scrollbar {
+            width: 6px;
+        }
+        .form-group textarea::-webkit-scrollbar-thumb {
+            background: rgba(14, 116, 144, 0.3);
+            border-radius: 6px;
+        }
+        .form-group textarea::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        /* Time Fields Container - New Styles */
+        /* ===== Force Opening & Closing Time Side-by-Side ===== */
+        .time-fields-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            align-items: stretch;
+        }
+
+        /* Make both cards equal height */
+        .time-field-group {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Make time input full width */
+        .time-input-wrapper {
+            width: 100%;
+        }
+
+        .time-input-wrapper input[type="time"] {
+            width: 100%;
+            height: 52px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 12px;
+            border: 2px solid var(--border-light);
+            background: linear-gradient(135deg, #ffffff, #f8fafc);
+        }
+
+        /* Focus effect */
+        .time-input-wrapper input[type="time"]:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(14, 116, 144, 0.2);
+        }
+        @media (max-width: 768px) {
+            .time-fields-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        
+        .time-field-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(8, 145, 178, 0.1);
+        }
+        
+        .time-field-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            color: var(--primary-dark);
+            font-size: 1rem;
+        }
+        
+        .time-field-title i {
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+        
+        .time-field-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            font-style: italic;
+        }
+        
+        .time-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        
+        .time-input-wrapper i {
+            position: absolute;
+            left: 15px;
+            color: var(--primary-light);
+            font-size: 1.1rem;
+            z-index: 1;
+        }
+        
+        .time-input-wrapper input {
+            padding-left: 45px !important;
+            font-size: 1.1rem !important;
+            font-weight: 500 !important;
+            background: white !important;
+        }
+        
+        .time-status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: rgba(5, 150, 105, 0.1);
+            color: var(--success);
+        }
+        
+        .time-status-indicator.closed {
+            background: rgba(220, 38, 38, 0.1);
+            color: var(--error);
+        }
+        
+        .store-hours-summary {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, rgba(14, 116, 144, 0.05), rgba(8, 145, 178, 0.08));
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 15px;
+            border: 1px solid rgba(8, 145, 178, 0.15);
+        }
+        
+        .store-hours-summary h4 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--primary-dark);
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+        
+        .store-hours-summary h4 i {
+            color: var(--primary);
+        }
+        
+        .hours-display {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .hours-text {
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+        
+        .hours-duration {
+            font-weight: 600;
+            color: var(--primary);
+            background: rgba(8, 145, 178, 0.1);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+        
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        
+        .file-input-button {
+            background: linear-gradient(135deg, rgba(14, 116, 144, 0.05), rgba(8, 145, 178, 0.1));
+            border: 2px dashed var(--primary-light);
+            color: var(--primary-dark);
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: 500;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .file-input-button i {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+        
+        .file-input-button:hover {
+            background: linear-gradient(135deg, rgba(14, 116, 144, 0.1), rgba(8, 145, 178, 0.15));
+            border-color: var(--primary);
+        }
+        
+        .file-input-wrapper .helptext {
+            margin-top: 8px;
+            font-size: 0.85rem;
+            color: var(--text-light);
+            font-style: italic;
+        }
+        
+        .map-container {
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        #map {
+            height: 450px;
+            border-radius: 16px;
+            border: 3px solid var(--border-light);
+            box-shadow: var(--shadow-soft);
+            z-index: 1;
+        }
+        
+        .map-controls {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .map-control-btn {
+            background: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            color: var(--primary);
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .map-control-btn:hover {
+            background: var(--primary-light);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .map-info {
+            background: linear-gradient(135deg, rgba(14, 116, 144, 0.05), rgba(8, 145, 178, 0.05));
+            padding: 25px;
+            border-radius: 14px;
+            border: 2px solid var(--primary-light);
+            margin-top: 20px;
+        }
+        
+        .map-info label {
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-bottom: 15px;
+            font-size: 1rem;
+            gap: 10px;
+        }
+        
+        .map-info label i {
+            font-size: 1.1rem;
+        }
+        
+        #autoAddress {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid var(--border-light);
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-family: 'Poppins', sans-serif;
+            background: white;
+            color: var(--text-light);
+            line-height: 1.5;
+        }
+        
+        .coordinates-display {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .coord-box {
+            flex: 1;
+            background: white;
+            padding: 12px 15px;
+            border-radius: 10px;
+            border: 2px solid var(--border-light);
+            font-family: monospace;
+            font-weight: 500;
+            color: var(--primary-dark);
+            font-size: 0.95rem;
+        }
+        
+        .coord-box span {
+            color: var(--text-light);
+            font-size: 0.85rem;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .action-bar {
+            grid-column: 1 / -1;
+            background: var(--bg-card);
+            border-radius: var(--border-radius);
+            padding: 30px 40px;
+            box-shadow: var(--shadow-soft);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            border: 1px solid rgba(14, 116, 144, 0.05);
+        }
+        
+        .status-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        #status {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            background: rgba(8, 145, 178, 0.08);
+            border-radius: 10px;
+            border-left: 4px solid var(--primary);
+            min-height: 48px;
+            min-width: 200px;
+        }
+        
+        #status:empty {
+            display: none;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 20px;
+        }
+        
+        button[type="submit"] {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            color: white;
+            border: none;
+            padding: 17px 45px;
+            border-radius: 14px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 8px 20px rgba(14, 116, 144, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 200px;
+            justify-content: center;
+        }
+        
+        button[type="submit"]:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(14, 116, 144, 0.4);
+        }
+        
+        button[type="submit"]:active {
+            transform: translateY(-1px);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+            color: var(--text-dark);
+            border: none;
+            padding: 17px 30px;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+        
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+            transform: translateY(-3px);
+        }
+        
+        .error {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, rgba(220, 38, 38, 0.08), rgba(220, 38, 38, 0.05));
+            color: var(--error);
+            padding: 20px 25px;
+            border-radius: 14px;
+            font-weight: 500;
+            border: 2px solid rgba(220, 38, 38, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .error i {
+            font-size: 1.3rem;
+        }
+        
+        .hidden-fields {
+            display: none;
+        }
+        
+        .field-required::after {
+            content: " *";
+            color: var(--error);
+            font-weight: 700;
+        }
+        
+        .help-text {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-top: 6px;
+            font-style: italic;
+        }
+        
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--border-light), transparent);
+            margin: 30px 0;
+        }
+        
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-bar {
+                flex-direction: column;
+                gap: 25px;
+                align-items: stretch;
+            }
+            
+            .status-container {
+                justify-content: center;
+            }
+            
+            .button-group {
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .page-header {
+                padding: 30px 25px;
+            }
+            
+            .page-header h2 {
+                font-size: 1.8rem;
+            }
+            
+            .page-header h2 i {
+                font-size: 1.6rem;
+            }
+            
+            .left-section, .right-section {
+                padding: 25px;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .time-fields-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .hours-display {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            #map {
+                height: 350px;
+            }
+            
+            .coordinates-display {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            button[type="submit"], .btn-secondary {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .map-controls {
+                top: 10px;
+                right: 10px;
+            }
+            
+            .map-control-btn {
+                width: 36px;
+                height: 36px;
+                font-size: 1rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 20px 15px;
+            }
+            
+            .page-header {
+                padding: 25px 20px;
+            }
+            
+            .left-section, .right-section {
+                padding: 20px;
+            }
+            
+            .action-bar {
+                padding: 25px 20px;
+            }
+            
+            #map {
+                height: 300px;
+            }
+        }
+        
+        /* Loading animation for status */
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        .loading {
+            animation: pulse 1.5s infinite;
+        }
+        
+        /* Success animation */
+        @keyframes successPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .success {
+            animation: successPulse 0.5s ease;
+            color: var(--success) !important;
+            border-left-color: var(--success) !important;
+        }
     </style>
+    <style>/* ===== Store Image Enhanced UI ===== */
+
+.store-image-wrapper {
+    margin: 20px 0;
+    padding: 18px;
+    border: 2px dashed #94a3b8;
+    border-radius: 12px;
+    background: #f8fafc;
+}
+
+.store-image-title {
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #0f172a;
+}
+
+.store-image-row {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.store-image-preview {
+    width: 120px;
+    height: 120px;
+    background: #e2e8f0;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #cbd5e1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: #64748b;
+}
+
+.store-image-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.store-image-controls {
+    flex: 1;
+}
+
+.store-image-controls small {
+    display: block;
+    margin-top: 6px;
+    color: #64748b;
+}
+
+</style>
+
 </head>
 <body>
-
-<h2>Update Store – {{ store.name }}</h2>
-
-<form method="post" enctype="multipart/form-data" id="storeForm">
-    {% csrf_token %}
-    {{ form.as_p }}
-
-    <!-- Hidden lat/lng -->
-    <input type="hidden" name="latitude" id="latitude">
-    <input type="hidden" name="longitude" id="longitude">
-
-    <label><strong>Store Location</strong></label>
-    <div id="map"></div>
-
-    <label>Detected Address</label><br>
-    <textarea id="autoAddress" rows="2" readonly></textarea><br><br>
-
-    <button type="submit" id="submitBtn">Update Store</button>
-</form>
-
-<p id="status"></p>
-
-{% if error %}
-    <p class="error">{{ error }}</p>
-{% endif %}
+<div class="container">
+    <div class="page-header">
+        <h2><i class="fas fa-store-alt"></i> Update Store – {{ store.name }}</h2>
+        <p class="subtitle">Manage your store information, location, and operational details. All changes will be reflected immediately across the platform.</p>
+        <div class="store-info-badge">
+            <i class="fas fa-info-circle"></i> Store ID: {{ store.id }}
+        </div>
+    </div>
+    
+    <form method="post" enctype="multipart/form-data" id="storeForm">
+        {% csrf_token %}
+        
+        <div class="main-content">
+            <div class="left-section">
+                <div class="section-header">
+                    <div class="section-title">
+                        <i class="fas fa-info-circle"></i> Store Details
+                    </div>
+                    <div class="section-badge">Required Fields</div>
+                </div>
+                <div id="formFields"></div>
+                
+                <!-- Opening and Closing Time Section -->
+                <div class="section-divider"></div>
+                
+                <div class="section-header">
+                    <div class="section-title">
+                        <i class="fas fa-clock"></i> Store Hours
+                    </div>
+                    <div class="section-badge">Business Hours</div>
+                </div>
+                
+                <div id="timeFieldsContainer" class="time-fields-container">
+                    <!-- Opening Time and Closing Time will be dynamically placed here side by side -->
+                </div>
+            </div>
+            
+            <div class="right-section">
+                <div class="section-header">
+                    <div class="section-title">
+                        <i class="fas fa-map-marked-alt"></i> Location Settings
+                    </div>
+                    <div class="section-badge">Interactive Map</div>
+                </div>
+                <div id="rightFormFields" style="margin-bottom: 25px;"></div>
+                
+                <div class="map-container">
+                    <div id="map"></div>
+                    <div class="map-controls">
+                        <button type="button" class="map-control-btn" id="locateBtn" title="Locate me">
+                            <i class="fas fa-location-crosshairs"></i>
+                        </button>
+                        <button type="button" class="map-control-btn" id="resetBtn" title="Reset to original">
+                            <i class="fas fa-undo"></i>
+                        </button>
+                        <button type="button" class="map-control-btn" id="zoomInBtn" title="Zoom in">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                        <button type="button" class="map-control-btn" id="zoomOutBtn" title="Zoom out">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="map-info">
+                    <label><i class="fas fa-map-pin"></i> Detected Address</label>
+                    <textarea id="autoAddress" rows="3" readonly></textarea>
+                    
+                    <div class="coordinates-display">
+                        <div class="coord-box">
+                            <span>Latitude</span>
+                            <div id="latDisplay">{{ latitude|floatformat:6 }}</div>
+                        </div>
+                        <div class="coord-box">
+                            <span>Longitude</span>
+                            <div id="lngDisplay">{{ longitude|floatformat:6 }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="action-bar">
+                <div class="status-container">
+                    <div id="status"></div>
+                </div>
+                <div class="button-group">
+                    <button type="submit" id="submitBtn">
+                        <i class="fas fa-save"></i> Update Store
+                    </button>
+                </div>
+            </div>
+            
+            {% if error %}
+                <div class="error">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <div>{{ error }}</div>
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="hidden-fields">
+            <input type="hidden" name="latitude" id="latitude" value="{{ latitude }}">
+            <input type="hidden" name="longitude" id="longitude" value="{{ longitude }}">
+        </div>
+    </form>
+</div>
 
 <script>
 let map, marker;
-
 const latInput = document.getElementById("latitude");
 const lngInput = document.getElementById("longitude");
+const latDisplay = document.getElementById("latDisplay");
+const lngDisplay = document.getElementById("lngDisplay");
 const addressBox = document.getElementById("autoAddress");
 const statusEl = document.getElementById("status");
+const locateBtn = document.getElementById("locateBtn");
+const resetBtn = document.getElementById("resetBtn");
+const zoomInBtn = document.getElementById("zoomInBtn");
+const zoomOutBtn = document.getElementById("zoomOutBtn");
+
+// Store original coordinates for reset functionality
+const originalLat = parseFloat("{{ latitude }}");
+const originalLng = parseFloat("{{ longitude }}");
 
 function initMap(lat, lng) {
     map = L.map("map").setView([lat, lng], 15);
-
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution: "© OpenStreetMap"
     }).addTo(map);
-
-    marker = L.marker([lat, lng], { draggable: true }).addTo(map);
-
+    
+    // Create custom icon for marker
+    const customIcon = L.divIcon({
+        className: 'custom-marker',
+        html: '<div style="background: linear-gradient(135deg, var(--primary), var(--primary-dark)); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem; border: 3px solid white; box-shadow: 0 4px 12px rgba(0,0,0,0.3);"><i class="fas fa-store"></i></div>',
+        iconSize: [32, 32],
+        iconAnchor: [16, 32]
+    });
+    
+    marker = L.marker([lat, lng], { 
+        draggable: true,
+        icon: customIcon
+    }).addTo(map);
+    
     setLocation(lat, lng);
-
+    
+    // Map click event
     map.on("click", function (e) {
         marker.setLatLng(e.latlng);
         setLocation(e.latlng.lat, e.latlng.lng);
+        showStatus("Location updated", "success");
     });
-
+    
+    // Marker drag event
     marker.on("dragend", function () {
         const pos = marker.getLatLng();
         setLocation(pos.lat, pos.lng);
+        showStatus("Location updated", "success");
     });
+    
+    // Add map control event listeners
+    locateBtn.addEventListener("click", locateUser);
+    resetBtn.addEventListener("click", resetLocation);
+    zoomInBtn.addEventListener("click", () => map.zoomIn());
+    zoomOutBtn.addEventListener("click", () => map.zoomOut());
 }
 
 function setLocation(lat, lng) {
-    latInput.value = lat.toFixed(6);
-    lngInput.value = lng.toFixed(6);
-    statusEl.innerText = "Location selected";
-
+    const latVal = lat.toFixed(6);
+    const lngVal = lng.toFixed(6);
+    
+    latInput.value = latVal;
+    lngInput.value = lngVal;
+    latDisplay.textContent = latVal;
+    lngDisplay.textContent = lngVal;
+    
+    // Show loading status while fetching address
+    showStatus("Fetching address...", "loading");
+    
     fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`)
         .then(res => res.json())
         .then(data => {
             addressBox.value = data.display_name || "Selected location";
+            showStatus("Address updated successfully", "success");
         })
         .catch(() => {
             addressBox.value = "Selected location";
+            showStatus("Could not fetch address", "error");
         });
 }
 
+function locateUser() {
+    if (!navigator.geolocation) {
+        showStatus("Geolocation is not supported by your browser", "error");
+        return;
+    }
+    
+    showStatus("Locating your position...", "loading");
+    
+    navigator.geolocation.getCurrentPosition(
+        function(position) {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+            marker.setLatLng([lat, lng]);
+            map.setView([lat, lng], 15);
+            setLocation(lat, lng);
+            showStatus("Location set to your current position", "success");
+        },
+        function(error) {
+            let message = "Unable to retrieve your location";
+            if (error.code === error.PERMISSION_DENIED) {
+                message = "Location permission denied. Please enable location services.";
+            }
+            showStatus(message, "error");
+        }
+    );
+}
+
+function resetLocation() {
+    marker.setLatLng([originalLat, originalLng]);
+    map.setView([originalLat, originalLng], 15);
+    setLocation(originalLat, originalLng);
+    showStatus("Location reset to original", "info");
+}
+
+function showStatus(message, type = "info") {
+    statusEl.textContent = message;
+    statusEl.className = "";
+    
+    let icon = "";
+    switch(type) {
+        case "success":
+            icon = '<i class="fas fa-check-circle"></i>';
+            statusEl.classList.add("success");
+            break;
+        case "error":
+            icon = '<i class="fas fa-exclamation-circle"></i>';
+            statusEl.style.color = "var(--error)";
+            statusEl.style.borderLeftColor = "var(--error)";
+            break;
+        case "loading":
+            icon = '<i class="fas fa-spinner fa-spin"></i>';
+            statusEl.classList.add("loading");
+            break;
+        case "info":
+        default:
+            icon = '<i class="fas fa-info-circle"></i>';
+            break;
+    }
+    
+    statusEl.innerHTML = icon + " " + message;
+    
+    // Auto-hide success messages after 5 seconds
+    if (type === "success") {
+        setTimeout(() => {
+            if (statusEl.textContent.includes(message)) {
+                statusEl.textContent = "";
+            }
+        }, 5000);
+    }
+}
+
+// Calculate store hours duration
+function calculateHoursDuration(openingTime, closingTime) {
+    if (!openingTime || !closingTime) return '';
+    
+    try {
+        const [openHour, openMin] = openingTime.split(':').map(Number);
+        const [closeHour, closeMin] = closingTime.split(':').map(Number);
+        
+        let totalMinutes = (closeHour * 60 + closeMin) - (openHour * 60 + openMin);
+        
+        // Handle overnight hours
+        if (totalMinutes < 0) {
+            totalMinutes += 24 * 60;
+        }
+        
+        const hours = Math.floor(totalMinutes / 60);
+        const minutes = totalMinutes % 60;
+        
+        if (hours === 0) {
+            return `${minutes} min`;
+        } else if (minutes === 0) {
+            return `${hours} hour${hours !== 1 ? 's' : ''}`;
+        } else {
+            return `${hours}h ${minutes}m`;
+        }
+    } catch (e) {
+        return '';
+    }
+}
+
+// Update hours summary
+function updateHoursSummary() {
+    const openingTime = document.getElementById('opening_time') ? document.getElementById('opening_time').value : '';
+    const closingTime = document.getElementById('closing_time') ? document.getElementById('closing_time').value : '';
+    
+    const duration = calculateHoursDuration(openingTime, closingTime);
+    const summaryElement = document.getElementById('hoursSummary');
+    
+    if (summaryElement) {
+        if (openingTime && closingTime) {
+            summaryElement.innerHTML = `
+                <h4><i class="fas fa-business-time"></i> Store Hours Summary</h4>
+                <div class="hours-display">
+                    <div class="hours-text">${openingTime} - ${closingTime}</div>
+                    <div class="hours-duration">${duration}</div>
+                </div>
+            `;
+        } else {
+            summaryElement.innerHTML = `
+                <h4><i class="fas fa-business-time"></i> Store Hours Summary</h4>
+                <div class="hours-display">
+                    <div class="hours-text">Set opening and closing times</div>
+                </div>
+            `;
+        }
+    }
+}
+
+// Handle form submission
+document.getElementById("storeForm").addEventListener("submit", function(e) {
+    const submitBtn = document.getElementById("submitBtn");
+    const originalText = submitBtn.innerHTML;
+    
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Updating...';
+    submitBtn.disabled = true;
+    showStatus("Updating store information...", "loading");
+    
+    // Re-enable button after 5 seconds in case submission fails
+    setTimeout(() => {
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+    }, 5000);
+});
+
 document.addEventListener("DOMContentLoaded", function () {
-    initMap({{ latitude }}, {{ longitude }});
+    const formFieldsContainer = document.getElementById('formFields');
+    const rightFieldsContainer = document.getElementById('rightFormFields');
+    const timeFieldsContainer = document.getElementById('timeFieldsContainer');
+    const formContent = `{{ form.as_p }}`;
+    
+    // Create temporary container to parse form
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = formContent;
+    
+    const paragraphs = tempDiv.querySelectorAll('p');
+    let currentRow = null;
+    let fieldCount = 0;
+    
+    // Fields that should go to right section
+    const rightSectionFields = ['city', 'state', 'pincode', 'country'];
+    
+    // Special handling for opening_time and closing_time
+    let openingTimeField = null;
+    let closingTimeField = null;
+    
+    paragraphs.forEach((p) => {
+        const label = p.querySelector('label');
+        const input = p.querySelector('input, select, textarea');
+        
+        if (!label || !input) return;
+        
+        const labelText = label.textContent.toLowerCase();
+        const inputName = input.name ? input.name.toLowerCase() : '';
+        const inputId = input.id ? input.id.toLowerCase() : '';
+        
+        // Check if this is opening_time or closing_time
+        const isOpeningTime = labelText.includes('opening') || inputName.includes('opening') || inputId.includes('opening');
+        const isClosingTime = labelText.includes('closing') || inputName.includes('closing') || inputId.includes('closing');
+        
+        if (isOpeningTime || isClosingTime) {
+            // Store for later processing
+            if (isOpeningTime) {
+                openingTimeField = { label, input, p };
+            } else {
+                closingTimeField = { label, input, p };
+            }
+            return; // Skip regular processing
+        }
+        
+        const wrapper = document.createElement('div');
+        wrapper.className = 'form-group';
+        
+        // Add required field indicator
+        if (input.hasAttribute('required')) {
+            label.classList.add('field-required');
+        }
+        
+        // Check if this field belongs to right section
+        const isRightField = rightSectionFields.some(field => 
+            labelText.includes(field) || inputName.includes(field)
+        );
+        
+        const isFullWidth = input.tagName === 'TEXTAREA' || 
+                          labelText.includes('description') || 
+                          labelText.includes('address') ||
+                          labelText.includes('note');
+        
+        // Handle file inputs specially
+        if (input.type === 'file') {
+            const fileWrapper = document.createElement('div');
+            fileWrapper.className = 'file-input-wrapper';
+            
+            const fileButton = document.createElement('div');
+            fileButton.className = 'file-input-button';
+            fileButton.innerHTML = `
+                <i class="fas fa-cloud-upload-alt"></i>
+                <span>${label.textContent}</span>
+                <small>Click to upload or drag and drop</small>
+            `;
+            
+            // Move help text if exists
+            const helpText = p.querySelector('.helptext');
+            if (helpText) {
+                helpText.classList.add('helptext');
+                fileWrapper.appendChild(helpText);
+            }
+            
+            fileWrapper.appendChild(fileButton);
+            fileWrapper.appendChild(input);
+            
+            if (isRightField) {
+                rightFieldsContainer.appendChild(fileWrapper);
+            } else {
+                if (isFullWidth || fieldCount % 2 === 0) {
+                    currentRow = document.createElement('div');
+                    currentRow.className = 'form-row';
+                    formFieldsContainer.appendChild(currentRow);
+                    fieldCount = 0;
+                }
+                
+                if (isFullWidth) {
+                    wrapper.classList.add('full-width');
+                    wrapper.appendChild(label);
+                    wrapper.appendChild(fileWrapper);
+                    formFieldsContainer.appendChild(wrapper);
+                } else {
+                    wrapper.appendChild(label);
+                    wrapper.appendChild(fileWrapper);
+                    currentRow.appendChild(wrapper);
+                    fieldCount++;
+                }
+            }
+            
+        } else {
+            // Regular input fields
+            if (isRightField) {
+                // Add to right section
+                wrapper.appendChild(label);
+                wrapper.appendChild(input);
+                rightFieldsContainer.appendChild(wrapper);
+            } else {
+                // Add to left section
+                if (isFullWidth || fieldCount % 2 === 0) {
+                    currentRow = document.createElement('div');
+                    currentRow.className = 'form-row';
+                    formFieldsContainer.appendChild(currentRow);
+                    fieldCount = 0;
+                }
+                
+                if (isFullWidth) {
+                    wrapper.classList.add('full-width');
+                }
+                
+                wrapper.appendChild(label);
+                wrapper.appendChild(input);
+                
+                // Add help text if exists
+                const helpText = p.querySelector('.helptext');
+                if (helpText) {
+                    helpText.classList.add('help-text');
+                    wrapper.appendChild(helpText);
+                }
+                
+                currentRow.appendChild(wrapper);
+                fieldCount++;
+            }
+        }
+        
+        p.remove();
+    });
+    
+    // Process opening and closing time fields
+    if (openingTimeField || closingTimeField) {
+        // Create opening time field
+        if (openingTimeField) {
+            const openingWrapper = document.createElement('div');
+            openingWrapper.className = 'time-field-group';
+            
+            const openingHeader = document.createElement('div');
+            openingHeader.className = 'time-field-header';
+            
+            const openingTitle = document.createElement('div');
+            openingTitle.className = 'time-field-title';
+            openingTitle.innerHTML = '<i class="fas fa-door-open"></i> Opening Time';
+            openingHeader.appendChild(openingTitle);
+            
+            openingHeader.appendChild(openingTitle);
+            openingWrapper.appendChild(openingHeader);
+            
+            const openingInputWrapper = document.createElement('div');
+            openingInputWrapper.className = 'time-input-wrapper';
+            
+            const openingIcon = document.createElement('i');
+            openingIcon.className = 'fas fa-sun';
+            openingInputWrapper.appendChild(openingIcon);
+            
+            const openingInput = openingTimeField.input;
+            openingInput.id = 'opening_time';
+            openingInputWrapper.appendChild(openingInput);
+            
+            openingWrapper.appendChild(openingInputWrapper);
+            
+            // Add help text if exists
+            const openingHelp = openingTimeField.p.querySelector('.helptext');
+            if (openingHelp) {
+                openingHelp.className = 'time-field-subtitle';
+                openingWrapper.appendChild(openingHelp);
+            }
+            
+            timeFieldsContainer.appendChild(openingWrapper);
+            openingTimeField.p.remove();
+        }
+        
+        // Create closing time field
+        if (closingTimeField) {
+            const closingWrapper = document.createElement('div');
+            closingWrapper.className = 'time-field-group';
+            
+            const closingHeader = document.createElement('div');
+            closingHeader.className = 'time-field-header';
+            
+            const closingTitle = document.createElement('div');
+            closingTitle.className = 'time-field-title';
+            closingTitle.innerHTML = '<i class="fas fa-door-closed"></i> Closing Time';
+            closingHeader.appendChild(closingTitle);
+            
+            closingWrapper.appendChild(closingHeader);
+            
+            const closingInputWrapper = document.createElement('div');
+            closingInputWrapper.className = 'time-input-wrapper';
+            
+            const closingIcon = document.createElement('i');
+            closingIcon.className = 'fas fa-moon';
+            closingInputWrapper.appendChild(closingIcon);
+            
+            const closingInput = closingTimeField.input;
+            closingInput.id = 'closing_time';
+            closingInputWrapper.appendChild(closingInput);
+            
+            closingWrapper.appendChild(closingInputWrapper);
+            
+            // Add help text if exists
+            const closingHelp = closingTimeField.p.querySelector('.helptext');
+            if (closingHelp) {
+                closingHelp.className = 'time-field-subtitle';
+                closingWrapper.appendChild(closingHelp);
+            }
+            
+            timeFieldsContainer.appendChild(closingWrapper);
+            closingTimeField.p.remove();
+        }
+        
+        // Add hours summary section
+        const summaryWrapper = document.createElement('div');
+        summaryWrapper.className = 'store-hours-summary';
+        summaryWrapper.id = 'hoursSummary';
+        timeFieldsContainer.appendChild(summaryWrapper);
+        
+        // Add event listeners to update summary
+        if (openingTimeField) {
+            openingTimeField.input.addEventListener('change', updateHoursSummary);
+            openingTimeField.input.addEventListener('input', updateHoursSummary);
+        }
+        
+        if (closingTimeField) {
+            closingTimeField.input.addEventListener('change', updateHoursSummary);
+            closingTimeField.input.addEventListener('input', updateHoursSummary);
+        }
+        
+        // Initial update
+        updateHoursSummary();
+    }
+    
+    // Initialize the map with the store's current location
+    initMap(originalLat, originalLng);
 });
 </script>
 
 </body>
 </html>
+{% endblock %}
