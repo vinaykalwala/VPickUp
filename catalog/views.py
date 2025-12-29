@@ -372,23 +372,19 @@ class ProductListView(APIView):
         store = request.user.stores.first()
 
         if not store:
-            messages.error(request, 'No store assigned to user')
-            return render(
-                request,
-                'catalog/product_list.html',
-                {'products': []}
-            )
+            messages.error(request, "No store assigned to user")
+            return render(request, "catalog/product_list.html", {"products": []})
 
         products = (
             Product.objects
             .filter(store=store, is_active=True)
-            .prefetch_related('variants')
+            .prefetch_related("variants")
         )
 
         return render(
             request,
-            'catalog/product_list.html',
-            {'products': products}
+            "catalog/product_list.html",
+            {"products": products}
         )
 
 class ProductCreateView(APIView):
@@ -398,10 +394,9 @@ class ProductCreateView(APIView):
     def get(self, request):
         store = request.user.stores.first()
         if not store:
-            messages.error(request, 'No store assigned to user')
-            return redirect('product_list')
-        
-        # Get categories and subcategories for this store
+            messages.error(request, "No store assigned to user")
+            return redirect("product_list")
+
         categories = Category.objects.filter(
             models.Q(is_global=True) | models.Q(store=store),
             is_active=True
@@ -410,23 +405,26 @@ class ProductCreateView(APIView):
             models.Q(is_global=True) | models.Q(store=store),
             is_active=True
         )
-        
+
         form = ProductForm()
-        form.fields['category'].queryset = categories
-        form.fields['subcategory'].queryset = subcategories
-        
-        return render(request, 'catalog/product_form.html', {
-            'form': form,
-            'variant_form': ProductVariantForm()
-        })
+        form.fields["category"].queryset = categories
+        form.fields["subcategory"].queryset = subcategories
+
+        return render(
+            request,
+            "catalog/product_form.html",
+            {
+                "form": form,
+                "variant_form": ProductVariantForm(),
+            }
+        )
 
     def post(self, request):
         store = request.user.stores.first()
         if not store:
-            messages.error(request, 'No store assigned to user')
-            return redirect('product_list')
-        
-        # Get categories and subcategories for this store
+            messages.error(request, "No store assigned to user")
+            return redirect("product_list")
+
         categories = Category.objects.filter(
             models.Q(is_global=True) | models.Q(store=store),
             is_active=True
@@ -435,30 +433,48 @@ class ProductCreateView(APIView):
             models.Q(is_global=True) | models.Q(store=store),
             is_active=True
         )
-        
+
         form = ProductForm(request.POST, request.FILES)
-        form.fields['category'].queryset = categories
-        form.fields['subcategory'].queryset = subcategories
+        form.fields["category"].queryset = categories
+        form.fields["subcategory"].queryset = subcategories
+
         vform = ProductVariantForm(request.POST, request.FILES)
 
-        ps = ProductSerializer(data=request.POST)
-        vs = ProductVariantSerializer(data=request.POST)
+        ps = ProductSerializer(
+            data=request.POST,
+            context={"request": request}
+        )
+        vs = ProductVariantSerializer(
+            data=request.POST,
+            context={"request": request}
+        )
 
         if not ps.is_valid() or not vs.is_valid():
-            return render(request, 'catalog/product_form.html', {
-                'form': form,
-                'variant_form': vform,
-                'error': {**ps.errors, **vs.errors}
-            })
+            return render(
+                request,
+                "catalog/product_form.html",
+                {
+                    "form": form,
+                    "variant_form": vform,
+                    "error": {**ps.errors, **vs.errors},
+                }
+            )
 
         product = ps.save(
             store=store,
             created_by=request.user,
-            is_active=True  # Products are always active when created
+            is_active=True,
         )
-        vs.save(product=product)
-        messages.success(request, f'Product "{product.name}" created successfully!')
-        return redirect('product_list')
+
+        vs.save(
+            product=product,
+            is_active=True,
+        )
+
+        messages.success(
+            request, f'Product "{product.name}" created successfully!'
+        )
+        return redirect("product_list")
 
 class ProductDeleteView(APIView):
     authentication_classes = [SessionAuthentication]
@@ -468,8 +484,11 @@ class ProductDeleteView(APIView):
         product = get_object_or_404(Product, slug=slug)
         product_name = product.name
         product.delete()
-        messages.success(request, f'Product "{product_name}" deleted successfully!')
-        return redirect('product_list')
+
+        messages.success(
+            request, f'Product "{product_name}" deleted successfully!'
+        )
+        return redirect("product_list")
 
 class VariantCreateView(APIView):
     authentication_classes = [SessionAuthentication]
@@ -477,24 +496,45 @@ class VariantCreateView(APIView):
 
     def get(self, request, product_slug):
         product = get_object_or_404(Product, slug=product_slug)
-        return render(request, 'catalog/variant_form.html', {
-            'form': ProductVariantForm(),
-            'product': product
-        })
+
+        return render(
+            request,
+            "catalog/variant_form.html",
+            {
+                "form": ProductVariantForm(),
+                "product": product,
+            }
+        )
 
     def post(self, request, product_slug):
         product = get_object_or_404(Product, slug=product_slug)
+
         form = ProductVariantForm(request.POST, request.FILES)
-        serializer = ProductVariantSerializer(data=request.POST)
+        serializer = ProductVariantSerializer(
+            data=request.POST,
+            context={"request": request},
+        )
 
         if not serializer.is_valid():
-            return render(request, 'catalog/variant_form.html', {
-                'form': form, 'product': product, 'error': serializer.errors
-            })
+            return render(
+                request,
+                "catalog/variant_form.html",
+                {
+                    "form": form,
+                    "product": product,
+                    "error": serializer.errors,
+                }
+            )
 
-        variant = serializer.save(product=product)
-        messages.success(request, f'Variant "{variant.variant_name}" created successfully!')
-        return redirect('product_list')
+        serializer.save(
+            product=product,
+            is_active=True,
+        )
+
+        messages.success(
+            request, "Variant created successfully!"
+        )
+        return redirect("product_list")
 
 class VariantDeleteView(APIView):
     authentication_classes = [SessionAuthentication]
@@ -504,9 +544,12 @@ class VariantDeleteView(APIView):
         variant = get_object_or_404(ProductVariant, slug=slug)
         variant_name = variant.variant_name
         variant.delete()
-        messages.success(request, f'Variant "{variant_name}" deleted successfully!')
-        return redirect('product_list')
-    
+
+        messages.success(
+            request, f'Variant "{variant_name}" deleted successfully!'
+        )
+        return redirect("product_list")
+
 class ProductUpdateView(APIView):
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
@@ -525,16 +568,16 @@ class ProductUpdateView(APIView):
         )
 
         form = ProductForm(instance=product)
-        form.fields['category'].queryset = categories
-        form.fields['subcategory'].queryset = subcategories
+        form.fields["category"].queryset = categories
+        form.fields["subcategory"].queryset = subcategories
 
         return render(
             request,
-            'catalog/product_form.html',
+            "catalog/product_form.html",
             {
-                'form': form,
-                'edit': True,
-                'product': product
+                "form": form,
+                "edit": True,
+                "product": product,
             }
         )
 
@@ -542,50 +585,35 @@ class ProductUpdateView(APIView):
         store = request.user.stores.first()
         product = get_object_or_404(Product, slug=slug, store=store)
 
-        # 🔐 Preserve state
-        current_active = product.is_active
-        current_image = product.image
-
-        categories = Category.objects.filter(
-            models.Q(is_global=True) | models.Q(store=store),
-            is_active=True
-        )
-        subcategories = SubCategory.objects.filter(
-            models.Q(is_global=True) | models.Q(store=store),
-            is_active=True
-        )
-
         form = ProductForm(request.POST, request.FILES, instance=product)
-        form.fields['category'].queryset = categories
-        form.fields['subcategory'].queryset = subcategories
 
-        serializer = ProductSerializer(product, data=request.POST)
+        serializer = ProductSerializer(
+            product,
+            data=request.POST,
+            context={"request": request},
+            partial=True,
+        )
 
         if not serializer.is_valid():
             return render(
                 request,
-                'catalog/product_form.html',
+                "catalog/product_form.html",
                 {
-                    'form': form,
-                    'edit': True,
-                    'product': product,
-                    'error': serializer.errors
+                    "form": form,
+                    "edit": True,
+                    "product": product,
+                    "error": serializer.errors,
                 }
             )
 
         product = serializer.save()
-
-        # 🔥 Restore state
-        product.is_active = current_active
-
-        # 🔥 Preserve image if not reuploaded
-        if 'image' not in request.FILES:
-            product.image = current_image
-
+        product.is_active = True
         product.save()
 
-        messages.success(request, f'Product "{product.name}" updated successfully!')
-        return redirect('product_list')
+        messages.success(
+            request, f'Product "{product.name}" updated successfully!'
+        )
+        return redirect("product_list")
 
 class VariantUpdateView(APIView):
     authentication_classes = [SessionAuthentication]
@@ -596,55 +624,47 @@ class VariantUpdateView(APIView):
 
         return render(
             request,
-            'catalog/variant_form.html',
+            "catalog/variant_form.html",
             {
-                'form': ProductVariantForm(instance=variant),
-                'edit': True,
-                'variant': variant,
-                'product': variant.product
+                "form": ProductVariantForm(instance=variant),
+                "edit": True,
+                "variant": variant,
+                "product": variant.product,
             }
         )
 
     def post(self, request, slug):
         variant = get_object_or_404(ProductVariant, slug=slug)
 
-        # 🔐 Preserve state
-        current_active = variant.is_active
-        current_image = variant.image
-
         form = ProductVariantForm(request.POST, request.FILES, instance=variant)
-        serializer = ProductVariantSerializer(variant, data=request.POST)
+        serializer = ProductVariantSerializer(
+            variant,
+            data=request.POST,
+            context={"request": request},
+            partial=True,
+        )
 
         if not serializer.is_valid():
             return render(
                 request,
-                'catalog/variant_form.html',
+                "catalog/variant_form.html",
                 {
-                    'form': form,
-                    'edit': True,
-                    'variant': variant,
-                    'product': variant.product,
-                    'error': serializer.errors
+                    "form": form,
+                    "edit": True,
+                    "variant": variant,
+                    "product": variant.product,
+                    "error": serializer.errors,
                 }
             )
 
         variant = serializer.save()
-
-        # 🔥 Restore state
-        variant.is_active = current_active
-
-        # 🔥 Preserve image
-        if 'image' not in request.FILES:
-            variant.image = current_image
-
+        variant.is_active = True
         variant.save()
 
         messages.success(
-            request,
-            f'Variant "{variant.variant_name}" updated successfully!'
+            request, f'Variant "{variant.variant_name}" updated successfully!'
         )
-        return redirect('product_list')
-
+        return redirect("product_list")
 
 class AdminCategoryApprovalListView(APIView):
     authentication_classes = [SessionAuthentication]
