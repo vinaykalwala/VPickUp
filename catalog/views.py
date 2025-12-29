@@ -506,6 +506,145 @@ class VariantDeleteView(APIView):
         variant.delete()
         messages.success(request, f'Variant "{variant_name}" deleted successfully!')
         return redirect('product_list')
+    
+class ProductUpdateView(APIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, slug):
+        store = request.user.stores.first()
+        product = get_object_or_404(Product, slug=slug, store=store)
+
+        categories = Category.objects.filter(
+            models.Q(is_global=True) | models.Q(store=store),
+            is_active=True
+        )
+        subcategories = SubCategory.objects.filter(
+            models.Q(is_global=True) | models.Q(store=store),
+            is_active=True
+        )
+
+        form = ProductForm(instance=product)
+        form.fields['category'].queryset = categories
+        form.fields['subcategory'].queryset = subcategories
+
+        return render(
+            request,
+            'catalog/product_form.html',
+            {
+                'form': form,
+                'edit': True,
+                'product': product
+            }
+        )
+
+    def post(self, request, slug):
+        store = request.user.stores.first()
+        product = get_object_or_404(Product, slug=slug, store=store)
+
+        # 🔐 Preserve state
+        current_active = product.is_active
+        current_image = product.image
+
+        categories = Category.objects.filter(
+            models.Q(is_global=True) | models.Q(store=store),
+            is_active=True
+        )
+        subcategories = SubCategory.objects.filter(
+            models.Q(is_global=True) | models.Q(store=store),
+            is_active=True
+        )
+
+        form = ProductForm(request.POST, request.FILES, instance=product)
+        form.fields['category'].queryset = categories
+        form.fields['subcategory'].queryset = subcategories
+
+        serializer = ProductSerializer(product, data=request.POST)
+
+        if not serializer.is_valid():
+            return render(
+                request,
+                'catalog/product_form.html',
+                {
+                    'form': form,
+                    'edit': True,
+                    'product': product,
+                    'error': serializer.errors
+                }
+            )
+
+        product = serializer.save()
+
+        # 🔥 Restore state
+        product.is_active = current_active
+
+        # 🔥 Preserve image if not reuploaded
+        if 'image' not in request.FILES:
+            product.image = current_image
+
+        product.save()
+
+        messages.success(request, f'Product "{product.name}" updated successfully!')
+        return redirect('product_list')
+
+class VariantUpdateView(APIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, slug):
+        variant = get_object_or_404(ProductVariant, slug=slug)
+
+        return render(
+            request,
+            'catalog/variant_form.html',
+            {
+                'form': ProductVariantForm(instance=variant),
+                'edit': True,
+                'variant': variant,
+                'product': variant.product
+            }
+        )
+
+    def post(self, request, slug):
+        variant = get_object_or_404(ProductVariant, slug=slug)
+
+        # 🔐 Preserve state
+        current_active = variant.is_active
+        current_image = variant.image
+
+        form = ProductVariantForm(request.POST, request.FILES, instance=variant)
+        serializer = ProductVariantSerializer(variant, data=request.POST)
+
+        if not serializer.is_valid():
+            return render(
+                request,
+                'catalog/variant_form.html',
+                {
+                    'form': form,
+                    'edit': True,
+                    'variant': variant,
+                    'product': variant.product,
+                    'error': serializer.errors
+                }
+            )
+
+        variant = serializer.save()
+
+        # 🔥 Restore state
+        variant.is_active = current_active
+
+        # 🔥 Preserve image
+        if 'image' not in request.FILES:
+            variant.image = current_image
+
+        variant.save()
+
+        messages.success(
+            request,
+            f'Variant "{variant.variant_name}" updated successfully!'
+        )
+        return redirect('product_list')
+
 
 class AdminCategoryApprovalListView(APIView):
     authentication_classes = [SessionAuthentication]
