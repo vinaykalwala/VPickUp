@@ -1,11 +1,534 @@
-<h2>{% if edit %}Edit{% else %}Create{% endif %} Category</h2>
-
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Save</button>
-</form>
-
-{% if error %}
-<p style="color:red">{{ error }}</p>
-{% endif %}
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <title>{% if edit %}Edit{% else %}Create{% endif %} Category</title>
+    <style>
+        :root {
+            --primary: #0e7490;
+            --primary-light: #0891b2;
+            --primary-dark: #155e75;
+            --gradient-start: #0e7490;
+            --gradient-end: #0891b2;
+            --text-dark: #134e4a;
+            --text-light: #64748b;
+            --bg-light: #f8fafc;
+            --bg-card: #ffffff;
+            --shadow-soft: 0 4px 20px rgba(14, 116, 144, 0.08);
+            --shadow-hover: 0 12px 40px rgba(14, 116, 144, 0.15);
+            --border-light: #e2e8f0;
+            --success: #059669;
+            --warning: #d97706;
+            --error: #dc2626;
+            --border-radius: 12px;
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
+            padding: 0;
+            background: 
+                linear-gradient(135deg, rgba(255, 255, 255, 0.92) 0%, rgba(8, 145, 178, 0.85) 100%),
+                url('{% static "images/store.jpeg" %}');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(14, 116, 144, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(8, 145, 178, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        
+        .form-container {
+            width: 100%;
+            max-width: 700px;
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-soft);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            position: relative;
+            z-index: 1;
+            animation: slideUp 0.6s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .form-header {
+            padding: 32px 40px 24px;
+            border-bottom: 2px solid var(--border-light);
+            position: relative;
+        }
+        
+        .form-header::before {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 40px;
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+        }
+        
+        h2 {
+            margin: 0;
+            color: var(--text-dark);
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .form-content {
+            padding: 32px 40px 40px;
+        }
+        
+        form p {
+            margin-bottom: 24px;
+        }
+        
+        form label {
+            display: block;
+            color: var(--text-dark);
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 8px;
+            letter-spacing: 0.2px;
+        }
+        
+        form input[type="text"],
+        form input[type="email"],
+        form input[type="number"],
+        form input[type="url"],
+        form input[type="file"],
+        form textarea,
+        form select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--border-light);
+            border-radius: 8px;
+            font-size: 15px;
+            font-family: inherit;
+            transition: var(--transition);
+            background: white;
+            color: var(--text-dark);
+        }
+        
+        form input[type="text"]:focus,
+        form input[type="email"]:focus,
+        form input[type="number"]:focus,
+        form input[type="url"]:focus,
+        form textarea:focus,
+        form select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(14, 116, 144, 0.1);
+        }
+        
+        form input[type="file"] {
+            padding: 10px 14px;
+            cursor: pointer;
+        }
+        
+        form input[type="file"]::file-selector-button {
+            padding: 8px 16px;
+            border: none;
+            background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: var(--transition);
+            margin-right: 12px;
+        }
+        
+        form input[type="file"]::file-selector-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(14, 116, 144, 0.25);
+        }
+        
+        form textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        form input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: var(--primary);
+        }
+        
+        form ul {
+            list-style: none;
+            padding: 0;
+            margin: 8px 0 0 0;
+        }
+        
+        form ul li {
+            color: var(--error);
+            font-size: 13px;
+            margin-top: 6px;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        form ul li::before {
+            content: '⚠';
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        
+        .helptext {
+            display: block;
+            color: var(--text-light);
+            font-size: 12px;
+            margin-top: 6px;
+            font-style: italic;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-light);
+        }
+        
+        button[type="submit"],
+        .btn-cancel {
+            flex: 1;
+            padding: 14px 28px;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        button[type="submit"] {
+            background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(14, 116, 144, 0.25);
+        }
+        
+        button[type="submit"]::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        button[type="submit"]:hover::before {
+            left: 100%;
+        }
+        
+        button[type="submit"]:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(14, 116, 144, 0.35);
+        }
+        
+        button[type="submit"]:active {
+            transform: translateY(0);
+        }
+        
+        .btn-cancel {
+            background: white;
+            color: var(--text-dark);
+            border: 2px solid var(--border-light);
+            box-shadow: none;
+        }
+        
+        .btn-cancel:hover {
+            background: var(--bg-light);
+            border-color: var(--text-light);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        .error-message {
+            padding: 16px 20px;
+            background: linear-gradient(135deg, rgba(220, 38, 38, 0.1) 0%, rgba(239, 68, 68, 0.05) 100%);
+            border-left: 4px solid var(--error);
+            border-radius: 8px;
+            color: var(--error);
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .error-message::before {
+            content: '✕';
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            background: var(--error);
+            color: white;
+            border-radius: 50%;
+            font-size: 14px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 20px;
+            transition: var(--transition);
+            padding: 8px 12px;
+            border-radius: 6px;
+        }
+        
+        .back-link:hover {
+            color: var(--primary);
+            background: rgba(14, 116, 144, 0.05);
+            transform: translateX(-4px);
+        }
+        
+        .back-link svg {
+            transition: var(--transition);
+        }
+        
+        .back-link:hover svg {
+            transform: translateX(-2px);
+        }
+        
+        /* Checkbox and radio styling */
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .checkbox-wrapper label {
+            margin: 0;
+            font-weight: 500;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 16px;
+                align-items: flex-start;
+            }
+            
+            .form-container {
+                margin: 20px 0;
+            }
+            
+            .form-header {
+                padding: 24px 24px 20px;
+            }
+            
+            .form-header::before {
+                left: 24px;
+            }
+            
+            h2 {
+                font-size: 24px;
+            }
+            
+            .form-content {
+                padding: 24px;
+            }
+            
+            form p {
+                margin-bottom: 20px;
+            }
+            
+            form label {
+                font-size: 13px;
+            }
+            
+            form input[type="text"],
+            form input[type="email"],
+            form input[type="number"],
+            form input[type="url"],
+            form input[type="file"],
+            form textarea,
+            form select {
+                padding: 11px 14px;
+                font-size: 14px;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+                gap: 10px;
+                margin-top: 24px;
+                padding-top: 20px;
+            }
+            
+            button[type="submit"],
+            .btn-cancel {
+                padding: 13px 24px;
+                font-size: 14px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 16px 12px;
+            }
+            
+            .form-container {
+                margin: 10px 0;
+            }
+            
+            .form-header {
+                padding: 20px 20px 18px;
+            }
+            
+            .form-header::before {
+                left: 20px;
+                width: 50px;
+            }
+            
+            h2 {
+                font-size: 22px;
+            }
+            
+            .form-content {
+                padding: 20px;
+            }
+            
+            form p {
+                margin-bottom: 18px;
+            }
+            
+            form input[type="text"],
+            form input[type="email"],
+            form input[type="number"],
+            form input[type="url"],
+            form input[type="file"],
+            form textarea,
+            form select {
+                padding: 10px 12px;
+                font-size: 14px;
+            }
+            
+            form textarea {
+                min-height: 100px;
+            }
+            
+            button[type="submit"],
+            .btn-cancel {
+                padding: 12px 20px;
+                font-size: 13px;
+            }
+            
+            .error-message {
+                padding: 14px 16px;
+                font-size: 13px;
+            }
+        }
+        
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <div class="form-header">
+            <a href="{% url 'category_list' %}" class="back-link">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Back to Categories
+            </a>
+            <h2>{% if edit %}Edit{% else %}Create{% endif %} Category</h2>
+        </div>
+        
+        <div class="form-content">
+            {% if error %}
+            <div class="error-message">
+                {{ error }}
+            </div>
+            {% endif %}
+            
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                
+                <div class="form-actions">
+                    <button type="submit">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                            <polyline points="17 21 17 13 7 13 7 21"/>
+                            <polyline points="7 3 7 8 15 8"/>
+                        </svg>
+                        {% if edit %}Update Category{% else %}Create Category{% endif %}
+                    </button>
+                    <a href="{% url 'category_list' %}" class="btn-cancel">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18"/>
+                            <line x1="6" y1="6" x2="18" y2="18"/>
+                        </svg>
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
