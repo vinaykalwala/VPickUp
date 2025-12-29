@@ -1,11 +1,28 @@
-<h2>Add Variant for {{ product.name }}</h2>
+<h2>
+    {% if edit %}
+        Update Variant for {{ product.name }}
+    {% else %}
+        Add Variant for {{ product.name }}
+    {% endif %}
+</h2>
 
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
+
     {{ form.as_p }}
-    <button type="submit">Save</button>
+
+    {% if edit and variant.image %}
+        <p><strong>Current Variant Image</strong></p>
+        <img src="{{ variant.image.url }}" width="120">
+    {% endif %}
+
+    <button type="submit">
+        {% if edit %}Update Variant{% else %}Save Variant{% endif %}
+    </button>
 </form>
 
 {% if error %}
-<p style="color:red">{{ error }}</p>
+    <div style="color:red">
+        <pre>{{ error }}</pre>
+    </div>
 {% endif %}

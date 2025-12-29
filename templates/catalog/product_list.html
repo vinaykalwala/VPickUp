@@ -1,28 +1,107 @@
 <h2>Products</h2>
-<a href="{% url 'product_create' %}">+ Add Product</a>
 
-<ul>
+<a href="{% url 'product_create' %}">➕ Add Product</a>
+
+<hr>
+
+{% if not products %}
+    <p>No products added yet.</p>
+{% endif %}
+
+<ul style="list-style:none;padding-left:0;">
 {% for p in products %}
-    <li>
-        {{ p.name }}
-        <form method="post" action="{% url 'product_delete' p.slug %}" style="display:inline;">
-            {% csrf_token %}
-            <button>Delete</button>
-        </form>
+    <li style="margin-bottom:40px;border-bottom:1px solid #ddd;padding-bottom:20px;">
 
-        <ul>
-        {% for v in p.variants.all %}
-            <li>
-                {{ v.variant_name }}
-                <form method="post" action="{% url 'variant_delete' v.slug %}">
-                    {% csrf_token %}
-                    <button>Delete Variant</button>
-                </form>
-            </li>
-        {% endfor %}
-        </ul>
+        <!-- PRODUCT HEADER -->
+        <h3>{{ p.name }}</h3>
 
-        <a href="{% url 'variant_create' p.slug %}">+ Add Variant</a>
+        {% if p.image %}
+            <img
+                src="{{ p.image.url }}"
+                alt="{{ p.name }}"
+                style="width:140px;height:auto;border:1px solid #ccc;margin-bottom:10px;"
+            >
+        {% else %}
+            <p><em>No product image</em></p>
+        {% endif %}
+
+        <p><strong>Brand:</strong> {{ p.brand|default:"-" }}</p>
+        <p><strong>Description:</strong> {{ p.description|default:"-" }}</p>
+
+        <!-- PRODUCT ACTIONS -->
+        <div style="margin-bottom:10px;">
+            <a href="{% url 'product_update' p.slug %}">
+                ✏️ Edit Product
+            </a>
+
+            &nbsp;|&nbsp;
+
+            <form
+                method="post"
+                action="{% url 'product_delete' p.slug %}"
+                style="display:inline;"
+            >
+                {% csrf_token %}
+                <button type="submit" onclick="return confirm('Delete this product?')">
+                    🗑 Delete Product
+                </button>
+            </form>
+        </div>
+
+        <!-- VARIANTS -->
+        <h4>Variants</h4>
+
+        {% if p.variants.all %}
+            <ul style="list-style:none;padding-left:0;">
+            {% for v in p.variants.all %}
+                <li style="margin-bottom:20px;padding-left:10px;border-left:3px solid #eee;">
+
+                    <strong>{{ v.variant_name }}</strong><br>
+
+                    {% if v.image %}
+                        <img
+                            src="{{ v.image.url }}"
+                            alt="{{ v.variant_name }}"
+                            style="width:90px;height:auto;border:1px solid #ccc;margin:5px 0;"
+                        >
+                    {% else %}
+                        <em>No variant image</em><br>
+                    {% endif %}
+
+                    SKU: {{ v.sku|default:"-" }} |
+                    Barcode: {{ v.barcode|default:"-" }}
+
+                    <br><br>
+
+                    <!-- VARIANT ACTIONS -->
+                    <a href="{% url 'variant_update' v.slug %}">
+                        ✏️ Edit Variant
+                    </a>
+
+                    &nbsp;|&nbsp;
+
+                    <form
+                        method="post"
+                        action="{% url 'variant_delete' v.slug %}"
+                        style="display:inline;"
+                    >
+                        {% csrf_token %}
+                        <button type="submit" onclick="return confirm('Delete this variant?')">
+                            🗑 Delete Variant
+                        </button>
+                    </form>
+
+                </li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p><em>No variants added</em></p>
+        {% endif %}
+
+        <a href="{% url 'variant_create' p.slug %}">
+            ➕ Add Variant
+        </a>
+
     </li>
 {% endfor %}
 </ul>

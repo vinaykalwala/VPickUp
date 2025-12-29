@@ -1,16 +1,39 @@
-<h2>Create Product</h2>
+<h2>
+    {% if edit %}
+        Update Product
+    {% else %}
+        Create Product
+    {% endif %}
+</h2>
 
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    <h3>Product</h3>
-    {{ form.as_p }}
 
-    <h3>Variant</h3>
-    {{ variant_form.as_p }}
+    <fieldset>
+        <legend>Product Details</legend>
 
-    <button type="submit">Save</button>
+        {{ form.as_p }}
+
+        {% if edit and product.image %}
+            <p><strong>Current Product Image</strong></p>
+            <img src="{{ product.image.url }}" width="150">
+        {% endif %}
+    </fieldset>
+
+    {% if not edit %}
+    <fieldset>
+        <legend>Initial Variant</legend>
+        {{ variant_form.as_p }}
+    </fieldset>
+    {% endif %}
+
+    <button type="submit">
+        {% if edit %}Update Product{% else %}Save Product{% endif %}
+    </button>
 </form>
 
 {% if error %}
-<p style="color:red">{{ error }}</p>
+    <div style="color:red">
+        <pre>{{ error }}</pre>
+    </div>
 {% endif %}
