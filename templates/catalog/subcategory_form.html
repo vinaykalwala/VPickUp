@@ -1,11 +1,338 @@
-<h2>Create SubCategory</h2>
+{% extends "admin_base.html" %}
+{% load static %}
+{% block content %}
 
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Save</button>
-</form>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:'Poppins','Segoe UI',sans-serif;
+}
 
-{% if error %}
-<p style="color:red">{{ error }}</p>
-{% endif %}
+body{
+    background:linear-gradient(135deg,#eef2f6,#e6edf3);
+    color:#0f172a;
+}
+
+/* ================= PAGE ================= */
+.page{
+    max-width:1250px;
+    margin:30px auto;
+    padding:0 20px;
+}
+
+/* ================= CONTAINER ================= */
+.container{
+    background:rgba(255,255,255,0.95);
+    backdrop-filter: blur(10px);
+    border-radius:26px;
+    box-shadow:0 30px 70px rgba(0,0,0,0.12);
+    overflow:hidden;
+}
+
+/* ================= HEADER ================= */
+.header{
+    background:linear-gradient(135deg,#0e7490,#0891b2);
+    padding:20px;
+    text-align:center;
+}
+
+.header-content{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:14px;
+}
+
+.header-icon{
+    width:44px;
+    height:44px;
+    border-radius:14px;
+    background:rgba(255,255,255,0.18);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:20px;
+    color:#ffffff;
+}
+
+.header h1{
+    font-size:22px;
+    font-weight:600;
+    color:#ffffff;
+}
+
+/* ================= LAYOUT ================= */
+.layout{
+    display:grid;
+    grid-template-columns:1.1fr 0.9fr;
+    min-height:520px;
+}
+
+/* ================= FORM ================= */
+.form-panel{
+    padding:36px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+}
+
+.form-group{
+    margin-bottom:18px;
+}
+
+/* LABEL */
+label{
+    font-size:13px;
+    font-weight:600;
+    margin-bottom:6px;
+    display:block;
+    color:#334155;
+}
+
+/* INPUTS */
+input, select{
+    width:100%;
+    padding:14px 16px;
+    border-radius:16px;
+    border:1px solid #cbd5e1;
+    font-size:14px;
+    background:#f8fafc;
+    transition:.25s;
+}
+
+input:focus, select:focus{
+    outline:none;
+    border-color:#0891b2;
+    box-shadow:0 0 0 4px rgba(8,145,178,0.15);
+    background:#ffffff;
+}
+
+/* ================= FILE FIELD (CREATE + EDIT) ================= */
+
+/* Django "Currently:" text */
+.form-panel a{
+    color:#0891b2;
+    font-weight:500;
+    text-decoration:none;
+}
+
+.form-panel a:hover{
+    text-decoration:underline;
+}
+
+/* Wrap Django file widgets nicely */
+.form-panel input[type="file"]{
+    margin-top:10px;
+    padding:10px;
+    background:#ffffff;
+    border-radius:14px;
+    border:1px solid #cbd5e1;
+}
+
+/* File button */
+input[type="file"]::file-selector-button{
+    padding:10px 16px;
+    margin-right:12px;
+    border:none;
+    border-radius:12px;
+    background:linear-gradient(135deg,#0e7490,#0891b2);
+    color:#ffffff;
+    font-weight:600;
+    cursor:pointer;
+}
+
+/* ================= CLEAR CHECKBOX (FILE FIELD) ================= */
+.form-panel input[type="checkbox"]{
+    accent-color:#0891b2;
+    cursor:pointer;
+}
+
+.form-panel .clearable-file-input{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-top:8px;
+    font-size:13px;
+    color:#334155;
+}
+
+/* ================= ACTIVE CHECKBOX ================= */
+.checkbox-row{
+    margin-top:14px;
+}
+
+.checkbox-wrapper{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    cursor:pointer;
+}
+
+.checkbox-wrapper input{
+    width:18px;
+    height:18px;
+    margin:0;
+}
+
+.checkbox-wrapper span{
+    font-size:14px;
+    font-weight:500;
+    line-height:1;
+}
+
+/* ================= ACTION ================= */
+.actions{
+    margin-top:28px;
+}
+
+.submit-btn{
+    width:100%;
+    padding:16px;
+    border-radius:20px;
+    border:none;
+    background:linear-gradient(135deg,#0e7490,#0891b2);
+    color:#ffffff;
+    font-size:16px;
+    font-weight:600;
+    cursor:pointer;
+    box-shadow:0 14px 40px rgba(8,145,178,0.45);
+    transition:.25s;
+}
+
+.submit-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 18px 50px rgba(8,145,178,0.6);
+}
+
+/* ================= IMAGE ================= */
+.image-panel{
+    background:radial-gradient(circle at top,#e0f2fe,#f8fafc);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:32px;
+}
+
+.illustration-img{
+    width:100%;
+    max-width:480px;
+    height:440px;
+    object-fit:contain;
+    filter:drop-shadow(0 25px 40px rgba(0,0,0,0.15));
+}
+
+/* ================= SELECT2 ================= */
+.select2-container .select2-selection--single{
+    height:52px;
+    border-radius:16px;
+    border:1px solid #cbd5e1;
+}
+
+.select2-selection__rendered{
+    line-height:52px !important;
+    padding-left:12px !important;
+}
+
+.select2-selection__arrow{
+    height:52px !important;
+}
+
+/* ================= RESPONSIVE ================= */
+@media(max-width:900px){
+    .layout{
+        grid-template-columns:1fr;
+    }
+
+    .image-panel{
+        order:-1;
+        padding:26px;
+    }
+
+    .illustration-img{
+        height:300px;
+    }
+
+    .form-panel{
+        padding:28px;
+    }
+}
+</style>
+
+<div class="page">
+<div class="container">
+
+<div class="header">
+    <div class="header-content">
+        <div class="header-icon">
+            <i class="fa-solid fa-tags"></i>
+
+        </div>
+        <h1>Create SubCategory</h1>
+    </div>
+</div>
+
+
+<div class="layout">
+
+    <!-- FORM -->
+    <div class="form-panel">
+        <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+            <div class="form-group">
+                {{ form.category.label_tag }}
+                {{ form.category }}
+            </div>
+
+            <div class="form-group">
+                {{ form.name.label_tag }}
+                {{ form.name }}
+            </div>
+
+            <div class="form-group">
+                {{ form.image.label_tag }}
+                {{ form.image }}
+            </div>
+
+            <div class="checkbox-row">
+                <label class="checkbox-wrapper">
+                    {{ form.is_active }}
+                    <span>Is active</span>
+                </label>
+            </div>
+
+
+            <div class="actions">
+                <button type="submit" class="submit-btn">
+                    Save SubCategory
+                </button>
+            </div>
+
+        </form>
+    </div>
+
+    <!-- IMAGE -->
+    <div class="image-panel">
+        <img src="{% static 'images/categeory1.jpeg' %}" class="illustration-img">
+    </div>
+
+</div>
+</div>
+</div>
+
+<script>
+$(document).ready(function () {
+    $('.select2').select2({
+        placeholder: "Select Category",
+        width: '100%'
+    });
+});
+</script>
+
+{% endblock %}

@@ -5,13 +5,18 @@ from .models import Category, SubCategory, Product, ProductVariant
 class CategoryForm(forms.ModelForm):
     class Meta:
         model = Category
-        fields = ['name', 'image','is_active']  # Added image field
+        fields = ['name', 'image', 'is_active']
 
 
 class SubCategoryForm(forms.ModelForm):
     class Meta:
         model = SubCategory
-        fields = ['category', 'name', 'image','is_active']  # Added image field
+        fields = ['category', 'name', 'image', 'is_active']
+        widgets = {
+            'category': forms.Select(attrs={
+                'class': 'select2'
+            })
+        }
 
 
 class ProductForm(forms.ModelForm):
@@ -21,6 +26,14 @@ class ProductForm(forms.ModelForm):
             'name', 'category', 'subcategory',
             'brand', 'description', 'image'
         ]
+        widgets = {
+            'category': forms.Select(attrs={
+                'class': 'select2'
+            }),
+            'subcategory': forms.Select(attrs={
+                'class': 'select2'
+            })
+        }
 
 
 class ProductVariantForm(forms.ModelForm):
@@ -36,18 +49,26 @@ class AddProductWithInventoryForm(forms.Form):
     # Category
     category = forms.ModelChoiceField(
         queryset=Category.objects.filter(is_active=True),
-        required=False
+        required=False,
+        widget=forms.Select(attrs={
+            'class': 'select2'
+        })
     )
+
     new_category_name = forms.CharField(required=False)
-    new_category_image = forms.ImageField(required=False)  # Added for new category image
+    new_category_image = forms.ImageField(required=False)
     
     # SubCategory
     subcategory = forms.ModelChoiceField(
         queryset=SubCategory.objects.filter(is_active=True),
-        required=False
+        required=False,
+        widget=forms.Select(attrs={
+            'class': 'select2'
+        })
     )
+
     new_subcategory_name = forms.CharField(required=False)
-    new_subcategory_image = forms.ImageField(required=False)  # Added for new subcategory image
+    new_subcategory_image = forms.ImageField(required=False)
     
     # Product
     product_name = forms.CharField()
