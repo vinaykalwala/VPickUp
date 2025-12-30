@@ -1,21 +1,883 @@
-<h2>Stores</h2>
+{% extends 'base.html' %}
 
-{% for store in stores %}
-  <div style="border:1px solid #ccc; padding:10px; margin:10px 0;">
+{% block content %}
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+    .stores-page {
+        --primary: #0e7490;
+        --primary-light: #0891b2;
+        --primary-dark: #155e75;
+        --gradient-start: #0e7490;
+        --gradient-end: #0891b2;
+        --text-dark: #134e4a;
+        --text-light: #64748b;
+        --bg-light: #f8fafc;
+        --bg-card: #ffffff;
+        --shadow-soft: 0 4px 20px rgba(14, 116, 144, 0.08);
+        --shadow-hover: 0 12px 40px rgba(14, 116, 144, 0.15);
+        --border-light: #e2e8f0;
+        --status-verified: #10b981;
+        --status-pending: #f59e0b;
+        --status-open: #10b981;
+        --status-closed: #ef4444;
+        
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(135deg, #f0f9ff 0%, #f0fdfa 100%);
+        min-height: 100vh;
+        padding: 2rem 0;
+    }
+
+    .stores-container {
+        max-width: 1400px; /* Increased from 1200px */
+        margin: 0 auto;
+        padding: 0 2rem;
+        width: 95%;
+    }
+
+    /* Hero Header */
+    .stores-hero {
+        background: linear-gradient(135deg, var(--gradient-start), var(--primary-dark));
+        color: white;
+        padding: 4rem 2rem 3rem;
+        text-align: center;
+        border-radius: 24px;
+        margin-bottom: 3rem;
+        position: relative;
+        overflow: hidden;
+        box-shadow: var(--shadow-soft);
+        max-width: 1400px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .stores-hero::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 100%;
+        background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%2306b6d4' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+        opacity: 0.3;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        max-width: 900px; /* Increased from 800px */
+        margin: 0 auto;
+    }
+
+    .stores-hero h1 {
+        font-size: 3.5rem; /* Slightly larger */
+        margin: 0 0 1rem;
+        font-weight: 700;
+        line-height: 1.2;
+    }
+
+    .stores-hero p {
+        font-size: 1.3rem; /* Slightly larger */
+        opacity: 0.95;
+        margin: 0 auto 1.5rem;
+        max-width: 700px; /* Increased from 600px */
+        line-height: 1.6;
+    }
+
+    /* Store Count Badge */
+    .store-count {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        padding: 0.8rem 2rem; /* Slightly larger */
+        border-radius: 50px;
+        font-size: 1.1rem; /* Slightly larger */
+        font-weight: 500;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .store-count::before {
+        content: "🏪";
+        font-size: 1.3rem;
+    }
+
+    /* Main Store Layout - WIDER */
+    .store-main-layout {
+        display: grid;
+        grid-template-columns: 1fr 450px; /* Increased sidebar from 400px to 450px */
+        gap: 3rem; /* Increased gap from 2.5rem */
+        margin-bottom: 3rem;
+        max-width: 1400px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    /* Store Card - Enhanced Single Store View */
+    .store-card-single {
+        background: var(--bg-card);
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: var(--shadow-soft);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        border: 1px solid var(--border-light);
+        width: 100%;
+    }
+
+    .store-card-single:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-hover);
+    }
+
+    .store-image-hero {
+        width: 100%;
+        height: 320px; /* Increased from 300px */
+        overflow: hidden;
+        background: linear-gradient(135deg, #e0f2fe 0%, #ccfbf1 100%);
+        position: relative;
+    }
+
+    .store-image-hero img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.6s ease;
+    }
+
+    .store-card-single:hover .store-image-hero img {
+        transform: scale(1.05);
+    }
+
+    .store-badge-container {
+        position: absolute;
+        top: 1.5rem;
+        left: 1.5rem;
+        display: flex;
+        gap: 0.75rem;
+    }
+
+    .status-badge {
+        padding: 0.6rem 1.2rem; /* Slightly larger */
+        border-radius: 50px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .status-verified {
+        background: rgba(16, 185, 129, 0.95);
+        color: white;
+    }
+
+    .status-pending {
+        background: rgba(245, 158, 11, 0.95);
+        color: white;
+    }
+
+    .status-active {
+        background: rgba(14, 116, 144, 0.95);
+        color: white;
+    }
+
+    .store-details {
+        padding: 3rem; /* Increased from 2.5rem */
+    }
+
+    .store-header {
+        margin-bottom: 2.5rem; /* Increased from 2rem */
+    }
+
+    .store-header h2 {
+        font-size: 2.4rem; /* Increased from 2.2rem */
+        margin: 0 0 0.5rem;
+        color: var(--text-dark);
+        font-weight: 700;
+    }
+
+    .store-description {
+        position: relative;
+        color: var(--text-light);
+        line-height: 1.7;
+        margin-bottom: 1.5rem;
+        font-size: 1.1rem; /* Slightly larger */
+
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        padding-right: 5rem; /* Increased space for Read more */
+    }
+
+    .store-description.expanded {
+        -webkit-line-clamp: unset;
+        overflow: visible;
+        padding-right: 0;
+    }
+
+    .read-more {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+
+        background: linear-gradient(to right, transparent, var(--card-bg, #fff) 40%);
+        padding-left: 10px; /* Increased padding */
+
+        color: #3b82f6;
+        font-weight: 500;
+        cursor: pointer;
+        font-size: 1rem; /* Slightly larger */
+    }
+
+    .read-more:hover {
+        text-decoration: underline;
+    }
+
+    /* Store Info Grid - WIDER CARDS */
+    .store-info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Increased from 250px */
+        gap: 1.75rem; /* Increased gap */
+        margin-bottom: 3rem; /* Increased from 2.5rem */
+    }
+
+    .info-card {
+        background: var(--bg-light);
+        padding: 1.75rem; /* Increased from 1.5rem */
+        border-radius: 16px;
+        border-left: 4px solid var(--primary);
+        transition: transform 0.3s ease;
+    }
+
+    .info-card:hover {
+        transform: translateX(4px);
+    }
+
+    .info-card h4 {
+        font-size: 1.1rem; /* Slightly larger */
+        color: var(--primary);
+        margin: 0 0 0.75rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 600;
+    }
+
+    .info-card h4::before {
+        font-size: 1.2rem;
+    }
+
+    .info-card p {
+        margin: 0;
+        color: var(--text-dark);
+        font-size: 1.2rem; /* Increased from 1.1rem */
+        font-weight: 500;
+    }
+
+    /* Opening Hours */
+    .opening-hours {
+        background: linear-gradient(135deg, #ffffff 0%, #ffffff 100%);
+        padding: 2.5rem; /* Increased from 2rem */
+        border-radius: 20px;
+        border: 1px solid var(--border-light);
+        margin-bottom: 2rem;
+    }
+
+    .opening-hours h3 {
+        font-size: 1.4rem; /* Slightly larger */
+        color: var(--text-dark);
+        margin: 0 0 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .opening-hours h3::before {
+        content: "🕒";
+        font-size: 1.3rem;
+    }
+
+    .hours-display {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem; /* Increased from 1rem */
+        margin-bottom: 1rem;
+    }
+
+    .hours-text {
+        font-size: 1.3rem; /* Increased from 1.2rem */
+        font-weight: 600;
+        color: var(--text-dark);
+        padding: 0.85rem 1.75rem; /* Increased padding */
+        background: white;
+        border-radius: 12px;
+        border: 1px solid var(--border-light);
+        flex: 1;
+    }
+
+    .status-indicator {
+        padding: 0.6rem 1.5rem; /* Increased padding */
+        border-radius: 50px;
+        font-size: 0.95rem; /* Slightly larger */
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+
+    .status-open {
+        background: rgba(16, 185, 129, 0.1);
+        color: var(--status-open);
+        border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+
+    .status-closed {
+        background: rgba(239, 68, 68, 0.1);
+        color: var(--status-closed);
+        border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+
+    /* Store Actions */
+    .store-actions {
+        display: flex;
+        gap: 1.5rem; /* Increased from 1rem */
+        margin-top: 3rem; /* Increased from 2.5rem */
+    }
+
+    .btn-primary {
+        flex: 1;
+        background: linear-gradient(to right, var(--primary), var(--primary-dark));
+        color: white;
+        border: none;
+        padding: 1.1rem 2.2rem; /* Increased padding */
+        border-radius: 12px;
+        font-size: 1.2rem; /* Increased from 1.1rem */
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        text-decoration: none;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(14, 116, 144, 0.25);
+    }
+
+    .btn-secondary {
+        flex: 1;
+        background: white;
+        color: var(--primary);
+        border: 2px solid var(--primary);
+        padding: 1.1rem 2.2rem; /* Increased padding */
+        border-radius: 12px;
+        font-size: 1.2rem; /* Increased from 1.1rem */
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        text-decoration: none;
+    }
+
+    .btn-secondary:hover {
+        background: var(--primary-light);
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    /* Sidebar Information - WIDER */
+    .store-sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 2.5rem; /* Increased from 2rem */
+    }
+
+    .sidebar-card {
+        background: var(--bg-card);
+        padding: 2.5rem; /* Increased from 2rem */
+        border-radius: 20px;
+        box-shadow: var(--shadow-soft);
+        border: 1px solid var(--border-light);
+    }
+
+    .sidebar-card h3 {
+        font-size: 1.4rem; /* Increased from 1.3rem */
+        color: var(--text-dark);
+        margin: 0 0 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .sidebar-card h3::before {
+        font-size: 1.3rem;
+    }
+
+    .location-details {
+        line-height: 1.7;
+        color: var(--text-light);
+        font-size: 1.05rem; /* Slightly larger */
+    }
+
+    .location-details p {
+        margin: 0.6rem 0; /* Slightly larger margin */
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+
+    .location-details p::before {
+        min-width: 26px; /* Increased from 24px */
+        color: var(--primary);
+    }
+
+    .verification-status {
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem; /* Increased from 1rem */
+    }
+
+    .verification-item {
+        display: flex;
+        align-items: center;
+        gap: 1.25rem; /* Increased from 1rem */
+        padding: 1.25rem; /* Increased from 1rem */
+        background: var(--bg-light);
+        border-radius: 12px;
+        border-left: 4px solid var(--primary);
+    }
+
+    .verification-icon {
+        width: 44px; /* Increased from 40px */
+        height: 44px; /* Increased from 40px */
+        background: var(--primary);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.3rem; /* Increased from 1.2rem */
+    }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 7rem 2rem; /* Increased padding */
+        background: var(--bg-card);
+        border-radius: 24px;
+        box-shadow: var(--shadow-soft);
+        max-width: 700px; /* Increased from 600px */
+        margin: 0 auto;
+    }
+
+    .empty-state-icon {
+        font-size: 6rem; /* Increased from 5rem */
+        margin-bottom: 2rem; /* Increased from 1.5rem */
+        opacity: 0.2;
+    }
+
+    .empty-state h3 {
+        color: var(--text-dark);
+        font-size: 2.2rem; /* Increased from 2rem */
+        margin-bottom: 1.25rem; /* Increased from 1rem */
+        font-weight: 600;
+    }
+
+    .empty-state p {
+        color: var(--text-light);
+        font-size: 1.2rem; /* Increased from 1.1rem */
+        line-height: 1.6;
+        margin-bottom: 2.5rem; /* Increased from 2rem */
+    }
+
+    /* Responsive Design - ADJUSTED FOR WIDER LAYOUT */
+    @media (max-width: 1440px) {
+        .stores-container {
+            max-width: 1300px;
+        }
+        
+        .store-main-layout {
+            grid-template-columns: 1fr 420px; /* Adjusted for medium screens */
+            gap: 2.5rem;
+        }
+    }
+
+    @media (max-width: 1200px) {
+        .stores-container {
+            max-width: 1100px;
+        }
+        
+        .store-main-layout {
+            grid-template-columns: 1fr 400px;
+            gap: 2.25rem;
+        }
+        
+        .store-info-grid {
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        }
+    }
+
+    @media (max-width: 1024px) {
+        .store-main-layout {
+            grid-template-columns: 1fr;
+            gap: 2.5rem; /* Increased gap */
+        }
+        
+        .store-sidebar {
+            order: -1;
+        }
+        
+        .stores-hero h1 {
+            font-size: 3rem;
+        }
+    }
+
+    @media (max-width: 900px) {
+        .stores-container {
+            max-width: 100%;
+            padding: 0 1.5rem;
+        }
+        
+        .store-main-layout {
+            gap: 2rem;
+        }
+        
+        .store-details {
+            padding: 2.5rem;
+        }
+        
+        .store-info-grid {
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        }
+    }
+
+    @media (max-width: 768px) {
+        .stores-page {
+            padding: 1.5rem 0; /* Increased from 1rem */
+        }
+
+        .stores-container {
+            padding: 0 1.25rem;
+        }
+
+        .stores-hero {
+            padding: 3rem 1.5rem 2rem;
+            margin-bottom: 2.5rem; /* Increased from 2rem */
+            border-radius: 20px;
+        }
+
+        .stores-hero h1 {
+            font-size: 2.5rem; /* Increased from 2.2rem */
+        }
+
+        .stores-hero p {
+            font-size: 1.15rem;
+        }
+
+        .store-details {
+            padding: 2rem; /* Increased from 1.75rem */
+        }
+
+        .store-header h2 {
+            font-size: 2rem; /* Increased from 1.8rem */
+        }
+
+        .store-info-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .store-actions {
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .sidebar-card {
+            padding: 2rem; /* Increased from 1.5rem */
+        }
+        
+        .opening-hours {
+            padding: 2rem; /* Increased from 1.5rem */
+        }
+    }
+
+    @media (max-width: 640px) {
+        .store-main-layout {
+            gap: 1.75rem;
+        }
+        
+        .store-details {
+            padding: 1.75rem;
+        }
+        
+        .store-header h2 {
+            font-size: 1.8rem;
+        }
+        
+        .store-image-hero {
+            height: 260px; /* Slightly smaller on mobile */
+        }
+        
+        .btn-primary, .btn-secondary {
+            padding: 1rem 1.75rem;
+            font-size: 1.1rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .stores-hero h1 {
+            font-size: 2rem;
+        }
+        
+        .stores-hero p {
+            font-size: 1.1rem;
+        }
+
+        .store-image-hero {
+            height: 220px;
+        }
+
+        .store-badge-container {
+            top: 1rem;
+            left: 1rem;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .store-details {
+            padding: 1.5rem;
+        }
+
+        .opening-hours {
+            padding: 1.5rem;
+        }
+        
+        .sidebar-card {
+            padding: 1.5rem;
+        }
+        
+        .store-count {
+            font-size: 1rem;
+            padding: 0.7rem 1.5rem;
+        }
+    }
+</style>
+
+<div class="stores-page">
+    <div class="stores-container">
+        <!-- Hero Section -->
+        <div class="stores-hero">
+            <div class="hero-content">
+                <h1>Your Store List</h1>
+                <p>Welcome to your store management. Monitor your listings, track performance, and manage your inventory all in one place.</p>
+                {% if stores %}
+                <span class="store-count">{{ stores|length }} Store{{ stores|length|pluralize }} Registered</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Store Content -->
+        {% if stores %}
+            {% for store in stores %}
+            <div class="store-main-layout">
+
+    <!-- LEFT: Main Store Card -->
+    <div class="store-card-single">
+        <div class="store-image-hero">
+            {% if store.store_image %}
+                <img src="{{ store.store_image.url }}" alt="{{ store.name }}">
+            {% else %}
+                <div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center;
+                            background:linear-gradient(135deg, #e0f2fe 0%, #ccfbf1 100%);
+                            color:#0e7490; font-size:3rem;">
+                    🏪
+                </div>
+            {% endif %}
+
+            <div class="store-badge-container">
+                <span class="status-badge status-verified">
+                    {% if store.verification_status == 'verified' %}
+                        ✓ Verified
+                    {% elif store.verification_status == 'pending' %}
+                        ⏳ Pending
+                    {% elif store.verification_status == 'rejected' %}
+                        ✗ Rejected
+                    {% else %}
+                        ⚠ Suspended
+                    {% endif %}
+                </span>
+
+                <span class="status-badge status-active">
+                    {% if store.is_active %}✓ Active{% else %}✗ Inactive{% endif %}
+                </span>
+            </div>
+        </div>
+
+        <div class="store-details">
+            <div class="store-header">
+                <h2>{{ store.name }}</h2>
+
+                {% if store.description %}
+                <p class="store-description">
+                    {{ store.description }}
+                    <span class="read-more" onclick="toggleReadMore(this)">Read more</span>
+                </p>
+                {% endif %}
+            </div>
+
+            <!-- Store Information Grid -->
+            <div class="store-info-grid">
+                <div class="info-card">
+                    <h4>📍 Location Details</h4>
+                    <p>{{ store.city }}, {{ store.state }}</p>
+                </div>
+
+                <div class="info-card">
+                    <h4>📦 Store ID</h4>
+                    <p>#{{ store.id|stringformat:"04d" }}</p>
+                </div>
+
+                <div class="info-card">
+                    <h4>👤 Store Owner</h4>
+                    <p>{{ store.owner.get_full_name|default:store.owner.username }}</p>
+                </div>
+
+                <div class="info-card">
+                    <h4>📅 Member Since</h4>
+                    <p>{{ store.created_at|date:"F Y" }}</p>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="store-actions">
+                <a href="{% url 'store_detail' store.id %}" class="btn-primary">
+                    Store Details →
+                </a>
+
+                <a href="https://maps.google.com/?q={{ store.latitude }},{{ store.longitude }}"
+                   target="_blank"
+                   class="btn-secondary">
+                    Get Directions 🗺️
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- RIGHT: Sidebar -->
+    <div class="store-sidebar">
+
+        <div class="sidebar-card">
+            <h3>📍 Store Location</h3>
+            <div class="location-details">
+                <p><strong>Address:</strong> {{ store.address }}</p>
+                <p><strong>City:</strong> {{ store.city }}</p>
+                <p><strong>State:</strong> {{ store.state }}</p>
+                <p><strong>Pincode:</strong> {{ store.pincode }}</p>
+                <p><strong>Coordinates:</strong>
+                    {{ store.latitude|floatformat:4 }},
+                    {{ store.longitude|floatformat:4 }}
+                </p>
+            </div>
+        </div>
+
+        <div class="sidebar-card">
+            <h3>📋 Verification Status</h3>
+            <div class="verification-status">
+                <div class="verification-item">
+                    <div class="verification-icon">✓</div>
+                    <div>
+                        <strong>Store Verification</strong>
+                        <p style="margin:0.25rem 0 0; color:{% if store.verification_status == 'verified' %}var(--status-verified){% elif store.verification_status == 'pending' %}var(--status-pending){% else %}var(--status-closed){% endif %}; font-size:0.9rem;">
+                            {{ store.verification_status|title }}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="verification-item">
+                    <div class="verification-icon">📋</div>
+                    <div>
+                        <strong>Account Status</strong>
+                        <p style="margin:0.25rem 0 0; color:{% if store.is_active %}var(--status-open){% else %}var(--status-closed){% endif %}; font-size:0.9rem;">
+                            {% if store.is_active %}Active{% else %}Inactive{% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="opening-hours">
+            <h3>Opening Hours</h3>
+
+            <div class="hours-display">
+                <span class="hours-text">
+                    {{ store.opening_time|time:"g:i A" }} -
+                    {{ store.closing_time|time:"g:i A" }}
+                </span>
+
+                <!-- {% if is_open %}
+                    <span class="status-indicator status-open">● Open Now</span>
+                {% else %}
+                    <span class="status-indicator status-closed">● Closed Now</span>
+                {% endif %}
+            </div> -->
+
+            <!-- <p style="color:var(--text-light); font-size:0.95rem;">
+                Daily schedule
+            </p> -->
+        </div>
+
+    </div>
+
+</div>
+            {% endfor %}
+        {% else %}
+        <!-- Empty State -->
+        <div class="empty-state">
+            <div class="empty-state-icon">🏪</div>
+            <h3>No Stores Available</h3>
+            <p>We're currently expanding our network of partner stores. New locations will be added soon to serve you better!</p>
+            <a href="#" class="btn-primary" style="display:inline-flex; max-width:200px; margin:0 auto;">
+                Notify Me
+                <span>🔔</span>
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    // Dynamic status update for opening hours
+    function updateStoreStatus() {
+        const now = new Date();
+        const currentTime = now.getHours() * 60 + now.getMinutes();
+        
+        // This would be populated from your store data
+        // For demo, we're using the existing logic
+        console.log("Store status check completed");
+    }
     
-    {% if store.store_image %}
-        <img src="{{ store.store_image.url }}" width="120" height="80">
-    {% endif %}
+    // Update status every minute
+    setInterval(updateStoreStatus, 60000);
+    updateStoreStatus();
+</script>
 
-    <h3>
-      <a href="{% url 'store_detail' store.id %}">
-        {{ store.name }}
-      </a>
-    </h3>
-
-    <p>{{ store.city }}</p>
-
-  </div>
-{% empty %}
-  <p>No stores found.</p>
-{% endfor %}
+                    <script>
+                        function toggleReadMore(el) {
+                            const desc = el.parentElement;
+                            desc.classList.toggle("expanded");
+                            el.textContent = desc.classList.contains("expanded")
+                                ? "Read less"
+                                : "Read more";
+                        }
+                    </script>
+{% endblock %}
