@@ -797,7 +797,7 @@
                     <div class="verification-icon">✓</div>
                     <div>
                         <strong>Store Verification</strong>
-                        <p style="margin:0.25rem 0 0; color:var(--text-light); font-size:0.9rem;">
+                        <p style="margin:0.25rem 0 0; color:{% if store.verification_status == 'verified' %}var(--status-verified){% elif store.verification_status == 'pending' %}var(--status-pending){% else %}var(--status-closed){% endif %}; font-size:0.9rem;">
                             {{ store.verification_status|title }}
                         </p>
                     </div>
@@ -807,7 +807,7 @@
                     <div class="verification-icon">📋</div>
                     <div>
                         <strong>Account Status</strong>
-                        <p style="margin:0.25rem 0 0; color:var(--text-light); font-size:0.9rem;">
+                        <p style="margin:0.25rem 0 0; color:{% if store.is_active %}var(--status-open){% else %}var(--status-closed){% endif %}; font-size:0.9rem;">
                             {% if store.is_active %}Active{% else %}Inactive{% endif %}
                         </p>
                     </div>
