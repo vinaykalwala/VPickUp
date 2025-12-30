@@ -1,3 +1,6 @@
+{% extends 'admin_base.html' %}
+
+{% block content %}
 <!DOCTYPE html>
 {% load static %}
 <html>
@@ -56,6 +59,9 @@
             pointer-events: none;
         }
         
+        .main-content {
+            padding-top: 45px;
+        }
         .container {
             max-width: 1300px;
             margin: 0 auto;
@@ -668,6 +674,7 @@
     </style>
 </head>
 <body>
+    <div class="main-content">
     <div class="container">
         <div class="page-header">
             <div class="header-top">
@@ -759,6 +766,7 @@
             {% endfor %}
         </div>
     </div>
+    </div>
 
     <script>
         function filterCategories() {
@@ -792,3 +800,4 @@
     </script>
 </body>
 </html>
+{% endblock %}
