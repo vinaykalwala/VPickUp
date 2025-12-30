@@ -1,9 +1,711 @@
 {% extends 'base.html' %}
 {% block content %}
-<form method="post">{% csrf_token %}
-<input name="email" value="{{ email }}">
-<input name="otp" placeholder="OTP">
-<input type="hidden" name="purpose" value="register">
-<button>Verify</button>
-</form>
+{% load static %}
+
+<style>
+/* ===== Reset & Base Styles ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ===== Canvas ===== */
+.verify-canvas {
+  min-height: calc(100vh - 56px);
+  padding: 2rem;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ===== Frame ===== */
+.verify-frame {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  border: 2px solid #0e7490;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 600px;
+  background: #ffffff;
+}
+
+/* ===== Left Content Section ===== */
+.verify-content {
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: #f0f9ff;
+}
+
+/* ===== Headline ===== */
+.verify-headline {
+  max-width: 500px;
+  margin: 0 auto 2rem auto;
+}
+
+.verify-headline h1 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  line-height: 1.2;
+  color: #0e7490;
+  margin-bottom: 1.5rem;
+}
+
+.verify-headline p {
+  font-size: 1.1rem;
+  color: #475569;
+  line-height: 1.6;
+}
+
+/* ===== Form Container ===== */
+.verify-form-container {
+  max-width: 500px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.verify-form {
+  width: 100%;
+}
+
+/* ===== Form Fields ===== */
+.form-group {
+  margin-bottom: 2rem;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #64748b;
+  margin-bottom: 0.75rem;
+}
+
+.email-field {
+  width: 100%;
+  padding: 1rem;
+  border: 1px solid #90b3bd;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  color: #0e7490;
+  background: transparent;
+  font-weight: 600;
+}
+
+/* ===== OTP Container ===== */
+.otp-container {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin: 1rem 0 2rem 0;
+}
+
+.otp-input {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #0e7490;
+  border-radius: 12px;
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #0e7490;
+  background: #ffffff;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.otp-input:focus {
+  border-color: #0891b2;
+  box-shadow: 0 0 0 4px rgba(14, 116, 144, 0.2);
+  transform: translateY(-2px);
+}
+
+.otp-input::placeholder {
+  color: #cbd5e1;
+  font-size: 1.5rem;
+}
+
+/* ===== Button ===== */
+.verify-btn {
+  width: 100%;
+  padding: 1.2rem;
+  border: 2px solid #0e7490;
+  background: #0e7490;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 8px;
+  margin-top: 1rem;
+}
+
+.verify-btn:hover {
+  background: transparent;
+  color: #0e7490;
+  transform: translateY(-2px);
+}
+
+/* ===== Right Image Section ===== */
+.verify-image {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  background: #ffffff;
+  border-left: 2px solid #0e7490;
+  padding-bottom: 30px;
+}
+
+.image-wrapper {
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 3rem;
+}
+
+.verify-image img {
+  width: 100%;
+  height: auto;
+  max-height: 400px;
+  object-fit: contain;
+  border-radius: 12px;
+}
+
+/* ===== Content After Image ===== */
+.image-content {
+  width: 100%;
+  max-width: 500px;
+  padding: 1.5rem;
+  background: #f8fafc;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+}
+
+.image-content h3 {
+  color: #0e7490;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.image-content p {
+  color: #475569;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.feature-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.feature-list li {
+  color: #0e7490;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 0.75rem;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.feature-list li:before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: #0e7490;
+  font-weight: bold;
+}
+
+/* ===== Responsive Design ===== */
+
+/* Large Desktop */
+@media (min-width: 1400px) {
+  .verify-frame {
+    max-width: 1300px;
+  }
+  
+  .verify-content {
+    padding: 4rem;
+  }
+  
+  .verify-image {
+    padding: 4rem;
+  }
+  
+  .image-wrapper {
+    margin-bottom: 3.5rem;
+  }
+}
+
+/* Desktop */
+@media (max-width: 1200px) {
+  .verify-frame {
+    max-width: 1000px;
+    min-height: 550px;
+  }
+  
+  .verify-content {
+    padding: 2.5rem;
+  }
+  
+  .verify-image {
+    padding: 2.5rem;
+  }
+  
+  .image-wrapper {
+    margin-bottom: 2.5rem;
+  }
+  
+  .otp-input {
+    width: 55px;
+    height: 65px;
+    font-size: 1.8rem;
+  }
+}
+
+/* Tablets */
+@media (max-width: 992px) {
+  .verify-canvas {
+    padding: 1.5rem;
+  }
+  
+  .verify-frame {
+    grid-template-columns: 1fr;
+    max-width: 800px;
+    min-height: auto;
+  }
+  
+  
+  
+  .verify-content {
+    padding: 2.5rem;
+  }
+  
+  .verify-headline h1 {
+    font-size: 2.2rem;
+  }
+  
+  .image-wrapper {
+    margin-bottom: 2rem;
+  }
+  
+  .otp-input {
+    width: 50px;
+    height: 60px;
+    font-size: 1.6rem;
+  }
+}
+
+/* Medium Tablets */
+@media (max-width: 768px) {
+  .verify-frame {
+    max-width: 600px;
+  }
+  
+  .verify-content {
+    padding: 2rem;
+  }
+  
+  .verify-image {
+    padding: 2rem;
+  }
+  
+  .verify-headline h1 {
+    font-size: 2rem;
+  }
+  
+  .image-wrapper {
+    margin-bottom: 1.5rem;
+  }
+  
+  .image-content {
+    padding: 1.25rem;
+  }
+  
+  .image-content h3 {
+    font-size: 1.3rem;
+  }
+  
+  .otp-input {
+    width: 45px;
+    height: 55px;
+    font-size: 1.5rem;
+  }
+  
+  .otp-container {
+    gap: 0.75rem;
+  }
+}
+
+/* Mobile */
+@media (max-width: 576px) {
+  .verify-canvas {
+    padding: 1rem;
+  }
+  
+  .verify-frame {
+    border-width: 1px;
+  }
+  
+  .verify-content {
+    padding: 1.5rem;
+  }
+  
+  .verify-image {
+    padding: 1.5rem;
+  }
+  
+  .verify-headline h1 {
+    font-size: 1.8rem;
+  }
+  
+  .verify-headline p {
+    font-size: 1rem;
+  }
+  
+  .image-wrapper {
+    margin-bottom: 1.5rem;
+  }
+  
+  .verify-image img {
+    max-height: 250px;
+  }
+  
+  .image-content {
+    padding: 1rem;
+  }
+  
+  .image-content h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .image-content p {
+    font-size: 0.9rem;
+  }
+  
+  .feature-list li {
+    font-size: 0.85rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .otp-container {
+    gap: 0.5rem;
+  }
+  
+  .otp-input {
+    width: 40px;
+    height: 50px;
+    font-size: 1.3rem;
+  }
+  
+  .email-field {
+    padding: 0.75rem;
+    font-size: 1rem;
+  }
+  
+  .verify-btn {
+    padding: 1rem;
+    font-size: 1rem;
+  }
+}
+
+/* Small Mobile */
+@media (max-width: 380px) {
+  .verify-content {
+    padding: 1.25rem;
+  }
+  
+  .verify-image {
+    padding: 1.25rem;
+  }
+  
+  .verify-headline h1 {
+    font-size: 1.6rem;
+  }
+  
+  .image-wrapper {
+    margin-bottom: 1.25rem;
+  }
+  
+  .verify-image img {
+    max-height: 200px;
+  }
+  
+  .image-content {
+    padding: 0.75rem;
+  }
+  
+  .otp-container {
+    gap: 0.4rem;
+  }
+  
+  .otp-input {
+    width: 35px;
+    height: 45px;
+    font-size: 1.2rem;
+  }
+}
+
+/* Extra Small Mobile */
+@media (max-width: 320px) {
+  .otp-container {
+    gap: 0.3rem;
+  }
+  
+  .otp-input {
+    width: 30px;
+    height: 40px;
+    font-size: 1.1rem;
+  }
+  
+  .verify-headline h1 {
+    font-size: 1.5rem;
+  }
+  
+  .image-content h3 {
+    font-size: 1.1rem;
+  }
+}
+</style>
+
+<div class="verify-canvas">
+  <div class="verify-frame">
+
+    <!-- LEFT CONTENT SECTION -->
+    <div class="verify-content">
+      <div class="verify-headline">
+        <h1>Confirm<br>Valid Email Address</h1>
+        <p>
+          A one-time verification code was sent to your email.
+          Please enter it below to continue.
+        </p>
+      </div>
+
+      <!-- FORM -->
+      <div class="verify-form-container">
+        <form method="post" class="verify-form" id="otpForm">
+          {% csrf_token %}
+
+          <!-- Email Field -->
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" 
+                   id="email" 
+                   name="email" 
+                   value="{{ email }}" 
+                   readonly 
+                   class="email-field">
+          </div>
+
+          <!-- OTP Field -->
+          <div class="form-group">
+            <label>6-Digit Verification Code</label>
+            <div class="otp-container">
+              <input type="text" 
+                     maxlength="1" 
+                     class="otp-input" 
+                     data-index="1" 
+                     autocomplete="off"
+                     placeholder="•">
+              <input type="text" 
+                     maxlength="1" 
+                     class="otp-input" 
+                     data-index="2" 
+                     autocomplete="off"
+                     placeholder="•">
+              <input type="text" 
+                     maxlength="1" 
+                     class="otp-input" 
+                     data-index="3" 
+                     autocomplete="off"
+                     placeholder="•">
+              <input type="text" 
+                     maxlength="1" 
+                     class="otp-input" 
+                     data-index="4" 
+                     autocomplete="off"
+                     placeholder="•">
+              <input type="text" 
+                     maxlength="1" 
+                     class="otp-input" 
+                     data-index="5" 
+                     autocomplete="off"
+                     placeholder="•">
+              <input type="text" 
+                     maxlength="1" 
+                     class="otp-input" 
+                     data-index="6" 
+                     autocomplete="off"
+                     placeholder="•">
+            </div>
+            <input type="hidden" name="otp" id="otpValue" required>
+          </div>
+
+          <input type="hidden" name="purpose" value="register">
+
+          <button type="submit" class="verify-btn">Verify Email</button>
+        </form>
+         <p style="color: #0e7490; font-weight: 600; margin-top: 1rem; font-size: 0.9rem;">
+          <strong>Note:</strong> The verification code expires in 5 minutes.
+        </p>
+      </div>
+    </div>
+
+    <!-- RIGHT IMAGE SECTION WITH CONTENT -->
+    <div class="verify-image">
+      <!-- Image -->
+      <div class="image-wrapper">
+        <img src="{% static 'images/otp.avif' %}" alt="Email Verification">
+      </div>
+
+      <!-- Content After Image -->
+      <div class="image-content">
+        <h3>Why Verify Your Email?</h3>
+        <ul class="feature-list">
+        <li>Secure account access and password recovery</li>
+<li>Critical alerts and important updates</li>
+
+         
+        </ul>
+       
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const otpInputs = document.querySelectorAll('.otp-input');
+  const otpValueInput = document.getElementById('otpValue');
+  const form = document.getElementById('otpForm');
+  
+  // Function to update the hidden OTP value
+  function updateOTPValue() {
+    let otp = '';
+    otpInputs.forEach(input => {
+      otp += input.value;
+    });
+    otpValueInput.value = otp;
+    console.log('OTP Updated:', otpValueInput.value);
+  }
+  
+  // Function to validate if input is a number
+  function isValidNumber(input) {
+    return /^[0-9]$/.test(input);
+  }
+  
+  // Handle OTP input navigation
+  otpInputs.forEach((input, index) => {
+    // Handle input
+    input.addEventListener('input', (e) => {
+      const value = e.target.value;
+      
+      // Only allow numbers
+      if (value && !isValidNumber(value)) {
+        e.target.value = '';
+        return;
+      }
+      
+      if (value.length === 1) {
+        updateOTPValue();
+        // Move to next input if available
+        if (index < otpInputs.length - 1) {
+          otpInputs[index + 1].focus();
+        }
+      } else if (value.length === 0) {
+        updateOTPValue();
+      }
+    });
+    
+    // Handle keydown for navigation
+    input.addEventListener('keydown', (e) => {
+      // Handle backspace
+      if (e.key === 'Backspace') {
+        if (input.value.length === 0 && index > 0) {
+          otpInputs[index - 1].focus();
+          otpInputs[index - 1].value = '';
+          updateOTPValue();
+        }
+      }
+      
+      // Handle arrow keys
+      if (e.key === 'ArrowLeft' && index > 0) {
+        otpInputs[index - 1].focus();
+        e.preventDefault();
+      }
+      
+      if (e.key === 'ArrowRight' && index < otpInputs.length - 1) {
+        otpInputs[index + 1].focus();
+        e.preventDefault();
+      }
+    });
+    
+    // Handle paste
+    input.addEventListener('paste', (e) => {
+      e.preventDefault();
+      const pastedData = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
+      const digits = pastedData.split('');
+      
+      digits.forEach((digit, digitIndex) => {
+        if (index + digitIndex < otpInputs.length) {
+          otpInputs[index + digitIndex].value = digit;
+        }
+      });
+      
+      updateOTPValue();
+      
+      // Focus the last filled input or next empty
+      let focusIndex = index + digits.length;
+      if (focusIndex >= otpInputs.length) {
+        focusIndex = otpInputs.length - 1;
+      }
+      otpInputs[focusIndex].focus();
+    });
+    
+    // Handle focus
+    input.addEventListener('focus', (e) => {
+      e.target.select();
+    });
+  });
+  
+  // Form submission validation
+  form.addEventListener('submit', function(e) {
+    updateOTPValue();
+    
+    if (otpValueInput.value.length !== 6) {
+      e.preventDefault();
+      alert('Please enter the complete 6-digit verification code.');
+      
+      // Focus the first empty input
+      for (let i = 0; i < otpInputs.length; i++) {
+        if (!otpInputs[i].value) {
+          otpInputs[i].focus();
+          break;
+        }
+      }
+    } else {
+      console.log('Submitting OTP:', otpValueInput.value);
+    }
+  });
+  
+  // Auto-focus first input on page load
+  setTimeout(() => {
+    otpInputs[0].focus();
+  }, 100);
+});
+</script>
+
 {% endblock %}
