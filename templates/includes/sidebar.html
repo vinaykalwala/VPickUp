@@ -299,7 +299,7 @@ body {
     <a href="#" class="vp-btn vp-btn-ghost hide-mobile">
       <i class="fa-solid fa-arrow-left"></i> Back
     </a>
-    <a href="#" class="vp-btn vp-btn-primary hide-mobile">
+    <a href="{% url 'profile' %}" class="vp-btn vp-btn-primary hide-mobile">
       <i class="fa-solid fa-user"></i> Profile
     </a>
     <a href="{% url 'logout' %}" class="vp-btn vp-btn-danger">
@@ -362,6 +362,11 @@ body {
   <i class="fa-solid fa-warehouse"></i>Store Inventory
 </a>
 
+<a href="{% url 'smart_inventory_create' %}">
+ <i class="fa-solid fa-boxes-stacked"></i>
+Smart Store Inventory
+</a>
+
 
       {% endif %}
     </div>
@@ -395,7 +400,7 @@ body {
 
     <div class="vp-account-card">
 
-      <a href="#" class="vp-account-link">
+      <a href="{% url 'profile' %}" class="vp-account-link">
         <i class="fa-solid fa-user"></i>
         <div class="vp-account-text">
           <strong>My Profile</strong><br>

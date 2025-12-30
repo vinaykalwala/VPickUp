@@ -421,7 +421,7 @@ class StoreOwnerProfileEditView(APIView):
     def get(self, request):
         return render(
             request,
-            'accounts/storeowner_profile_edit.html',
+            'accounts/store_owner_profile_edit.html',
             {
                 'user_form': UserForm(instance=request.user),
                 'profile_form': StoreOwnerProfileForm(
@@ -446,7 +446,7 @@ class StoreOwnerProfileEditView(APIView):
         if not us.is_valid() or not ps.is_valid():
             return render(
                 request,
-                'accounts/storeowner_profile_edit.html',
+                'accounts/store_owner_profile_edit.html',
                 {
                     'user_form': UserForm(request.POST, instance=request.user),
                     'profile_form': StoreOwnerProfileForm(
@@ -583,7 +583,7 @@ class StoreOwnerProfileView(APIView):
     def get(self, request):
         return render(
             request,
-            'accounts/storeowner_profile_view.html',
+            'accounts/store_owner_profile_view.html',
             {
                 'user': request.user,
                 'profile': request.user.store_owner_profile
