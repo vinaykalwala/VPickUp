@@ -1,0 +1,51 @@
+<h2>My Profile</h2>
+
+<p><strong>Name:</strong> {{ user.first_name }} {{ user.last_name }}</p>
+<p><strong>Email:</strong> {{ user.email }}</p>
+<p><strong>Phone:</strong> {{ user.phone_number }}</p>
+
+{% if profile.profile_image %}
+    <img src="{{ profile.profile_image.url }}" width="120">
+{% endif %}
+
+<hr>
+
+<h3>Saved Addresses</h3>
+
+<a href="{% url 'address_add' %}">➕ Add New Address</a>
+
+<ul>
+{% for addr in addresses %}
+    <li style="margin-bottom:15px;">
+        <strong>{{ addr.label|title }}</strong><br>
+        {{ addr.address_line_1 }}, {{ addr.city }}, {{ addr.state }} - {{ addr.pincode }}
+
+        {% if addr.is_selected %}
+            <span style="color:green;">(Selected)</span>
+        {% endif %}
+
+        <br>
+
+        <a href="{% url 'address_edit' addr.id %}">✏️ Edit</a>
+
+        <form method="post" action="{% url 'address_delete' addr.id %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit">Delete</button>
+        </form>
+
+        {% if not addr.is_selected %}
+        <form method="post" action="{% url 'address_select' addr.id %}" style="display:inline;">
+            {% csrf_token %}
+            <button>Select</button>
+        </form>
+        {% endif %}
+    </li>
+{% empty %}
+    <p>No addresses added.</p>
+{% endfor %}
+</ul>
+
+
+<hr>
+
+<a href="{% url 'customer_profile_edit' %}">✏️ Edit Profile</a>

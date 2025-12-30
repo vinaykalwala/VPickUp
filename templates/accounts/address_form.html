@@ -1,0 +1,263 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<!-- Leaflet -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<style>
+.page-wrapper{
+    max-width:1100px;
+    margin:40px auto;
+    padding:0 16px;
+}
+
+.card{
+    background:rgba(255,255,255,0.35);
+    backdrop-filter:blur(22px);
+    border-radius:22px;
+    padding:26px;
+    border:1px solid rgba(255,255,255,0.35);
+    box-shadow:0 25px 60px rgba(0,0,0,0.18);
+    margin-bottom:28px;
+}
+
+.title{
+    font-size:22px;
+    font-weight:600;
+    margin-bottom:16px;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:16px 20px;
+}
+
+.form-group{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+}
+
+.form-group.full{
+    grid-column:1/-1;
+}
+
+label{
+    font-size:13px;
+    font-weight:600;
+}
+
+input, select, textarea{
+    height:46px;
+    padding:10px 12px;
+    border-radius:12px;
+    border:1px solid #cbd5e1;
+    font-size:14px;
+}
+
+textarea{
+    resize:none;
+}
+
+.search-bar{
+    display:flex;
+    gap:10px;
+    margin-bottom:14px;
+}
+
+.search-bar input{
+    flex:1;
+}
+
+.search-bar button{
+    border:none;
+    border-radius:12px;
+    padding:0 18px;
+    font-weight:600;
+    cursor:pointer;
+    background:#0284c7;
+    color:#fff;
+}
+
+#map{
+    height:420px;
+    border-radius:18px;
+    margin-top:10px;
+}
+
+.submit-box{
+    text-align:center;
+    margin-top:28px;
+}
+
+.submit-box button{
+    width:220px;
+    height:50px;
+    border:none;
+    border-radius:18px;
+    background:linear-gradient(135deg,#0e7490,#0891b2);
+    color:#fff;
+    font-size:16px;
+    font-weight:600;
+    cursor:pointer;
+}
+</style>
+
+<div class="page-wrapper">
+
+<form method="post">
+{% csrf_token %}
+
+<!-- ================= ADDRESS DETAILS ================= -->
+<div class="card">
+    <div class="title">Address Details</div>
+
+    <div class="form-grid">
+        <div class="form-group">
+            <label>Label</label>
+            {{ form.label }}
+        </div>
+
+        <div class="form-group full">
+            <label>Address</label>
+            {{ form.address_line_1 }}
+        </div>
+
+        <div class="form-group">
+            <label>City</label>
+            {{ form.city }}
+        </div>
+
+        <div class="form-group">
+            <label>State</label>
+            {{ form.state }}
+        </div>
+
+        <div class="form-group">
+            <label>Pincode</label>
+            {{ form.pincode }}
+        </div>
+    </div>
+
+    {{ form.latitude }}
+    {{ form.longitude }}
+</div>
+
+<!-- ================= LOCATION PICKER ================= -->
+<div class="card">
+    <div class="title">Select Exact Location</div>
+
+    <div class="search-bar">
+        <input
+            type="text"
+            id="locationSearch"
+            placeholder="House No, Street, Area, City, Pincode"
+        >
+        <button type="button" onclick="searchLocation()">Search</button>
+        <button type="button" onclick="useCurrentLocation()">Use Current</button>
+    </div>
+
+    <div id="map"></div>
+
+    <label style="margin-top:14px;">Detected Address</label>
+    <textarea id="detectedAddress" rows="2" readonly></textarea>
+
+    <p style="margin-top:10px;font-size:13px;">
+        <strong>Latitude:</strong> <span id="latDisplay">-</span><br>
+        <strong>Longitude:</strong> <span id="lngDisplay">-</span>
+    </p>
+</div>
+
+<div class="submit-box">
+    <button type="submit">Save Address</button>
+</div>
+
+</form>
+
+{% if error %}
+<pre style="color:red">{{ error }}</pre>
+{% endif %}
+
+</div>
+
+<!-- ================= JS ================= -->
+<script>
+let map, marker;
+const latInput = document.getElementById("id_latitude");
+const lngInput = document.getElementById("id_longitude");
+const addrBox = document.getElementById("detectedAddress");
+const latDisp = document.getElementById("latDisplay");
+const lngDisp = document.getElementById("lngDisplay");
+
+function initMap(lat=20.5937, lng=78.9629){
+    map = L.map("map").setView([lat,lng], 6);
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png")
+        .addTo(map);
+
+    marker = L.marker([lat,lng],{draggable:true}).addTo(map);
+    setLocation(lat,lng);
+
+    map.on("click", e=>{
+        marker.setLatLng(e.latlng);
+        setLocation(e.latlng.lat, e.latlng.lng);
+    });
+
+    marker.on("dragend", ()=>{
+        const p = marker.getLatLng();
+        setLocation(p.lat, p.lng);
+    });
+}
+
+function setLocation(lat,lng){
+    const latVal = Number(lat).toFixed(6);
+    const lngVal = Number(lng).toFixed(6);
+
+    latInput.value = latVal;
+    lngInput.value = lngVal;
+
+    latDisp.innerText = latVal;
+    lngDisp.innerText = lngVal;
+
+    fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latVal}&lon=${lngVal}`)
+        .then(r=>r.json())
+        .then(d=>{
+            addrBox.value = d.display_name || "Selected location";
+        });
+}
+
+function searchLocation(){
+    const q = document.getElementById("locationSearch").value;
+    if(!q) return;
+
+    fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}`)
+        .then(r=>r.json())
+        .then(res=>{
+            if(!res.length) return alert("Location not found");
+            const lat = parseFloat(res[0].lat);
+            const lng = parseFloat(res[0].lon);
+            map.setView([lat,lng], 16);
+            marker.setLatLng([lat,lng]);
+            setLocation(lat,lng);
+        });
+}
+
+function useCurrentLocation(){
+    navigator.geolocation.getCurrentPosition(
+        p=>{
+            map.setView([p.coords.latitude,p.coords.longitude],18);
+            marker.setLatLng([p.coords.latitude,p.coords.longitude]);
+            setLocation(p.coords.latitude,p.coords.longitude);
+        },
+        ()=>alert("Location permission denied")
+    );
+}
+
+initMap();
+</script>
+
+{% endblock %}

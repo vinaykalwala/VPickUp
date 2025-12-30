@@ -25,11 +25,6 @@ class OTPSerializer(serializers.Serializer):
     purpose = serializers.ChoiceField(choices=['register', 'forgot'])
 
 
-class CustomerProfileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CustomerProfile
-        fields = '__all__'
-        read_only_fields = ['latitude', 'longitude', 'is_location_verified', 'user']
 
 
 class CustomerLocationSerializer(serializers.Serializer):
@@ -37,11 +32,7 @@ class CustomerLocationSerializer(serializers.Serializer):
     longitude = serializers.DecimalField(max_digits=9, decimal_places=6)
 
 
-class StoreOwnerProfileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = StoreOwnerProfile
-        fields = '__all__'
-        read_only_fields = ['is_kyc_completed', 'user']
+
 
 class ChangePasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField()
@@ -64,3 +55,44 @@ class AdminRegisterSerializer(serializers.Serializer):
     phone_number = serializers.CharField()
     password = serializers.CharField()
     secret_key = serializers.CharField()
+
+from rest_framework import serializers
+from .models import User, CustomerProfile, StoreOwnerProfile, CustomerAddress
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'phone_number']
+
+class CustomerProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomerProfile
+        fields = ['profile_image']
+    
+    def update(self, instance, validated_data):
+        # Handle profile image separately if needed
+        return super().update(instance, validated_data)
+
+class StoreOwnerProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StoreOwnerProfile
+        fields = [
+            'profile_image',
+            'business_name',
+            'gst_number',
+            'pan_number',
+            'is_kyc_completed'
+        ]
+    
+    def update(self, instance, validated_data):
+        return super().update(instance, validated_data)
+    
+class CustomerAddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomerAddress
+        exclude = ['user']
+    def validate(self, data):
+        data['latitude'] = round(float(data['latitude']), 6)
+        data['longitude'] = round(float(data['longitude']), 6)
+        return data
+
