@@ -18,7 +18,8 @@ urlpatterns = [
     path('products/', ProductListView.as_view(), name='product_list'),
     path('products/create/', ProductCreateView.as_view(), name='product_create'),
     path('products/<slug:slug>/delete/', ProductDeleteView.as_view(), name='product_delete'),
-
+    path('products/<slug:slug>/update/', ProductUpdateView.as_view(), name='product_update'),
+    path('variants/<slug:slug>/update/', VariantUpdateView.as_view(), name='variant_update'),
     # Variants
     path('products/<slug:product_slug>/variants/create/', VariantCreateView.as_view(), name='variant_create'),
     path('variants/<slug:slug>/delete/', VariantDeleteView.as_view(), name='variant_delete'),
