@@ -26,17 +26,61 @@ class CustomerProfile(models.Model):
         related_name='customer_profile'
     )
 
-    profile_image = models.ImageField(upload_to='profiles/customers/', blank=True, null=True)
+    profile_image = models.ImageField(
+        upload_to='profiles/customers/',
+        blank=True,
+        null=True
+    )
 
-    address_line_1 = models.CharField(max_length=255, blank=True)
-    city = models.CharField(max_length=100, blank=True)
-    state = models.CharField(max_length=100, blank=True)
-    pincode = models.CharField(max_length=10, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
-    latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
-    longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    def __str__(self):
+        return self.user.email
 
-    is_location_verified = models.BooleanField(default=False)
+
+class CustomerAddress(models.Model):
+    ADDRESS_LABELS = (
+        ('home', 'Home'),
+        ('office', 'Office'),
+        ('other', 'Other'),
+    )
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='addresses'
+    )
+
+    label = models.CharField(
+        max_length=20,
+        choices=ADDRESS_LABELS,
+        default='home'
+    )
+
+    address_line_1 = models.CharField(max_length=255)
+    city = models.CharField(max_length=100)
+    state = models.CharField(max_length=100)
+    pincode = models.CharField(max_length=10)
+
+    latitude = models.DecimalField(max_digits=9, decimal_places=6)
+    longitude = models.DecimalField(max_digits=9, decimal_places=6)
+
+    is_selected = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-is_selected', '-created_at']
+
+    def save(self, *args, **kwargs):
+        if self.is_selected:
+            CustomerAddress.objects.filter(
+                user=self.user,
+                is_selected=True
+            ).update(is_selected=False)
+
+        super().save(*args, **kwargs)
 
 
 class StoreOwnerProfile(models.Model):

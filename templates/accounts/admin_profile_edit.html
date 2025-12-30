@@ -1,0 +1,13 @@
+<h2>Edit Admin Profile</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Update</button>
+</form>
+
+{% if error %}
+<pre style="color:red;">{{ error }}</pre>
+{% endif %}
+
+<a href="{% url 'profile' %}">⬅ Back</a>

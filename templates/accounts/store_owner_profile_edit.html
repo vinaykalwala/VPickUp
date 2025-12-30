@@ -1,0 +1,23 @@
+<h2>Edit Store Owner Profile</h2>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <fieldset>
+        <legend>User Info</legend>
+        {{ user_form.as_p }}
+    </fieldset>
+
+    <fieldset>
+        <legend>Business Info</legend>
+        {{ profile_form.as_p }}
+    </fieldset>
+
+    <button type="submit">Update</button>
+</form>
+
+{% if error %}
+<pre style="color:red;">{{ error }}</pre>
+{% endif %}
+
+<a href="{% url 'profile' %}">⬅ Back</a>

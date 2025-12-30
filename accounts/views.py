@@ -1,4 +1,3 @@
-from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 
@@ -12,6 +11,10 @@ from .serializers import *
 from .forms import *
 from .utils import generate_otp, send_otp_email
 from django.conf import settings
+
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+
 
 
 class CustomerRegisterView(APIView):
@@ -336,3 +339,289 @@ def dashboard(request):
         return render(request, 'accounts/seller_dashboard.html')
     else:
         return render(request, 'accounts/admin_dashboard.html')
+
+@login_required
+def profile_redirect(request):
+    if request.user.role == 'customer':
+        return redirect('customer_profile')
+    elif request.user.role == 'store_owner':
+        return redirect('store_owner_profile')
+    else:
+        return redirect('admin_profile')
+
+class CustomerProfileView(APIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        return render(
+            request,
+            'accounts/customer_profile_view.html',
+            {
+                'user': request.user,
+                'profile': request.user.customer_profile,
+                'addresses': request.user.addresses.filter(is_active=True)
+            }
+        )
+
+class CustomerProfileEditView(APIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        return render(
+            request,
+            'accounts/customer_profile_edit.html',
+            {
+                'user_form': UserForm(instance=request.user),
+                'profile_form': CustomerProfileForm(
+                    instance=request.user.customer_profile
+                )
+            }
+        )
+
+    def post(self, request):
+        # Prepare data dictionary for serializer that includes files
+        profile_data = request.POST.copy()
+        if request.FILES:
+            profile_data.update(request.FILES.dict())
+        
+        us = UserSerializer(request.user, data=request.POST)
+        ps = CustomerProfileSerializer(
+            request.user.customer_profile,
+            data=profile_data,
+            partial=True
+        )
+
+        if not us.is_valid() or not ps.is_valid():
+            # Re-initialize forms with submitted data for error display
+            return render(
+                request,
+                'accounts/customer_profile_edit.html',
+                {
+                    'user_form': UserForm(request.POST, instance=request.user),
+                    'profile_form': CustomerProfileForm(
+                        profile_data,  # Use profile_data which includes files
+                        request.FILES,
+                        instance=request.user.customer_profile
+                    ),
+                    'error': {**us.errors, **ps.errors}
+                }
+            )
+
+        us.save()
+        ps.save()
+        messages.success(request, 'Profile updated')
+        return redirect('profile')
+
+class StoreOwnerProfileEditView(APIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        return render(
+            request,
+            'accounts/storeowner_profile_edit.html',
+            {
+                'user_form': UserForm(instance=request.user),
+                'profile_form': StoreOwnerProfileForm(
+                    instance=request.user.store_owner_profile
+                )
+            }
+        )
+
+    def post(self, request):
+        # Prepare data dictionary for serializer that includes files
+        profile_data = request.POST.copy()
+        if request.FILES:
+            profile_data.update(request.FILES.dict())
+        
+        us = UserSerializer(request.user, data=request.POST)
+        ps = StoreOwnerProfileSerializer(
+            request.user.store_owner_profile,
+            data=profile_data,
+            partial=True
+        )
+
+        if not us.is_valid() or not ps.is_valid():
+            return render(
+                request,
+                'accounts/storeowner_profile_edit.html',
+                {
+                    'user_form': UserForm(request.POST, instance=request.user),
+                    'profile_form': StoreOwnerProfileForm(
+                        profile_data,  # Use profile_data which includes files
+                        request.FILES,
+                        instance=request.user.store_owner_profile
+                    ),
+                    'error': {**us.errors, **ps.errors}
+                }
+            )
+
+        us.save()
+        ps.save()
+        messages.success(request, 'Profile updated')
+        return redirect('profile')
+class AddressCreateView(APIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        return render(
+            request,
+            'accounts/address_form.html',
+            {'form': CustomerAddressForm()}
+        )
+
+    def post(self, request):
+        form = CustomerAddressForm(request.POST)
+        serializer = CustomerAddressSerializer(data=request.POST)
+
+        if not serializer.is_valid():
+            return render(
+                request,
+                'accounts/address_form.html',
+                {
+                    'form': form,
+                    'error': serializer.errors
+                }
+            )
+
+        serializer.save(
+            user=request.user,
+            is_active=True,        # ✅ FORCE ACTIVE
+            is_selected=False      # ✅ SAFE DEFAULT
+        )
+
+        messages.success(request, 'Address added successfully')
+        return redirect('profile')
+
+class AddressUpdateView(APIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, pk):
+        address = get_object_or_404(
+            CustomerAddress,
+            pk=pk,
+            user=request.user,
+            is_active=True
+        )
+
+        form = CustomerAddressForm(instance=address)
+
+        return render(
+            request,
+            'accounts/address_edit.html',
+            {
+                'form': form,
+                'address': address
+            }
+        )
+
+    def post(self, request, pk):
+        address = get_object_or_404(
+            CustomerAddress,
+            pk=pk,
+            user=request.user,
+            is_active=True
+        )
+
+        # 🔐 Preserve state
+        current_selected = address.is_selected
+        current_active = address.is_active
+
+        form = CustomerAddressForm(request.POST, instance=address)
+
+        if not form.is_valid():
+            return render(
+                request,
+                'accounts/address_edit.html',
+                {
+                    'form': form,
+                    'address': address,
+                    'error': form.errors
+                }
+            )
+
+        addr = form.save(commit=False)
+        addr.user = request.user
+        addr.is_selected = current_selected   # ✅ preserve
+        addr.is_active = current_active       # ✅ preserve
+        addr.save()
+
+        messages.success(request, 'Address updated')
+        return redirect('profile')
+
+
+class AddressSelectView(APIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, pk):
+        addr = get_object_or_404(CustomerAddress, pk=pk, user=request.user)
+        addr.is_selected = True
+        addr.save()
+        messages.success(request, 'Address selected')
+        return redirect('profile')
+
+class AddressDeleteView(APIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, pk):
+        addr = get_object_or_404(CustomerAddress, pk=pk, user=request.user)
+        addr.is_active = False
+        addr.save()
+        messages.success(request, 'Address removed')
+        return redirect('profile')
+
+class StoreOwnerProfileView(APIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        return render(
+            request,
+            'accounts/storeowner_profile_view.html',
+            {
+                'user': request.user,
+                'profile': request.user.store_owner_profile
+            }
+        )
+
+class AdminProfileView(APIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        return render(
+            request,
+            'accounts/admin_profile_view.html',
+            {'user': request.user}
+        )
+
+class AdminProfileEditView(APIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        return render(
+            request,
+            'accounts/admin_profile_edit.html',
+            {'form': UserForm(instance=request.user)}
+        )
+
+    def post(self, request):
+        serializer = UserSerializer(request.user, data=request.POST)
+
+        if not serializer.is_valid():
+            return render(
+                request,
+                'accounts/admin_profile_edit.html',
+                {'form': UserForm(request.POST), 'error': serializer.errors}
+            )
+
+        serializer.save()
+        messages.success(request, 'Profile updated')
+        return redirect('profile')

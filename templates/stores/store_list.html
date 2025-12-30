@@ -817,20 +817,23 @@
 
         <div class="opening-hours">
             <h3>Opening Hours</h3>
+
             <div class="hours-display">
                 <span class="hours-text">
                     {{ store.opening_time|time:"g:i A" }} -
                     {{ store.closing_time|time:"g:i A" }}
                 </span>
 
-                {% now "H:i" as current_time %}
-                {% if current_time >= store.opening_time|time:"H:i" and current_time <= store.closing_time|time:"H:i" %}
+                <!-- {% if is_open %}
                     <span class="status-indicator status-open">● Open Now</span>
                 {% else %}
                     <span class="status-indicator status-closed">● Closed Now</span>
                 {% endif %}
-            </div>
-            <p style="color:var(--text-light); font-size:0.95rem;">Daily schedule</p>
+            </div> -->
+
+            <!-- <p style="color:var(--text-light); font-size:0.95rem;">
+                Daily schedule
+            </p> -->
         </div>
 
     </div>
