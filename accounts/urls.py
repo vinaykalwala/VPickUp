@@ -21,8 +21,8 @@ urlpatterns = [
      path('profile/customer/', CustomerProfileView.as_view(), name='customer_profile'),
     path('profile/customer/edit/', CustomerProfileEditView.as_view(), name='customer_profile_edit'),
 
-    path('profile/store-owner/', StoreOwnerProfileView.as_view(), name='storeowner_profile'),
-    path('profile/store-owner/edit/', StoreOwnerProfileEditView.as_view(), name='storeowner_profile_edit'),
+    path('profile/store-owner/', StoreOwnerProfileView.as_view(), name='store_owner_profile'),
+    path('profile/store-owner/edit/', StoreOwnerProfileEditView.as_view(), name='store_owner_profile_edit'),
 
     path('profile/admin/', AdminProfileView.as_view(), name='admin_profile'),
     path('profile/admin/edit/', AdminProfileEditView.as_view(), name='admin_profile_edit'),

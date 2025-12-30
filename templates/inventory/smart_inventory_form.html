@@ -1,182 +1,664 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Smart Inventory Create</title>
+{% extends "admin_base.html" %}
+{% load static %}
+
+{% block content %}
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f6f8;
-            margin: 0;
-            padding: 20px;
+        :root {
+            --primary: #0e7490;
+            --primary-light: #0891b2;
+            --primary-dark: #155e75;
+            --secondary: #f8fafc;
+            --accent: #f0f9ff;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 16px;
+            --transition: all 0.2s ease;
         }
-        .container {
-            width: 900px;
-            margin: 20px auto;
-            background: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        h2, h3 {
-            margin-bottom: 15px;
-            color: #333;
-        }
-        h2 {
-            border-bottom: 2px solid #3498db;
-            padding-bottom: 10px;
-        }
-        label {
-            font-weight: bold;
-            margin-top: 12px;
-            display: block;
-            color: #555;
-        }
-        input, select, textarea {
-            width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
-        .row {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-        .row > div {
-            flex: 1;
-        }
-        .card {
-            border: 1px solid #ddd;
-            padding: 20px;
-            margin-top: 20px;
-            border-radius: 6px;
-            background: #f9f9f9;
-        }
-        .variant-card {
+
+      .container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 16px;
+}
+
+/* Small phones */
+@media (min-width: 480px) {
+    .container {
+        padding: 18px;
+    }
+}
+
+/* Tablets */
+@media (min-width: 768px) {
+    .container {
+        max-width: 720px;
+        padding: 20px;
+    }
+}
+
+/* Small laptops */
+@media (min-width: 1024px) {
+    .container {
+        max-width: 960px;
+        padding: 24px;
+    }
+}
+
+/* Desktops */
+@media (min-width: 1280px) {
+    .container {
+        max-width: 1200px;
+        padding: 30px;
+    }
+}
+
+/* Large screens */
+@media (min-width: 1536px) {
+    .container {
+        max-width: 1400px;
+    }
+}
+
+
+        /* Header Section */
+        .form-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            margin-bottom: 40px;
+            color: white;
+            box-shadow: var(--shadow-lg);
             position: relative;
-            margin-top: 15px;
-            padding: 15px;
-            background: white;
-            border: 1px solid #e0e0e0;
-            border-radius: 5px;
+            overflow: hidden;
         }
-        .remove-btn {
+
+        .form-header::before {
+            content: '';
             position: absolute;
-            top: 10px;
-            right: 10px;
-            background: #e74c3c;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            cursor: pointer;
-            border-radius: 3px;
-            font-size: 12px;
+            top: -50%;
+            right: -20%;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
         }
-        .add-btn {
-            margin-top: 15px;
-            background: #3498db;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            cursor: pointer;
-            border-radius: 4px;
-            font-size: 14px;
+
+        .form-header::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 50%;
         }
-        .submit-btn {
-            margin-top: 25px;
-            background: #2ecc71;
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            font-size: 16px;
-            cursor: pointer;
-            border-radius: 4px;
+
+        .header-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .header-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 700px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .header-icon {
+            position: absolute;
+            right: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 4rem;
+            opacity: 0.2;
+            z-index: 1;
+        }
+
+        /* Main Layout */
+        .form-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 1200px) {
+            .form-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Cards */
+        .form-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+
+        .form-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%);
         }
-        .error-box {
-            background: #ffecec;
-            border: 1px solid #e74c3c;
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 5px;
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed var(--border);
         }
-        .muted {
-            font-size: 13px;
-            color: #777;
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--accent) 0%, #e0f2fe 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin: 0;
+        }
+
+        .card-subtitle {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-top: 5px;
+        }
+
+        /* Form Elements */
+        .field-group {
+            margin-bottom: 25px;
+        }
+
+        .field-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+            font-size: 0.95rem;
+        }
+
+        .field-label .required {
+            color: var(--danger);
+            margin-left: 3px;
+        }
+
+        .field-help {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-top: 6px;
             font-style: italic;
         }
-        .global-badge {
-            background: #3498db;
-            color: white;
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-size: 11px;
-            margin-left: 5px;
+
+        input, select, textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 1rem;
+            transition: var(--transition);
+            background: white;
+            color: var(--text-dark);
         }
-        .info-box {
-            background: #e8f4fc;
-            border: 1px solid #b3d9ff;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 15px;
-        }
-        .field-group {
-            margin-bottom: 15px;
-        }
+
         input:focus, select:focus, textarea:focus {
             outline: none;
-            border-color: #3498db;
-            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(14, 116, 144, 0.1);
         }
-        .messages {
+
+        input::placeholder, textarea::placeholder {
+            color: #94a3b8;
+        }
+
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%230e7490' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            background-size: 16px;
+            padding-right: 40px;
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        /* Row Layout */
+        .field-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .field-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Global Badge */
+        .global-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 12px;
+            margin-left: 8px;
+            font-weight: 600;
+            vertical-align: middle;
+        }
+
+        /* Variant Cards */
+        .variants-container {
+            margin-top: 20px;
+        }
+
+        .variant-card {
+            background: var(--accent);
+            border-radius: var(--radius-md);
+            padding: 25px;
             margin-bottom: 20px;
+            border: 1px solid #bae6fd;
+            position: relative;
         }
+
+        .variant-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--primary) 0%, var(--primary-light) 100%);
+            border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+        }
+
+        .variant-remove-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: white;
+            border: 1px solid var(--danger);
+            color: var(--danger);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 1.2rem;
+        }
+
+        .variant-remove-btn:hover {
+            background: var(--danger);
+            color: white;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 14px 28px;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(14, 116, 144, 0.2);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary-light);
+        }
+
+        .btn-secondary:hover {
+            background: var(--accent);
+            border-color: var(--primary);
+        }
+
+        .btn-add {
+            width: 100%;
+            margin-top: 10px;
+            padding: 16px;
+            font-size: 1.05rem;
+        }
+
+        .btn-submit {
+            width: 100%;
+            margin-top: 30px;
+            padding: 18px;
+            font-size: 1.1rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 20px rgba(14, 116, 144, 0.3);
+        }
+
+        /* Messages */
+        .messages {
+            margin-bottom: 30px;
+        }
+
         .alert {
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 10px;
-        }
-        .alert-success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        .alert-error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        .alert-info {
-            background: #d1ecf1;
-            color: #0c5460;
-            border: 1px solid #bee5eb;
-        }
-        .debug-info {
-            background: #f8f9fa;
-            border: 1px solid #dee2e6;
-            padding: 10px;
-            border-radius: 5px;
+            padding: 18px 20px;
+            border-radius: var(--radius-md);
             margin-bottom: 15px;
-            font-size: 12px;
-            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-left: 4px solid transparent;
         }
+
+        .alert-success {
+            background: #f0fdf4;
+            color: #166534;
+            border-left-color: #22c55e;
+        }
+
+        .alert-error {
+            background: #fef2f2;
+            color: #991b1b;
+            border-left-color: #ef4444;
+        }
+
+        .alert-info {
+            background: #f0f9ff;
+            color: var(--primary-dark);
+            border-left-color: var(--primary);
+        }
+
+        /* Error Box */
+        .error-box {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: var(--radius-md);
+            padding: 25px;
+            margin-bottom: 30px;
+            border-left: 4px solid var(--danger);
+        }
+
+        .error-title {
+            color: var(--danger);
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .error-list {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .error-list li {
+            margin-bottom: 8px;
+            color: #991b1b;
+        }
+
+        /* Stats */
+        .stats {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .stat-badge {
+            background: var(--accent);
+            color: var(--primary);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        /* File Input */
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .file-input-wrapper input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .file-input-label {
+            display: block;
+            padding: 14px 16px;
+            border: 2px dashed var(--border);
+            border-radius: var(--radius-sm);
+            text-align: center;
+            color: var(--text-light);
+            transition: var(--transition);
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .file-input-wrapper:hover .file-input-label {
+            border-color: var(--primary-light);
+            background: var(--accent);
+            color: var(--primary);
+        }
+
+        /* Existing Selection */
+        .existing-select {
+            margin-bottom: 25px;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .form-header {
+                padding: 30px 20px;
+                text-align: center;
+            }
+            
+            .header-icon {
+                display: none;
+            }
+            
+            .header-title {
+                font-size: 2rem;
+            }
+            
+            .form-card {
+                padding: 20px;
+            }
+            
+            .card-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .card-icon {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+        }
+        /* ================================
+   MAKE SELECT2 MATCH INPUT FIELDS
+   ================================ */
+
+.select2-container {
+    width: 100% !important;
+}
+
+/* Force vertical centering for Select2 text & placeholder */
+.select2-container--default .select2-selection--single {
+    height: 52px !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+/* Text + placeholder */
+.select2-container--default
+.select2-selection--single
+.select2-selection__rendered {
+    display: flex !important;
+    align-items: center !important;
+    height: 100% !important;
+    padding: 0 16px !important;
+    line-height: normal !important;
+}
+
+/* Placeholder specifically */
+.select2-container--default
+.select2-selection__placeholder {
+    display: flex !important;
+    align-items: center !important;
+    height: 100% !important;
+    color: #94a3b8 !important;
+}
+
+
+/* Arrow */
+.select2-container--default
+.select2-selection--single
+.select2-selection__arrow {
+    height: 100% !important;
+    right: 12px !important;
+    top: 0 !important;
+}
+
+/* Focus state – same as input */
+.select2-container--default.select2-container--focus
+.select2-selection--single {
+    border-color: var(--primary-light) !important;
+    box-shadow: 0 0 0 3px rgba(14, 116, 144, 0.1) !important;
+}
+
+/* Hover */
+.select2-container--default
+.select2-selection--single:hover {
+    border-color: var(--primary-light);
+}
+
+/* Dropdown */
+.select2-dropdown {
+    border: 2px solid var(--primary-light) !important;
+    border-radius: var(--radius-sm) !important;
+    box-shadow: var(--shadow-lg) !important;
+}
+
+/* Search input inside dropdown */
+.select2-search--dropdown .select2-search__field {
+    padding: 12px 14px !important;
+    font-size: 0.95rem !important;
+    border: 2px solid var(--border) !important;
+    border-radius: var(--radius-sm) !important;
+}
+
+/* Dropdown items */
+.select2-results__option {
+    padding: 12px 16px !important;
+    font-size: 0.95rem;
+}
+
+/* Highlighted option */
+.select2-results__option--highlighted[aria-selected] {
+    background: var(--accent) !important;
+    color: var(--primary-dark) !important;
+}
+
     </style>
-</head>
-<body>
+
+<!-- Add FontAwesome CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <div class="container">
-    <h2>Smart Product + Inventory Creation</h2>
-    
+    <!-- Header Section -->
+    <div class="form-header">
+        <h1 class="header-title">Smart Product + Inventory Creation</h1>
+        <p class="header-subtitle">Create or update products with variants and inventory details in a single streamlined form. Select existing categories or create new ones as needed.</p>
+        <div class="header-icon">
+            <i class="fas fa-boxes"></i>
+        </div>
+    </div>
+
     {% if messages %}
     <div class="messages">
         {% for message in messages %}
             <div class="alert alert-{{ message.tags }}">
+                {% if message.tags == 'success' %}
+                    <i class="fas fa-check-circle"></i>
+                {% endif %}
+                {% if message.tags == 'error' %}
+                    <i class="fas fa-times-circle"></i>
+                {% endif %}
+                {% if message.tags == 'info' %}
+                    <i class="fas fa-info-circle"></i>
+                {% endif %}
                 {{ message }}
             </div>
         {% endfor %}
@@ -185,8 +667,11 @@
     
     {% if errors %}
         <div class="error-box">
-            <strong>Error(s):</strong>
-            <ul>
+            <div class="error-title">
+                <i class="fas fa-exclamation-triangle"></i>
+                Error(s) Detected
+            </div>
+            <ul class="error-list">
                 {% if errors is string %}
                     <li>{{ errors }}</li>
                 {% elif errors is list %}
@@ -213,201 +698,280 @@
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
 
-        <!-- CATEGORY -->
-        <div class="card">
-            <h3>Category</h3>
-            
-            <div class="field-group">
-                <label>Select Existing Category</label>
-                <select name="category" id="category_select">
-                    <option value="">-- Select Existing Category --</option>
-                    {% for c in categories %}
-                        <option value="{{ c.id }}"
-                            {% if post and post.category == c.id|stringformat:"s" %}selected{% endif %}
-                        >
-                            {{ c.name }}
-                            {% if c.is_global %}<span class="global-badge">Global</span>{% endif %}
-                        </option>
-                    {% empty %}
-                        <option value="">No categories available</option>
-                    {% endfor %}
-                </select>
-                <p class="muted">Found {{ categories.count }} categories</p>
-            </div>
-
-            <div class="field-group">
-                <label>Or Create New Category</label>
-                <input type="text" name="new_category_name" id="new_category_name"
-                       value="{{ post.new_category_name|default:'' }}"
-                       placeholder="Enter new category name">
-                <p class="muted">Leave blank if selecting existing category</p>
-            </div>
-        </div>
-
-        <!-- SUBCATEGORY -->
-        <div class="card">
-            <h3>SubCategory</h3>
-            
-            <div class="field-group">
-                <label>Select Existing SubCategory</label>
-                <select name="subcategory" id="subcategory_select">
-                    <option value="">-- Select Existing SubCategory --</option>
-                    {% for s in subcategories %}
-                        <option value="{{ s.id }}"
-                            {% if post and post.subcategory == s.id|stringformat:"s" %}selected{% endif %}
-                        >
-                            {{ s.name }} ({{ s.category.name }})
-                            {% if s.is_global %}<span class="global-badge">Global</span>{% endif %}
-                        </option>
-                    {% empty %}
-                        <option value="">No subcategories available</option>
-                    {% endfor %}
-                </select>
-                <p class="muted">Found {{ subcategories.count }} subcategories</p>
-            </div>
-
-            <div class="field-group">
-                <label>Or Create New SubCategory</label>
-                <input type="text" name="new_subcategory_name" id="new_subcategory_name"
-                       value="{{ post.new_subcategory_name|default:'' }}"
-                       placeholder="Enter new subcategory name">
-                <p class="muted">Leave blank if selecting existing subcategory</p>
-            </div>
-        </div>
-
-        <!-- PRODUCT -->
-        <div class="card">
-            <h3>Product</h3>
-            
-            <div class="field-group">
-                <label>Select Existing Product (Optional)</label>
-                <select name="existing_product" id="existing_product_select">
-                    <option value="">-- Create New Product --</option>
-                    {% for p in products %}
-                        <option value="{{ p.id }}" 
-                            {% if post and post.existing_product == p.id|stringformat:"s" %}selected{% endif %}>
-                            {{ p.name }} ({{ p.category.name }})
-                        </option>
-                    {% empty %}
-                        <option value="">No products in your store</option>
-                    {% endfor %}
-                </select>
-                <p class="muted">Found {{ products.count }} products in your store</p>
-            </div>
-
-            <div id="new_product_fields">
-                <p class="muted">If selecting existing product above, below fields are ignored.</p>
-
-                <div class="field-group">
-                    <label>Product Name *</label>
-                    <input name="product_name" id="product_name" 
-                           value="{{ post.product_name|default:'' }}" required>
-                </div>
-
-                <div class="row">
-                    <div>
-                        <label>Brand (Optional)</label>
-                        <input name="brand" value="{{ post.brand|default:'' }}">
+        <!-- First Row: Category and Subcategory Forms -->
+        <div class="form-layout">
+            <!-- Category Form -->
+            <div class="form-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-tags"></i>
                     </div>
                     <div>
-                        <label>Product Image (Optional)</label>
-                        <input type="file" name="product_image" accept="image/*">
+                        <h3 class="card-title">Category</h3>
+                        <p class="card-subtitle">Select existing category or create a new one</p>
+                    </div>
+                </div>
+
+                <div class="existing-select">
+                    <label class="field-label">Select Existing Category</label>
+                    <select name="category" id="category_select">
+                        <option value="">-- Select Existing Category --</option>
+                        {% for c in categories %}
+                            <option value="{{ c.id }}"
+                                {% if post and post.category == c.id|stringformat:"s" %}selected{% endif %}
+                            >
+                                {{ c.name }}
+                                {% if c.is_global %}<span class="global-badge">Global</span>{% endif %}
+                            </option>
+                        {% empty %}
+                            <option value="">No categories available</option>
+                        {% endfor %}
+                    </select>
+                    <div class="stats">
+                        <span class="stat-badge">Found {{ categories.count }} categories</span>
                     </div>
                 </div>
 
                 <div class="field-group">
-                    <label>Description (Optional)</label>
-                    <textarea name="description">{{ post.description|default:'' }}</textarea>
+                    <label class="field-label">Or Create New Category</label>
+                    <input type="text" name="new_category_name" id="new_category_name"
+                           value="{{ post.new_category_name|default:'' }}"
+                           placeholder="Enter new category name">
+                    <p class="field-help">Leave blank if selecting existing category</p>
+                </div>
+            </div>
+
+            <!-- Subcategory Form -->
+            <div class="form-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-folder-open"></i>
+                    </div>
+                    <div>
+                        <h3 class="card-title">SubCategory</h3>
+                        <p class="card-subtitle">Select existing subcategory or create a new one</p>
+                    </div>
+                </div>
+
+                <div class="existing-select">
+                    <label class="field-label">Select Existing SubCategory</label>
+                    <select name="subcategory" id="subcategory_select">
+                        <option value="">-- Select Existing SubCategory --</option>
+                        {% for s in subcategories %}
+                            <option value="{{ s.id }}"
+                                {% if post and post.subcategory == s.id|stringformat:"s" %}selected{% endif %}
+                            >
+                                {{ s.name }} ({{ s.category.name }})
+                                {% if s.is_global %}<span class="global-badge">Global</span>{% endif %}
+                            </option>
+                        {% empty %}
+                            <option value="">No subcategories available</option>
+                        {% endfor %}
+                    </select>
+                    <div class="stats">
+                        <span class="stat-badge">Found {{ subcategories.count }} subcategories</span>
+                    </div>
+                </div>
+
+                <div class="field-group">
+                    <label class="field-label">Or Create New SubCategory</label>
+                    <input type="text" name="new_subcategory_name" id="new_subcategory_name"
+                           value="{{ post.new_subcategory_name|default:'' }}"
+                           placeholder="Enter new subcategory name">
+                    <p class="field-help">Leave blank if selecting existing subcategory</p>
                 </div>
             </div>
         </div>
 
-        <!-- VARIANTS -->
-        <div class="card">
-            <h3>Variants (At least one required)</h3>
+        <!-- Second Row: Product and Variants Forms (Column Layout) -->
+        <div style="display: grid; grid-template-columns: 1fr; gap: 30px;">
+            <!-- Product Form -->
+            <div class="form-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-cube"></i>
+                    </div>
+                    <div>
+                        <h3 class="card-title">Product Details</h3>
+                        <p class="card-subtitle">Select existing product or create a new one</p>
+                    </div>
+                </div>
 
-            <div id="variants-container">
-                <div class="card variant-card">
-                    <button type="button" class="remove-btn" onclick="removeVariant(this)">Remove</button>
+                <div class="existing-select">
+                    <label class="field-label">Select Existing Product (Optional)</label>
+                    <select name="existing_product" id="existing_product_select">
+                        <option value="">-- Create New Product --</option>
+                        {% for p in products %}
+                            <option value="{{ p.id }}" 
+                                {% if post and post.existing_product == p.id|stringformat:"s" %}selected{% endif %}>
+                                {{ p.name }} ({{ p.category.name }})
+                            </option>
+                        {% empty %}
+                            <option value="">No products in your store</option>
+                        {% endfor %}
+                    </select>
+                    <div class="stats">
+                        <span class="stat-badge">Found {{ products.count }} products in your store</span>
+                    </div>
+                </div>
 
-                    <label>Variant Name * (e.g. 500g, 1kg, Size M)</label>
-                    <input name="variants[0][variant_name]" required>
+                <div id="new_product_fields">
+                    <div style="background: var(--accent); padding: 15px; border-radius: var(--radius-sm); margin: 20px 0;">
+                        <p style="margin: 0; color: var(--primary); font-weight: 600;">
+                            <i class="fas fa-info-circle"></i> If selecting existing product above, below fields are ignored.
+                        </p>
+                    </div>
 
-                    <div class="row">
-                        <div>
-                            <label>SKU (Optional)</label>
-                            <input name="variants[0][sku]" placeholder="Stock Keeping Unit">
+                    <div class="field-group">
+                        <label class="field-label">Product Name <span class="required">*</span></label>
+                        <input name="product_name" id="product_name" 
+                               value="{{ post.product_name|default:'' }}" required>
+                    </div>
+
+                    <div class="field-row">
+                        <div class="field-group">
+                            <label class="field-label">Brand (Optional)</label>
+                            <input name="brand" value="{{ post.brand|default:'' }}" placeholder="e.g., Nike, Apple, Samsung">
                         </div>
-                        <div>
-                            <label>Barcode (Optional)</label>
-                            <input name="variants[0][barcode]" placeholder="Product barcode">
+                        <div class="field-group">
+                            <label class="field-label">Product Image (Optional)</label>
+                            <div class="file-input-wrapper">
+                                <input type="file" name="product_image" accept="image/*">
+                                <div class="file-input-label">
+                                    <i class="fas fa-folder-open"></i> Choose Product Image
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div>
-                            <label>Price *</label>
-                            <input name="variants[0][price]" type="number" step="0.01" min="0" required>
-                        </div>
-                        <div>
-                            <label>Quantity *</label>
-                            <input name="variants[0][quantity]" type="number" min="0" required>
-                        </div>
+                    <div class="field-group">
+                        <label class="field-label">Description (Optional)</label>
+                        <textarea name="description" placeholder="Enter product description...">{{ post.description|default:'' }}</textarea>
                     </div>
-
-                    <label>Variant Image (Optional)</label>
-                    <input type="file" name="variants[0][image]" accept="image/*">
                 </div>
             </div>
 
-            <button type="button" class="add-btn" onclick="addVariant()">
-                ➕ Add Another Variant
-            </button>
+            <!-- Variants Form -->
+            <div class="form-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-layer-group"></i>
+                    </div>
+                    <div>
+                        <h3 class="card-title">Product Variants</h3>
+                        <p class="card-subtitle">Add at least one variant with pricing and inventory</p>
+                    </div>
+                </div>
+
+                <div id="variants-container">
+                    <div class="variant-card">
+                        <div class="variant-remove-btn" onclick="removeVariant(this)">
+                            <i class="fas fa-times"></i>
+                        </div>
+
+                        <div class="field-group">
+                            <label class="field-label">Variant Name <span class="required">*</span></label>
+                            <input name="variants[0][variant_name]" required placeholder="e.g., 500g, 1kg, Size M, Color Red">
+                        </div>
+
+                        <div class="field-row">
+                            <div class="field-group">
+                                <label class="field-label">SKU (Optional)</label>
+                                <input name="variants[0][sku]" placeholder="Stock Keeping Unit">
+                            </div>
+                            <div class="field-group">
+                                <label class="field-label">Barcode (Optional)</label>
+                                <input name="variants[0][barcode]" placeholder="Product barcode">
+                            </div>
+                        </div>
+
+                        <div class="field-row">
+                            <div class="field-group">
+                                <label class="field-label">Price <span class="required">*</span></label>
+                                <input name="variants[0][price]" type="number" step="0.01" min="0" required placeholder="0.00">
+                            </div>
+                            <div class="field-group">
+                                <label class="field-label">Quantity <span class="required">*</span></label>
+                                <input name="variants[0][quantity]" type="number" min="0" required placeholder="0">
+                            </div>
+                        </div>
+
+                        <div class="field-group">
+                            <label class="field-label">Variant Image (Optional)</label>
+                            <div class="file-input-wrapper">
+                                <input type="file" name="variants[0][image]" accept="image/*">
+                                <div class="file-input-label">
+                                    <i class="fas fa-folder-open"></i> Choose Variant Image
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="button" class="btn btn-secondary btn-add" onclick="addVariant()">
+                    <i class="fas fa-plus"></i> Add Another Variant
+                </button>
+            </div>
         </div>
 
-        <button type="submit" class="submit-btn">Save Product & Inventory</button>
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-submit" style="color: #fff;">
+            <i class="fas fa-save"></i> Save Product & Inventory
+        </button>
     </form>
 </div>
 
 <script>
+// Preserving all original JavaScript functionality
 let variantIndex = 1;
 
 function addVariant() {
     const container = document.getElementById("variants-container");
 
     const div = document.createElement("div");
-    div.className = "card variant-card";
+    div.className = "variant-card";
 
     div.innerHTML = `
-        <button type="button" class="remove-btn" onclick="removeVariant(this)">Remove</button>
+        <div class="variant-remove-btn" onclick="removeVariant(this)">
+            <i class="fas fa-times"></i>
+        </div>
 
-        <label>Variant Name *</label>
-        <input name="variants[${variantIndex}][variant_name]" required>
+        <div class="field-group">
+            <label class="field-label">Variant Name <span class="required">*</span></label>
+            <input name="variants[${variantIndex}][variant_name]" required placeholder="e.g., 500g, 1kg, Size M, Color Red">
+        </div>
 
-        <div class="row">
-            <div>
-                <label>SKU (Optional)</label>
+        <div class="field-row">
+            <div class="field-group">
+                <label class="field-label">SKU (Optional)</label>
                 <input name="variants[${variantIndex}][sku]" placeholder="Stock Keeping Unit">
             </div>
-            <div>
-                <label>Barcode (Optional)</label>
+            <div class="field-group">
+                <label class="field-label">Barcode (Optional)</label>
                 <input name="variants[${variantIndex}][barcode]" placeholder="Product barcode">
             </div>
         </div>
 
-        <div class="row">
-            <div>
-                <label>Price *</label>
-                <input name="variants[${variantIndex}][price]" type="number" step="0.01" min="0" required>
+        <div class="field-row">
+            <div class="field-group">
+                <label class="field-label">Price <span class="required">*</span></label>
+                <input name="variants[${variantIndex}][price]" type="number" step="0.01" min="0" required placeholder="0.00">
             </div>
-            <div>
-                <label>Quantity *</label>
-                <input name="variants[${variantIndex}][quantity]" type="number" min="0" required>
+            <div class="field-group">
+                <label class="field-label">Quantity <span class="required">*</span></label>
+                <input name="variants[${variantIndex}][quantity]" type="number" min="0" required placeholder="0">
             </div>
         </div>
 
-        <label>Variant Image (Optional)</label>
-        <input type="file" name="variants[${variantIndex}][image]" accept="image/*">
+        <div class="field-group">
+            <label class="field-label">Variant Image (Optional)</label>
+            <div class="file-input-wrapper">
+                <input type="file" name="variants[${variantIndex}][image]" accept="image/*">
+                <div class="file-input-label">
+                    <i class="fas fa-folder-open"></i> Choose Variant Image
+                </div>
+            </div>
+        </div>
     `;
 
     container.appendChild(div);
@@ -460,6 +1024,31 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
-</body>
-</html>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+$(document).ready(function () {
+    $('#category_select').select2({
+        placeholder: "Search or select category",
+        allowClear: true,
+        width: '100%'
+    });
+
+    $('#subcategory_select').select2({
+        placeholder: "Search or select subcategory",
+        allowClear: true,
+        width: '100%'
+    });
+
+    $('#existing_product_select').select2({
+        placeholder: "Search product (optional)",
+        allowClear: true,
+        width: '100%'
+    });
+});
+</script>
+
+{% endblock %}

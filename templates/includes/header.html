@@ -279,7 +279,7 @@ body {
   <div class="vp-header-top">
     <div class="vp-header-top-wrap">
 
-      <a href="/" class="vp-logo">V<span>Pickup</span></a>
+      <a href="/" class="vp-logo"><span>Pickup</span></a>
 
       <div class="vp-search">
         <input type="text" placeholder="Search groceries, stores, items..." />
@@ -287,7 +287,15 @@ body {
 
       <!-- LOGIN / SIGNUP -->
       <div class="vp-auth">
-        <a href="{% url 'login' %}" class="vp-login">Login</a>
+{% if request.user.is_authenticated %}
+  <a href="{% url 'logout' %}" class="vp-login">
+    <i class="fa-solid fa-right-from-bracket"></i> Logout
+  </a>
+{% else %}
+  <a href="{% url 'login' %}" class="vp-login">
+    <i class="fa-solid fa-right-to-bracket"></i> Login
+  </a>
+{% endif %}
         <a href="#" class="vp-signup">Sign Up</a>
       </div>
 
@@ -302,10 +310,13 @@ body {
         </div>
 
         <div class="vp-icon-btn" title="Profile">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
-            <circle cx="12" cy="8" r="4"/>
-            <path d="M4 20c2-4 14-4 16 0"/>
-          </svg>
+        <a href="{% url 'profile' %}" class="vp-icon-btn" title="Profile">
+  <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+    <circle cx="12" cy="8" r="4"/>
+    <path d="M4 20c2-4 14-4 16 0"/>
+  </svg>
+</a>
+
         </div>
       </div>
 

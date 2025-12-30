@@ -1,107 +1,647 @@
-<h2>Products</h2>
+{% extends "admin_base.html" %}
+{% block content %}
+{% load static %}
 
-<a href="{% url 'product_create' %}">➕ Add Product</a>
+<style>
+:root{
+  --primary:#0e7490;
+  --primary-soft:#e7f6f8;
+  --danger:#dc2626;
+  --bg:#f8fafc;
+  --card:#ffffff;
+  --border:#e2e8f0;
+  --text:#0f172a;
+  --muted:#64748b;
+}
 
-<hr>
+/* ================= RESET ================= */
+a,a:hover,a:focus,a:visited{
+  text-decoration:none !important;
+}
+button{
+  background:none;
+  border:none;
+  padding:0;
+}
 
-{% if not products %}
-    <p>No products added yet.</p>
+/* ================= PAGE ================= */
+.page{
+  background:var(--bg);
+  padding:28px;
+}
+
+/* ================= HERO WRAPPER ================= */
+.hero-wrapper{
+  display:grid;
+  grid-template-columns:1.4fr 1fr;
+  gap:24px;
+  margin-bottom:32px;
+}
+
+/* ================= HERO LEFT ================= */
+.hero-left{
+  /* Gradient overlay + image */
+  background:
+    linear-gradient(
+      135deg,
+      rgba(14,116,144,0.7),
+      rgba(8,145,178,0.7)
+    ),
+   url("{% static 'storebanner.jpg' %}"); /* 👈 change image path */
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  border-radius:22px;
+  padding:36px;
+  color:white;
+
+  display:flex;
+  flex-direction:column;
+  justify-content:center;   /* vertical center */
+}
+
+
+.hero-left h1{
+  margin:0;
+  font-size:34px;
+  font-weight:800;
+}
+.hero-left p{
+  margin:14px 0 22px;
+  font-size:15px;
+  line-height:1.6;
+  max-width:520px;
+  opacity:0.95;
+}
+
+/* SEARCH */
+.hero-search{
+  max-width:420px;
+}
+.hero-search input{
+  width:100%;
+  padding:14px 16px;
+  border-radius:14px;
+  border:none;
+  outline:none;
+  font-size:15px;
+}
+
+/* ================= HERO RIGHT ================= */
+.hero-right{
+  background:white;
+  border-radius:22px;
+  padding:28px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  border:2px dashed #0e7490;
+}
+
+.hero-img{
+  margin-bottom:18px;
+}
+.hero-img img{
+  max-width:200px;
+  width:100%;
+  height:auto;
+}
+
+/* ADD PRODUCT BUTTON */
+.add-btn{
+  background:var(--primary);
+  color:white;
+  padding:14px 28px;
+  border-radius:16px;
+  font-weight:800;
+  box-shadow:0 10px 26px rgba(14,116,144,0.35);
+}
+
+/* ================= GRID ================= */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(360px,1fr));
+  gap:22px;
+}
+/* HERO PRODUCT COUNT BADGE – FINAL FIX */
+.hero-img {
+  position: relative; /* already correct */
+}
+
+.hero-product-count {
+  position: absolute;
+  right: 12px;        /* LOCK TO RIGHT */
+  background: var(--primary);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 6px 10px;
+  border-radius: 999px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+  white-space: nowrap;
+  z-index: 10;
+}
+@media (max-width: 370px) {
+  .hero-product-count {
+    top: 8px;
+    right: 8px;
+    font-size: 11px;
+    padding: 5px 8px;
+  }
+}
+
+
+
+/* ================= PRODUCT CARD ================= */
+.card{
+  background:var(--card);
+  border:1px solid #dadada;
+  border-radius:20px;
+  padding:16px;
+  display:flex;
+  flex-direction:column;
+}
+
+/* IMAGE */
+.product-img{
+  height:190px;
+  background:#f1f5f9;
+  border-radius:16px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin-bottom:14px;
+}
+.product-img img{
+  max-width:100%;
+  max-height:100%;
+  object-fit:contain;
+}
+
+/* INFO */
+.title{
+  font-size:19px;
+  font-weight:700;
+}
+.brand{
+  font-size:13px;
+  color:var(--muted);
+  margin-bottom:8px;
+}
+
+/* ===== ONE LINE DESCRIPTION ===== */
+.desc-line{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-size:14px;
+  color:#334155;
+  margin-bottom:14px;
+}
+
+.desc-text{
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  max-width:100%;
+}
+
+.read-more{
+  color:var(--primary);
+  font-weight:700;
+  cursor:pointer;
+  flex-shrink:0;
+}
+/* ===== DESCRIPTION MODAL ===== */
+.desc-modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.5);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+}
+
+.desc-modal-box{
+  background:#fff;
+  padding:22px;
+  border-radius:16px;
+  max-width:420px;
+  width:90%;
+}
+
+.desc-modal-box h3{
+  margin-top:0;
+}
+
+.desc-modal-box button{
+  margin-top:16px;
+  padding:10px 18px;
+  border-radius:12px;
+  background:var(--primary);
+  color:white;
+  font-weight:700;
+}
+
+
+/* ACTIONS */
+.actions{
+  display:flex;
+  gap:10px;
+  margin-bottom:14px;
+}
+.actions a,
+.actions form{
+  flex:1;
+}
+.actions a,
+.actions button{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  padding:10px 0;
+  border-radius:12px;
+  font-size:13px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.btn-edit{
+  background:var(--primary-soft);
+  color:var(--primary);
+  border:1px solid #bfe7ec;
+}
+.btn-delete{
+  background:#fef2f2;
+  color:var(--danger);
+  border:1px solid #fecaca;
+}
+/* SCROLL */
+
+.variant-list::-webkit-scrollbar{
+  width:4px;
+}
+
+.variant-list::-webkit-scrollbar-thumb{
+  background:#cbd5e1;
+  border-radius:10px;
+}
+/* ================= VARIANTS ================= */
+.variants{
+  border-top:1px solid var(--border);
+  padding-top:12px;
+  display:flex;
+  flex-direction:column;
+  height:100%;
+}
+
+.variants h4{
+  margin:0 0 10px;
+  font-size:14px;
+  font-weight:700;
+}
+
+.variant-list{
+  max-height:210px;
+  overflow-y:auto;
+  padding-right:6px;
+  flex:1;               /* 👈 KEY LINE */
+}
+
+
+.variant{
+  display:grid;
+  grid-template-columns:72px 1fr 40px;
+  gap:10px;
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:10px;
+  margin-bottom:10px;
+}
+
+.variant-img{
+  width:72px;
+  height:72px;
+  background:#f1f5f9;
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.variant-img img{
+  max-width:100%;
+  max-height:100%;
+  object-fit:contain;
+}
+
+.variant-info{
+  font-size:13px;
+}
+
+.variant-actions{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.icon-btn{
+  width:34px;
+  height:34px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+}
+.icon-btn.edit{ color:var(--primary); }
+.icon-btn.delete{ color:var(--danger);font-size: 24px; }
+
+.add-variant{
+  display:block;
+  margin-top:10px;
+  padding:10px;
+  text-align:center;
+  border-radius:14px;
+  background:var(--primary-soft);
+  color:var(--primary);
+  font-size:13px;
+  font-weight:700;
+}
+.add-variant{
+  margin-top:auto;      /* 👈 MAGIC LINE */
+}
+
+/* ================= RESPONSIVE ================= */
+@media(max-width:900px){
+  .hero-wrapper{
+    grid-template-columns:1fr;
+  }
+  .hero-left,
+  .hero-right{
+    text-align:center;
+  }
+  .hero-search{
+    max-width:100%;
+  }
+}
+/* ===== MOBILE FIX FOR VERY SMALL DEVICES ===== */
+@media (max-width: 370px) {
+
+  /* prevent horizontal scroll */
+  html, body {
+    overflow-x: hidden;
+  }
+
+  /* reduce page padding */
+  .page {
+    padding: 12px;
+  }
+
+  /* hero layout tightening */
+  .hero-wrapper {
+    gap: 14px;
+  }
+
+  .hero-left,
+  .hero-right {
+    padding: 18px;
+    border-radius: 16px;
+  }
+
+  /* text scaling */
+  .hero-left h1 {
+    font-size: 24px;
+  }
+
+  .hero-left p {
+    font-size: 14px;
+  }
+
+  /* search input fix */
+  .hero-search input {
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  /* image scaling */
+  .hero-img img {
+    max-width: 140px;
+  }
+
+  /* grid cards spacing */
+  .grid {
+    gap: 16px;
+  }
+}
+/* ===== CARD GRID FIX FOR VERY SMALL DEVICES ===== */
+@media (max-width: 370px) {
+
+  /* force single column that fits screen */
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* ensure cards never overflow */
+  .card {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  /* tighten card padding */
+  .card {
+    padding: 14px;
+  }
+
+  /* product image fix */
+  .product-img {
+    height: 160px;
+  }
+
+  /* variant grid fix */
+  .variant {
+    grid-template-columns: 60px 1fr;
+  }
+
+  .variant-actions {
+    flex-direction: row;
+    justify-content: flex-end;
+    grid-column: span 2;
+  }
+}
+/* ===== VARIANT EMPTY / WARNING STATE ===== */
+.variant-empty,
+.variant-warning{
+  margin-top:8px;
+  padding:8px 12px;
+  border:1px dashed var(--border);
+  border-radius:14px;
+  text-align:center;
+  font-size:13px;
+  color:var(--muted);
+  background:#f8fafc;
+  margin-bottom: 10px;
+}
+
+.variant-icon{
+  display:block;
+  font-size:22px;
+  margin-bottom:6px;
+}
+
+</style>
+
+<div class="page">
+
+  <!-- HERO -->
+  <div class="hero-wrapper">
+
+    <!-- LEFT -->
+    <div class="hero-left">
+      <h1>Product Management</h1>
+      <p>
+        Manage your products and variants with a clean, powerful interface.
+        Add, edit, and organize everything effortlessly.
+      </p>
+
+      <div class="hero-search">
+        <input id="searchInput" placeholder="Search products or variants">
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+   <div class="hero-right">
+        
+  <div class="hero-img">
+    <span class="hero-product-count">
+      Total Products: {{ products|length }}
+    </span>
+    <img src="{% static 'images/addproduct.png' %}" alt="Products">
+  </div>
+
+  <a href="{% url 'product_create' %}" class="add-btn">
+    + Add Product
+  </a>
+
+</div>
+  </div>
+
+  <!-- GRID -->
+  <div class="grid" id="grid">
+    {% for p in products %}
+    <div class="card">
+
+      <div class="product-img">
+        {% if p.image %}<img src="{{ p.image.url }}">{% endif %}
+      </div>
+
+      <div class="title">{{ p.name }}</div>
+      <div class="brand">Brand: {{ p.brand|default:"-" }}</div>
+
+<div class="desc-line">
+  <span class="desc-text">
+    {{ p.description|default:"No description available." }}
+  </span>
+
+  {% if p.description and p.description|length > 80 %}
+    <span class="read-more"
+          data-desc="{{ p.description }}"
+          onclick="openDescModal(this)">
+      Read more
+    </span>
+  {% endif %}
+</div>
+
+
+      <div class="actions">
+        <a href="{% url 'product_update' p.slug %}" class="btn-edit">Edit</a>
+        <form method="post" action="{% url 'product_delete' p.slug %}">
+          {% csrf_token %}
+          <button class="btn-delete">Delete</button>
+        </form>
+      </div>
+
+      <div class="variants">
+        <h4>Variants</h4>
+       <div class="variant-list">
+  {% for v in p.variants.all %}
+  <div class="variant">
+    <div class="variant-img">
+      {% if v.image %}<img src="{{ v.image.url }}">{% endif %}
+    </div>
+    <div class="variant-info">
+      <strong>{{ v.variant_name }}</strong><br>
+      SKU: {{ v.sku|default:"-" }}<br>
+      Barcode: {{ v.barcode|default:"-" }}
+    </div>
+    <div class="variant-actions">
+      <a href="{% url 'variant_update' v.slug %}" class="icon-btn edit">✏️</a>
+      <form method="post" action="{% url 'variant_delete' v.slug %}">
+        {% csrf_token %}
+        <button class="icon-btn delete">🗑</button>
+      </form>
+    </div>
+  </div>
+  {% empty %}
+  <!-- NO VARIANTS -->
+  <div class="variant-empty">
+    <span class="variant-icon">📦</span>
+    <p>No variants found.<br>Please add variants.</p>
+  </div>
+  {% endfor %}
+</div>
+
+{% if p.variants.count == 1 %}
+  <!-- ONLY ONE VARIANT -->
+  <div class="variant-warning">
+    <span class="variant-icon">➕</span>
+    <p>Add  more variants.</p>
+  </div>
 {% endif %}
 
-<ul style="list-style:none;padding-left:0;">
-{% for p in products %}
-    <li style="margin-bottom:40px;border-bottom:1px solid #ddd;padding-bottom:20px;">
 
-        <!-- PRODUCT HEADER -->
-        <h3>{{ p.name }}</h3>
+        <a href="{% url 'variant_create' p.slug %}" class="add-variant">+ Add Variant</a>
+      </div>
 
-        {% if p.image %}
-            <img
-                src="{{ p.image.url }}"
-                alt="{{ p.name }}"
-                style="width:140px;height:auto;border:1px solid #ccc;margin-bottom:10px;"
-            >
-        {% else %}
-            <p><em>No product image</em></p>
-        {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+</div>
+<!-- DESCRIPTION MODAL -->
+<div id="descModal" class="desc-modal">
+  <div class="desc-modal-box">
+    <h3>Description</h3>
+    <p id="descModalText"></p>
+    <button onclick="closeDescModal()">Close</button>
+  </div>
+</div>
 
-        <p><strong>Brand:</strong> {{ p.brand|default:"-" }}</p>
-        <p><strong>Description:</strong> {{ p.description|default:"-" }}</p>
 
-        <!-- PRODUCT ACTIONS -->
-        <div style="margin-bottom:10px;">
-            <a href="{% url 'product_update' p.slug %}">
-                ✏️ Edit Product
-            </a>
+<script>
+document.getElementById("searchInput").addEventListener("keyup",function(){
+  const v=this.value.toLowerCase();
+  document.querySelectorAll(".card").forEach(c=>{
+    c.style.display=c.innerText.toLowerCase().includes(v)?"flex":"none";
+  });
+});
+</script>
+<script>
+function openDescModal(el){
+  const text = el.getAttribute("data-desc") || "";
+  document.getElementById("descModalText").innerText = text;
+  document.getElementById("descModal").style.display = "flex";
+}
 
-            &nbsp;|&nbsp;
+function closeDescModal(){
+  document.getElementById("descModal").style.display = "none";
+}
+</script>
 
-            <form
-                method="post"
-                action="{% url 'product_delete' p.slug %}"
-                style="display:inline;"
-            >
-                {% csrf_token %}
-                <button type="submit" onclick="return confirm('Delete this product?')">
-                    🗑 Delete Product
-                </button>
-            </form>
-        </div>
 
-        <!-- VARIANTS -->
-        <h4>Variants</h4>
-
-        {% if p.variants.all %}
-            <ul style="list-style:none;padding-left:0;">
-            {% for v in p.variants.all %}
-                <li style="margin-bottom:20px;padding-left:10px;border-left:3px solid #eee;">
-
-                    <strong>{{ v.variant_name }}</strong><br>
-
-                    {% if v.image %}
-                        <img
-                            src="{{ v.image.url }}"
-                            alt="{{ v.variant_name }}"
-                            style="width:90px;height:auto;border:1px solid #ccc;margin:5px 0;"
-                        >
-                    {% else %}
-                        <em>No variant image</em><br>
-                    {% endif %}
-
-                    SKU: {{ v.sku|default:"-" }} |
-                    Barcode: {{ v.barcode|default:"-" }}
-
-                    <br><br>
-
-                    <!-- VARIANT ACTIONS -->
-                    <a href="{% url 'variant_update' v.slug %}">
-                        ✏️ Edit Variant
-                    </a>
-
-                    &nbsp;|&nbsp;
-
-                    <form
-                        method="post"
-                        action="{% url 'variant_delete' v.slug %}"
-                        style="display:inline;"
-                    >
-                        {% csrf_token %}
-                        <button type="submit" onclick="return confirm('Delete this variant?')">
-                            🗑 Delete Variant
-                        </button>
-                    </form>
-
-                </li>
-            {% endfor %}
-            </ul>
-        {% else %}
-            <p><em>No variants added</em></p>
-        {% endif %}
-
-        <a href="{% url 'variant_create' p.slug %}">
-            ➕ Add Variant
-        </a>
-
-    </li>
-{% endfor %}
-</ul>
+{% endblock %}
