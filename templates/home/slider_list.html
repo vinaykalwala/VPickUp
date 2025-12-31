@@ -1,0 +1,29 @@
+<h2>Homepage Sliders</h2>
+
+<a href="{% url 'slider_create' %}">➕ Add Slider</a>
+
+<hr>
+
+<ul>
+{% for s in sliders %}
+    <li style="margin-bottom:20px;">
+        <strong>{{ s.title }}</strong>
+        {% if s.image %}
+            <br>
+            <img src="{{ s.image.url }}" width="180">
+        {% endif %}
+
+        <p>{{ s.description }}</p>
+        <p>Status: {{ s.is_active|yesno:"Active,Inactive" }}</p>
+
+        <a href="{% url 'slider_update' s.id %}">✏️ Edit</a>
+
+        <form method="post" action="{% url 'slider_delete' s.id %}" style="display:inline;">
+            {% csrf_token %}
+            <button onclick="return confirm('Delete slider?')">🗑 Delete</button>
+        </form>
+    </li>
+{% empty %}
+    <p>No sliders added.</p>
+{% endfor %}
+</ul>
