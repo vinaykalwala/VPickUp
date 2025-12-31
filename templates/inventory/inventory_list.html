@@ -156,7 +156,7 @@
         background-position: center 20%;
         /* 👈 try 60%–70% */
 
-        opacity: 1;
+        opacity: 0.45;
         z-index: 0;
     }
 
@@ -309,10 +309,11 @@
 
     .header-stats {
         display: flex;
-        gap: 16px;
-        margin-top: 24px;
-        margin-left: 28px;
-        /* 👈 move right */
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        /* ⭐ IMPORTANT */
+        width: 100%;
     }
 
     .stat-chip {
@@ -672,7 +673,7 @@
     }
 
     .price-tag-premium::before {
- 
+
         font-size: 1rem;
         color: var(--text-muted);
         font-weight: 400;
@@ -1366,6 +1367,104 @@
             margin: 0;
         }
     }
+
+    /* 🔍 Pro responsive search width */
+    .header-search-inline {
+        width: 860px;
+        /* default desktop */
+        max-width: 720px;
+        /* large screens */
+    }
+
+    @media (max-width: 1200px) {
+        .header-search-inline {
+            width: 300px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .header-search-inline {
+            width: 100%;
+            /* mobile full width */
+        }
+    }
+
+    .header-search-inline {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 18px;
+        background: var(--glass-bg);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-full);
+        box-shadow: var(--shadow-sm);
+        transition: var(--transition);
+    }
+
+    .header-search-inline {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        padding: 12px 18px;
+        background: var(--glass-bg);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-full);
+        box-shadow: var(--shadow-sm);
+
+        flex: 1 1 280px;
+        /* ⭐ MAGIC LINE */
+        min-width: 260px;
+        max-width: 100%;
+    }
+
+    .header-search-inline i {
+        color: var(--primary);
+        font-size: 1rem;
+    }
+
+    .header-search-inline input {
+        flex: 1;
+        /* ⭐ MOST IMPORTANT */
+        min-width: 0;
+        border: none;
+        outline: none;
+        background: transparent;
+        font-size: 1rem;
+
+        line-height: 1.4;
+
+        color: var(--text-primary);
+    }
+
+    .header-search-inline input::placeholder {
+        color: var(--text-muted);
+        font-size: 0.95rem;
+    }
+
+    @media (max-width: 768px) {
+        .header-search-inline {
+            width: 100%;
+            flex: 1 1 100%;
+            order: 10;
+            /* search goes last */
+            margin-top: 10px;
+        }
+    }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+
+        .header-search-inline input {
+            width: 100%;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .header-search-inline input {
+            font-size: 1rem;
+        }
+    }
 </style>
 
 <div class="luxury-dashboard">
@@ -1390,16 +1489,23 @@
                             <div class="header-stats">
                                 <span class="stat-chip">
                                     <i class="fas fa-cube"></i>
-                                      {{ product_count }} Products
+                                    {{ product_count }} Products
                                 </span>
                                 <span class="stat-chip">
                                     <i class="fas fa-layer-group"></i>
-                                     {{ variant_count }} Variants
+                                    {{ variant_count }} Variants
                                 </span>
                                 <span class="stat-chip">
                                     <i class="fas fa-chart-line"></i>
                                     Real-time Updates
                                 </span>
+
+                                <!-- 🔍 SEARCH BAR -->
+                                <div class="header-search-inline">
+                                    <i class="fas fa-search"></i>
+                                    <input type="text" id="searchInput"
+                                        placeholder="Search inventory or variants, products..." />
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1411,14 +1517,7 @@
                 </div>
 
                 <!-- Premium Search -->
-                <div class="premium-search-section">
-                    <div class="search-container-premium">
-                        <i class="fas fa-search search-icon-premium"></i>
-                        <input type="text" id="searchInput" class="search-glass"
-                            placeholder="Search products, variants, SKUs, or categories...">
-                        <span class="search-glow-premium"></span>
-                    </div>
-                </div>
+
             </div>
         </div>
 
@@ -1471,7 +1570,7 @@
 
                         <div class="info-item-premium">
                             <label>Price</label>
-                            <div class="price-tag-premium">{{ i.price }}</div>
+                            <div class="price-tag-premium">₹{{ i.price }}</div>
                         </div>
 
                         <div class="info-item-premium">

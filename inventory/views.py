@@ -13,9 +13,29 @@ class InventoryListView(APIView):
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
 
+    #def get(self, request):
+       # qs = StoreInventory.objects.filter(store=request.user.stores.first())
+       # return render(request, 'inventory/inventory_list.html', {'items': qs})
     def get(self, request):
-        qs = StoreInventory.objects.filter(store=request.user.stores.first())
-        return render(request, 'inventory/inventory_list.html', {'items': qs})
+      store = request.user.stores.first()
+
+      items = StoreInventory.objects.filter(store=store)
+
+    # ✅ product count
+      product_count = Product.objects.filter(store=store).count()
+
+    # ✅ variant count (inventory rows)
+      variant_count = items.count()
+
+      return render(
+        request,
+        'inventory/inventory_list.html',
+        {
+            'items': items,
+            'product_count': product_count,
+            'variant_count': variant_count,
+        }
+    )
 
 class InventoryCreateView(APIView):
     authentication_classes = [SessionAuthentication]
