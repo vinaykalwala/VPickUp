@@ -1,3 +1,6 @@
+{% extends "base.html" %}
+{% block content %}
+{% load static %}
 <h2>My Profile</h2>
 
 <p><strong>Name:</strong> {{ user.first_name }} {{ user.last_name }}</p>
@@ -49,3 +52,4 @@
 <hr>
 
 <a href="{% url 'customer_profile_edit' %}">✏️ Edit Profile</a>
+{% endblock %}
