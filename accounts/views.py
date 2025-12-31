@@ -14,7 +14,7 @@ from django.conf import settings
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-
+from Pickup.models import HomeSlider
 
 
 class CustomerRegisterView(APIView):
@@ -334,7 +334,8 @@ def logout_view(request):
 @login_required
 def dashboard(request):
     if request.user.role == 'customer':
-        return render(request, 'accounts/customer_dashboard.html')
+        sliders = (HomeSlider.objects.filter(is_active=True).order_by('-created_at')[:5]  )
+        return render(request, 'accounts/customer_dashboard.html',{'sliders': sliders})
     elif request.user.role == 'store_owner':
         return render(request, 'accounts/seller_dashboard.html')
     else:

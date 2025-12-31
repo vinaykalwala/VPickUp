@@ -1,25 +1,453 @@
-<h2>Pending Category Approvals</h2>
+{% extends "admin_base.html" %}
+{% block content %}
 
-<table border="1">
-<tr>
-    <th>Name</th>
-    <th>Store</th>
-    <th>Created By</th>
-    <th>Action</th>
-</tr>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 
-{% for c in categories %}
-<tr>
-    <td>{{ c.name }}</td>
-    <td>{{ c.store.name }}</td>
-    <td>{{ c.created_by.email }}</td>
-    <td>
-        <form method="post" action="{% url 'admin_category_approve' c.slug %}">
-            {% csrf_token %}
-            <button name="action" value="approve">Approve & Make Global</button>
-            <button name="action" value="reject">Reject</button>
-        </form>
-    </td>
-</tr>
-{% endfor %}
-</table>
+<style>
+/* =====================================================
+   BASE
+   ===================================================== */
+*{
+    box-sizing:border-box;
+    font-family:'Inter','Poppins','Segoe UI',sans-serif;
+}
+
+body{
+    background:#f4f7fb;
+}
+
+.page{
+    max-width:1400px;
+    margin:40px auto;
+    padding:0 20px;
+}
+
+/* =====================================================
+   HEADER CARD
+   ===================================================== */
+.header-card{
+    background:linear-gradient(135deg,#0e7490,#0b5f73);
+    border-radius:22px;
+    padding:36px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    color:#fff;
+    box-shadow:0 18px 40px rgba(14,116,144,.35);
+    margin-bottom:28px;
+    gap:24px;
+}
+
+.header-left h1{
+    font-size:30px;
+    font-weight:800;
+    margin-bottom:10px;
+}
+
+.header-left p{
+    opacity:.9;
+    max-width:650px;
+    line-height:1.6;
+}
+
+/* Stats */
+.header-stat{
+    background:rgba(255,255,255,.15);
+    backdrop-filter:blur(10px);
+    padding:22px 28px;
+    border-radius:18px;
+    display:flex;
+    align-items:center;
+    gap:16px;
+    min-width:200px;
+}
+
+.stat-count{font-size:32px;font-weight:800;}
+.stat-label{font-size:13px;letter-spacing:.08em;opacity:.85;}
+
+/* =====================================================
+   SEARCH CARD
+   ===================================================== */
+.search-card{
+    background:#fff;
+    border-radius:18px;
+    padding:20px 26px;
+    display:flex;
+    align-items:center;
+    gap:18px;
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+    margin-bottom:28px;
+}
+
+.search-title{
+    font-size:14px;
+    font-weight:700;
+    color:#64748b;
+    letter-spacing:.08em;
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.search-box{
+    flex:1;
+    position:relative;
+}
+
+.search-box input{
+    width:100%;
+    padding:14px 18px 14px 48px;
+    border-radius:14px;
+    border:1px solid #e5e7eb;
+    font-size:15px;
+    outline:none;
+}
+
+/* =====================================================
+   TABLE CARD
+   ===================================================== */
+.table-card{
+    background:#fff;
+    border-radius:18px;
+    box-shadow:0 15px 35px rgba(0,0,0,.08);
+    overflow:hidden;
+}
+
+/* Sticky title (mobile) */
+.table-header{
+    padding:22px 26px;
+    border-bottom:1px solid #e5e7eb;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background:#fff;
+}
+
+.table-header h2{
+    font-size:20px;
+    font-weight:700;
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.table-count{
+    background:#0e7490;
+    color:#fff;
+    padding:6px 14px;
+    border-radius:12px;
+    font-size:13px;
+    font-weight:700;
+}
+
+/* =====================================================
+   TABLE
+   ===================================================== */
+.table-scroll{
+    width:100%;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+thead{background:#f9fafb;}
+
+th{
+    padding:16px 22px;
+    font-size:13px;
+    color:#6b7280;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    text-align:left;
+}
+
+td{
+    padding:18px 22px;
+    font-size:15px;
+    color:#1f2937;
+    vertical-align:top;
+}
+
+tbody tr{
+    border-top:1px solid #e5e7eb;
+    transition:.2s;
+}
+
+tbody tr:hover{background:#f0f9ff;}
+
+/* Vertical dividers */
+th:not(:last-child),
+td:not(:last-child){
+    border-right:1px solid #e5e7eb;
+}
+
+/* =====================================================
+   ACTION BUTTONS (NO EXTRA SPACE)
+   ===================================================== */
+td:last-child{
+    width:1%;
+    white-space:nowrap;
+}
+
+.actions{
+    display:inline-flex;
+    align-items:center;
+    gap:12px;
+}
+
+.actions button{
+    border:none;
+    border-radius:12px;
+    padding:10px 18px;
+    font-size:14px;
+    font-weight:700;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.approve-btn{background:#22c55e;color:#fff;}
+.reject-btn{background:#ef4444;color:#fff;}
+
+/* =====================================================
+   MODAL
+   ===================================================== */
+#confirmModal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.6);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:9999;
+}
+
+.modal-box{
+    background:#fff;
+    padding:32px;
+    border-radius:20px;
+    max-width:420px;
+    width:90%;
+    text-align:center;
+}
+
+.modal-actions{
+    display:flex;
+    gap:14px;
+    justify-content:center;
+    margin-top:22px;
+}
+
+/* =====================================================
+   RESPONSIVE
+   ===================================================== */
+
+/* Tablet & below */
+@media (max-width:992px){
+
+    .header-card{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .header-stat{width:100%;}
+
+    .search-card{
+        flex-direction:column;
+        align-items:stretch;
+    }
+
+    /* Table horizontal scroll only */
+    .table-scroll{
+        overflow-x:auto;
+        -webkit-overflow-scrolling:touch;
+    }
+
+    table{min-width:900px;}
+
+    /* Sticky & centered title */
+    .table-header{
+        position:sticky;
+        top:0;
+        z-index:20;
+        text-align:center;
+        flex-direction:column;
+        gap:6px;
+        box-shadow:0 6px 18px rgba(0,0,0,.08);
+    }
+
+    .table-header h2{
+        justify-content:center;
+        width:100%;
+    }
+}
+
+/* Mobile */
+@media (max-width:768px){
+
+    .header-left h1{font-size:22px;}
+    .stat-count{font-size:26px;}
+
+    table{min-width:800px;}
+
+    .actions{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    td:last-child{width:auto;}
+}
+
+/* Small mobile */
+@media (max-width:420px){
+
+    .header-left h1{font-size:18px;}
+
+    .modal-actions{
+        flex-direction:column;
+    }
+}
+
+
+</style>
+
+<div class="page">
+
+    <!-- HEADER -->
+    <div class="header-card">
+        <div class="header-left">
+            <h1>Category Management</h1>
+            <p>Review and manage store category requests. Approve them to make available globally or reject.</p>
+        </div>
+
+        <div class="header-stat">
+            <i class="fa-solid fa-layer-group"></i>
+            <div>
+                <div class="stat-count">{{ categories|length }}</div>
+                <div class="stat-label">TOTAL REQUESTS</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SEARCH -->
+    <div class="search-card">
+        <div class="search-title">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            SEARCH CATEGORIES
+        </div>
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search by category, store, email...">
+        </div>
+    </div>
+
+    <!-- TABLE -->
+    <div class="table-card">
+        <div class="table-header fixed-header">
+            <h2>
+                <i class="fa-regular fa-rectangle-list"></i>
+                Category Requests
+            </h2>
+            <span class="table-count">{{ categories|length }} items</span>
+        </div>
+
+        <div class="table-scroll">
+        <table id="categoryTable">
+            <thead>
+                <tr>
+                    <th>Category Name</th>
+                    <th>Store</th>
+                    <th>Created By</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for c in categories %}
+                <tr>
+                    <td>{{ c.name }}</td>
+                    <td>{{ c.store.name }}</td>
+                    <td>{{ c.created_by.email }}</td>
+                    <td>
+                        <form method="post" action="{% url 'admin_category_approve' c.slug %}">
+                            {% csrf_token %}
+                            <div class="actions">
+                                <button type="button" class="approve-btn" onclick="openModal('approve',this)">
+                                    <i class="fa-solid fa-check"></i> APPROVE
+                                </button>
+                                <button type="button" class="reject-btn" onclick="openModal('reject',this)">
+                                    <i class="fa-solid fa-xmark"></i> REJECT
+                                </button>
+                            </div>
+                        </form>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="4" class="no-data">No pending categories</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+</div>
+
+<!-- MODAL -->
+<div id="confirmModal">
+    <div class="modal-box">
+        <div class="modal-icon" id="modalIcon"></div>
+        <h3 id="modalTitle"></h3>
+        <p id="modalMessage"></p>
+        <div class="modal-actions">
+            <button class="cancel-btn" onclick="closeModal()">Cancel</button>
+            <button class="confirm-btn" id="confirmActionBtn">Confirm</button>
+        </div>
+    </div>
+</div>
+
+<script>
+/* SEARCH */
+document.getElementById("searchInput").addEventListener("keyup",function(){
+    const v=this.value.toLowerCase();
+    document.querySelectorAll("#categoryTable tbody tr").forEach(r=>{
+        r.style.display=r.innerText.toLowerCase().includes(v)?"":"none";
+    });
+});
+
+/* MODAL */
+let selectedForm=null,selectedAction=null;
+function openModal(action,btn){
+    selectedForm=btn.closest("form");
+    selectedAction=action;
+    const modal=document.getElementById("confirmModal");
+    const icon=document.getElementById("modalIcon");
+    const title=document.getElementById("modalTitle");
+    const msg=document.getElementById("modalMessage");
+    const confirm=document.getElementById("confirmActionBtn");
+    modal.style.display="flex";
+
+    if(action==="approve"){
+        icon.className="modal-icon approve";
+        icon.innerHTML='<i class="fa-solid fa-circle-check"></i>';
+        title.innerText="Approve Category?";
+        msg.innerText="This category will be approved and made global.";
+        confirm.className="confirm-btn";
+    }else{
+        icon.className="modal-icon reject";
+        icon.innerHTML='<i class="fa-solid fa-circle-xmark"></i>';
+        title.innerText="Reject Category?";
+        msg.innerText="This category will be permanently rejected.";
+        confirm.className="confirm-btn reject";
+    }
+    confirm.onclick=submitAction;
+}
+function closeModal(){document.getElementById("confirmModal").style.display="none";}
+function submitAction(){
+    const i=document.createElement("input");
+    i.type="hidden";i.name="action";i.value=selectedAction;
+    selectedForm.appendChild(i);
+    selectedForm.submit();
+}
+</script>
+
+{% endblock %}

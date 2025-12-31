@@ -688,6 +688,8 @@ class AdminCategoryApprovalListView(APIView):
             {'categories': categories}
         )
 
+
+
 class AdminCategoryApproveView(APIView):
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]

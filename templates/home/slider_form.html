@@ -1,0 +1,19 @@
+<h2>{% if edit %}Edit Slider{% else %}Add Slider{% endif %}</h2>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    {% if edit and slider.image %}
+        <p>Current Image</p>
+        <img src="{{ slider.image.url }}" width="200">
+    {% endif %}
+
+    <button type="submit">
+        {% if edit %}Update{% else %}Create{% endif %}
+    </button>
+</form>
+
+{% if error %}
+<pre style="color:red">{{ error }}</pre>
+{% endif %}
