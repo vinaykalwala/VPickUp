@@ -13,49 +13,46 @@
 
     body {
         margin: 0;
-        font-family: "Inter", "Segoe UI", sans-serif;
-        background: #eef6f7;
-
+        font-family: "Inter", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+        background: linear-gradient(135deg, #f5f9fa 0%, #e8f2f5 100%);
+        min-height: 100vh;
     }
 
     .page-center {
-        min-height: calc(100vh);
+        min-height: 100vh;
         display: flex;
-        align-items: flex-start;
-
+        align-items: center;
         justify-content: center;
-        padding-top: 40px;
-        background-color: white;
-        margin-bottom: 40px;
+        padding: 40px 20px;
     }
 
     /* ---------- MAIN CARD ---------- */
     .register-card {
         width: 1200px;
-        min-height: 650px;   /* 🔥 allow grow */
-    height: auto;      
+        min-height: 680px;
         display: flex;
-        border-radius: 36px;
-        overflow: visible;
+        border-radius: 32px;
+        overflow: hidden;
         background: #ffffff;
-        box-shadow: 0 40px 90px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 30px 80px rgba(12, 65, 72, 0.15),
+            0 10px 30px rgba(12, 65, 72, 0.08);
+        position: relative;
     }
 
+    /* Left panel with image */
     .image-panel {
-        width: 60%;
+        flex: 0 0 50%;
         position: relative;
         overflow: hidden;
-        z-index: 1;
-         min-height: 360px;
+        background: linear-gradient(145deg, #0c4148 0%, #1a7a8c 100%);
     }
 
     .image-panel img {
-        width: 99%;
+        width: 100%;
         height: 100%;
         object-fit: cover;
-        filter:
-            brightness(1.15) contrast(1.08) saturate(1.1);
-        animation: floatImage 12s ease-in-out infinite;
+        opacity: 0.85;
+        mix-blend-mode: overlay;
     }
 
     /* Gradient overlay */
@@ -63,347 +60,379 @@
         content: "";
         position: absolute;
         inset: 0;
-        background: linear-gradient(120deg,
-                rgba(21, 73, 78, 0.8),
-                rgba(255, 255, 255, 0.15));
+        background: linear-gradient(135deg,
+                rgba(12, 65, 72, 0.85) 0%,
+                rgba(26, 122, 140, 0.7) 50%,
+                rgba(42, 157, 143, 0.6) 100%);
+        z-index: 1;
     }
 
-    /* Welcome text inside image */
-    .hero-text {
+    /* Hero text */
+    .hero-content {
         position: absolute;
-        top: 40px;
-        left: 70px;
-        z-index: 3;
-        color: #ffffff;
+        top: 45%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 2;
+        text-align: center;
+        width: 85%;
+        max-width: 500px;
+    }
 
+    .hero-title {
+        font-size: 42px;
+        font-weight: 700;
+        color: white;
+        margin: 0 0 40px 0;
+        line-height: 1.2;
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .hero-subtitle {
+        font-size: 18px;
+        color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 30px;
+        line-height: 1.6;
+        font-weight: 400;
+    }
+
+    .badge-container {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: -20px;
+        /* 👈 move up */
     }
 
     .badge {
-        display: inline-block;
-        margin-top: 12px;
-        padding: 6px 14px;
-        font-size: 12px;
-        background: rgba(17, 15, 15, 0.25);
-        border-radius: 20px;
-        backdrop-filter: blur(6px);
-        box-shadow: 0 6px 18px rgba(255, 255, 255, 0.35);
-    }
-
-    .hero-text h1 i {
-        margin-left: 10px;
-        font-size: 42px;
-        color: #ffffff;
-        opacity: 0.95;
-        animation: wave 1.6s infinite;
-        transform-origin: 70% 70%;
-    }
-
-    @keyframes wave {
-        0% {
-            transform: rotate(0deg);
-        }
-
-        20% {
-            transform: rotate(14deg);
-        }
-
-        40% {
-            transform: rotate(-8deg);
-        }
-
-        60% {
-            transform: rotate(14deg);
-        }
-
-        80% {
-            transform: rotate(-4deg);
-        }
-
-        100% {
-            transform: rotate(0deg);
-        }
-    }
-
-
-    .hero-text p {
-        font-size: 16px;
-        margin-top: 10px;
-        /* small controlled gap */
-        opacity: 1;
-    }
-
-    .register-card {
-        background: transparent;
-    }
-
-    /* ---------- FORM PANEL (RIGHT) ---------- */
-    .form-panel {
-        width: 50%;
-        position: relative;
-        margin-left: -120px;
-        padding: 60px 60px 60px 80px;
-        background: linear-gradient(180deg,
-                rgba(248, 253, 254, 0.98),
-                rgba(232, 246, 248, 0.98));
-        backdrop-filter: blur(12px);
-
-        border-top-left-radius: 140px;
-        border-bottom-left-radius: 140px;
-
-        z-index: 5;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        box-shadow: -20px 0 40px rgba(0, 0, 0, 0.06);
-        align-items: center;
-        /* 🔥 THIS IS KEY */
-    }
-
-    /* Form fields */
-    form p {
-        margin-bottom: 20px;
-    }
-
-    form label {
-        display: block;
-        font-size: 13px;
-        font-weight: 600;
-        color: #5f7d89;
-        margin-bottom: 8px;
-    }
-
-    .form-panel form {
-        max-width: 520px;
-        width: 100%;
-        margin-left: 12px;
-        /* 🔥 small alignment nudge */
-    }
-
-    form input {
-        width: 100%;
-        height: 52px;
-        padding: 0 22px;
-        border-radius: 32px;
-        border: 1.8px solid #cfe7ec;
-        /* 🔥 DEFAULT BORDER */
-        background: #ffffff;
+        padding: 10px 24px;
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        border-radius: 25px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
         font-size: 14px;
-        box-shadow: 0 14px 30px rgba(0, 0, 0, 0.08);
-        transition: 0.3s ease;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
     }
 
-    form input:hover {
-        box-shadow: 0 16px 36px rgba(15, 164, 175, 0.18);
-    }
-
-    form input:focus {
-        outline: none;
-        box-shadow: 0 18px 40px rgba(15, 164, 175, 0.35);
-    }
-
-    form button {
-        margin-top: 18px;
-        height: 64px;
-        width: 100%;
-        max-width: 320px;
-        border-radius: 40px;
-        border: none;
-        background: linear-gradient(135deg, #0fa4af, #22c1a1);
-        color: #ffffff;
-        font-size: 18px;
-        font-weight: 800;
-        cursor: pointer;
-        transition: 0.3s;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 12px;
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    form button:hover {
-        box-shadow: 0 22px 48px rgba(15, 164, 175, 0.45);
+    .badge:hover {
+        background: rgba(255, 255, 255, 0.25);
         transform: translateY(-2px);
     }
 
-    form p {
-        position: relative;
-    }
-
-    form input {
-        padding-left: 52px;
-    }
-
-    /* Common icon style */
-    form p::before {
-
-        font-weight: 900;
-        position: absolute;
-        left: 20px;
-        top: 38px;
-        font-size: 14px;
-        color: #7aa5b1;
-    }
-
-
-    form button {
-        position: relative;
-        overflow: hidden;
-    }
-
-    form button::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: rgba(255, 255, 255, 0.2);
-        transform: translateX(-100%);
-        transition: 0.4s;
-    }
-
-    form button:hover::after {
-        transform: translateX(0);
-    }
-
-    @keyframes floatImage {
-        0% {
-            transform: translateY(0);
-        }
-
-        50% {
-            transform: translateY(-12px);
-        }
-
-        100% {
-            transform: translateY(0);
-        }
-    }
-
-    .image-panel img {
-        animation: floatImage 12s ease-in-out infinite;
-    }
-
-    /* ---------- RESPONSIVE ---------- */
-    @media (max-width: 1024px) {
-        body {
-            overflow: auto;
-        }
-
-        .register-card {
-            flex-direction: column;
-            height: auto;
-            width: 95%;
-        }
-
-        .image-panel,
-        .form-panel {
-            width: 100%;
-        }
-
-        .image-panel {
-            height: 380px;
-        }
-
-        .hero-text {
-            top: 40px;
-            left: 30px;
-        }
-         .form-panel {
-        border-radius: 0 0 28px 28px; /* 🔥 reduce curve */
-        padding-bottom: 60px;
-    }
-    }
-
-    .form-header {
-        text-align: center;
-        /* 🔥 */
-    }
-
-    .form-header h2 {
+    /* Form panel */
+    .form-panel {
+        flex: 0 0 50%;
+        padding: 60px;
+        background: white;
+        display: flex;
+        flex-direction: column;
         justify-content: center;
-        /* 🔥 icon + text center */
     }
 
-    .form-header::after {
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    .form-accent {
-        display: none;
-    }
-
-
-    /* ---------- FORM HEADER PREMIUM ---------- */
     .form-header {
-        margin-bottom: 28px;
-        position: relative;
-        animation: fadeUp 0.6s ease;
-        padding-left: 6px;
+        margin-bottom: 40px;
     }
 
-    .form-header::after {
-        content: "";
+    .form-title {
+        font-size: 32px;
+        font-weight: 700;
+        color: #0c4148;
+        margin: 0 0 15px 0;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .form-title i {
+        color: #1a7a8c;
+        font-size: 28px;
+    }
+
+    .form-subtitle {
+        color: #5f7d89;
+        font-size: 15px;
+        line-height: 1.5;
+        margin: 0;
+    }
+
+    /* Form styling */
+    form {
+        width: 100%;
+    }
+
+    .form-group {
+        margin-bottom: 24px;
+    }
+
+    .form-label {
         display: block;
-        margin-top: 16px;
-        width: 60px;
-        height: 3px;
-        background: linear-gradient(90deg, #0fa4af, #22c1a1);
-        border-radius: 10px;
-        opacity: 0.6;
+        font-size: 14px;
+        font-weight: 600;
+        color: #2a4a54;
+        margin-bottom: 8px;
     }
 
-    .form-header h2 {
-        font-size: 22px;
-        font-weight: 800;
-        color: #0b7285;
-        margin: 0 0 6px;
+    .form-control {
+        width: 100%;
+        height: 52px;
+        padding: 0 20px;
+        border: 2px solid #e1eef0;
+        border-radius: 12px;
+        font-size: 15px;
+        color: #2a4a54;
+        background: white;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #1a7a8c;
+        box-shadow: 0 0 0 3px rgba(26, 122, 140, 0.1);
+    }
+
+    .form-control:hover {
+        border-color: #a8d5e2;
+    }
+
+    /* Name fields side by side */
+    .name-fields {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    /* Checkbox sections */
+    .checkbox-section {
+        background: #f8fcfd;
+        border: 2px solid #e1eef0;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 24px;
+    }
+
+    .checkbox-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #0c4148;
+        margin-bottom: 15px;
         display: flex;
         align-items: center;
         gap: 10px;
     }
 
-    .form-header h2 i {
-        color: #0fa4af;
-        font-size: 20px;
+    .checkbox-title i {
+        color: #1a7a8c;
+        font-size: 16px;
     }
 
-    .form-header p {
-        font-size: 14px;
-        color: #5f7d89;
-        margin: 0;
-    }
-
-    /* Accent line */
-    .form-accent {
-        position: absolute;
-        left: -18px;
-        top: 4px;
-        width: 4px;
-        height: 36px;
-        background: linear-gradient(180deg, #0fa4af, #22c1a1);
-        border-radius: 10px;
-    }
-
-    /* Trust row */
-    .trust-row {
-        margin-top: 14px;
+    .checkbox-group {
         display: flex;
-        gap: 18px;
-        font-size: 12px;
-        color: #4b7f8c;
+        flex-direction: column;
+        gap: 12px;
     }
 
-    .trust-row i {
-        color: #0fa4af;
-        margin-right: 6px;
+    .checkbox-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
     }
 
-    /* Animation */
-    @keyframes fadeUp {
+    .checkbox-item input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        border: 2px solid #a8d5e2;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .checkbox-item label {
+        font-size: 14px;
+        color: #2a4a54;
+        cursor: pointer;
+    }
+
+    /* Special checkbox section */
+    .special-checkbox {
+        background: linear-gradient(135deg, #f0f9ff 0%, #e6f7ff 100%);
+        border: 2px solid #c2e7ff;
+        margin-top: 10px;
+    }
+
+    .special-checkbox .checkbox-title {
+        color: #0c4148;
+    }
+
+    .checkbox-item.special {
+        background: rgba(26, 122, 140, 0.05);
+        padding: 10px 15px;
+        border-radius: 8px;
+        border: 1px solid rgba(26, 122, 140, 0.1);
+    }
+
+    /* Submit button */
+    .submit-btn {
+        width: 100%;
+        height: 56px;
+        background: linear-gradient(135deg, #0c4148 0%, #1a7a8c 100%);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        transition: all 0.3s ease;
+        margin-top: 30px;
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(12, 65, 72, 0.25);
+        background: linear-gradient(135deg, #0a353a 0%, #156a7a 100%);
+    }
+
+    .submit-btn:active {
+        transform: translateY(0);
+    }
+
+    /* Date and time info */
+    .date-time-info {
+        text-align: center;
+        margin-top: 25px;
+        padding-top: 25px;
+        border-top: 1px solid #e1eef0;
+        color: #5f7d89;
+        font-size: 14px;
+    }
+
+    .date-time-info strong {
+        color: #0c4148;
+        font-weight: 600;
+    }
+
+    /* Active status */
+    .active-status {
+        text-align: center;
+        margin-top: 15px;
+        font-size: 13px;
+        color: #1a7a8c;
+        font-weight: 500;
+    }
+
+    /* Responsive design */
+    @media (max-width: 1200px) {
+        .register-card {
+            width: 95%;
+            min-height: auto;
+        }
+    }
+
+    @media (max-width: 1024px) {
+        .register-card {
+            flex-direction: column;
+            border-radius: 24px;
+        }
+
+        .image-panel,
+        .form-panel {
+            flex: none;
+            width: 100%;
+        }
+
+        .hero-content {
+            position: absolute;
+            /* ✅ keep overlay */
+            top: 45%;
+            /* adjust as needed */
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .image-panel {
+            min-height: 360px;
+            /* important for mobile */
+        }
+
+        .hero-title {
+            font-size: 36px;
+        }
+
+        .form-panel {
+            padding: 40px 30px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .name-fields {
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        .hero-title {
+            font-size: 30px;
+        }
+
+        .form-title {
+            font-size: 26px;
+        }
+
+        .form-panel {
+            padding: 30px 20px;
+        }
+
+        .checkbox-section {
+            padding: 15px;
+        }
+
+        .badge-container {
+            flex-direction: column;
+            align-items: center;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .hero-title {
+            font-size: 26px;
+            margin-bottom: 20px;
+        }
+
+        .hero-subtitle {
+            font-size: 14px;
+        }
+
+        .form-title {
+            font-size: 22px;
+        }
+
+        .form-control {
+            height: 48px;
+        }
+
+        .submit-btn {
+            height: 52px;
+        }
+
+        .badge {
+            padding: 8px 20px;
+            font-size: 13px;
+        }
+    }
+
+    /* Animation for form elements */
+    @keyframes fadeIn {
         from {
             opacity: 0;
-            transform: translateY(12px);
+            transform: translateY(10px);
         }
 
         to {
@@ -412,243 +441,180 @@
         }
     }
 
-    /* ==============================
-   LARGE DESKTOPS (1440px+)
-================================ */
-    @media (min-width: 1440px) {
-        .register-card {
-            width: 1320px;
-            height: 700px;
-        }
-
-        .hero-text h1 {
-            font-size: 52px;
-        }
-
-        .form-panel form {
-            max-width: 560px;
-        }
+    .form-group,
+    .checkbox-section,
+    .submit-btn {
+        animation: fadeIn 0.5s ease forwards;
+        opacity: 0;
     }
 
-
-    /* ==============================
-   LAPTOPS (1200px – 1439px)
-================================ */
-    @media (max-width: 1439px) {
-        .register-card {
-            width: 1100px;
-            height: 620px;
-        }
-
-        .hero-text h1 {
-            font-size: 44px;
-        }
+    .form-group:nth-child(1) {
+        animation-delay: 0.1s;
     }
 
-
-    /* ==============================
-   TABLETS (768px – 1024px)
-================================ */
-    @media (max-width: 1024px) {
-        body {
-            overflow: auto;
-        }
-
-        .page-center {
-            padding-top: 20px;
-        }
-
-        .register-card {
-            flex-direction: column;
-            height: auto;
-            width: 95%;
-            border-radius: 28px;
-        }
-
-        .image-panel {
-            width: 100%;
-            height: 360px;
-        }
-
-        .image-panel img {
-            width: 100%;
-        }
-
-        .hero-text {
-            top: 30px;
-            left: 30px;
-        }
-
-        .hero-text h1 {
-            font-size: 36px;
-        }
-
-        .form-panel {
-            width: 100%;
-            margin-left: 0;
-            padding: 50px 40px;
-            border-radius: 0 0 28px 28px;
-            box-shadow: none;
-        }
-
-        .form-panel form {
-            margin-left: 0;
-            max-width: 480px;
-        }
+    .form-group:nth-child(2) {
+        animation-delay: 0.2s;
     }
 
-
-    /* ==============================
-   MOBILES (≤767px)
-================================ */
-    @media (max-width: 767px) {
-        .page-center {
-            padding-top: 10px;
-        }
-
-        .image-panel {
-            height: 300px;
-        }
-
-        .hero-text {
-            top: 20px;
-            left: 20px;
-        }
-
-        .hero-text h1 {
-            font-size: 30px;
-        }
-
-        .badge {
-            font-size: 11px;
-            padding: 5px 12px;
-        }
-
-        .form-panel {
-            padding: 40px 24px;
-        }
-
-        .form-header h2 {
-            font-size: 20px;
-        }
-
-        form input {
-            height: 50px;
-            font-size: 13px;
-        }
-
-        form button {
-            height: 56px;
-            font-size: 16px;
-        }
+    .checkbox-section:nth-child(3) {
+        animation-delay: 0.3s;
     }
 
-
-    /* ==============================
-   SMALL MOBILES (≤480px)
-================================ */
-    @media (max-width: 480px) {
-        .image-panel {
-            height: 240px;
-        }
-
-        .hero-text h1 {
-            font-size: 26px;
-        }
-
-        .form-panel {
-            padding: 32px 20px;
-        }
-
-        .form-header h2 {
-            font-size: 18px;
-        }
-
-        .form-panel form {
-            max-width: 100%;
-        }
-
-        form button {
-            width: 100%;
-        }
+    .checkbox-section:nth-child(4) {
+        animation-delay: 0.4s;
     }
 
-    .hero-text h1 {
-        margin: 0;
-        line-height: 1.1;
+    .submit-btn {
+        animation-delay: 0.5s;
     }
 
-    .hero-text p {
-        margin: 6px 0 8px;
-        /* small controlled gap */
-        font-size: 16px;
-        opacity: 1;
+    .date-time-info {
+        animation-delay: 0.6s;
     }
 
-    .hero-text .badge {
-        margin-top: 0;
+    .active-status {
+        animation-delay: 0.7s;
     }
-    @media (max-width: 1100px) {
-    .form-panel {
-        margin-left: 0;
-    }
-}
-
-
-@media (max-width: 768px) {
-    .register-card {
-        width: 100%;
-        border-radius: 24px;
-    }
-
-    .page-center {
-        padding-bottom: 40px;
-    }
-}
-
 </style>
 
 <div class="page-center">
     <div class="register-card">
 
-        <!-- IMAGE SIDE -->
+        <!-- Left Image Panel -->
         <div class="image-panel">
-            <img src="/static/pickup.jpg" alt="Pickup Illustration">
-
-            <div class="hero-text">
-                <h1>
-                    Welcome
-                    <i class="fa-solid fa-hand"></i>
+            <img src="/static/pickup.jpg" alt="Pickup Service Illustration">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    Hassle-free pickups,<br>
+                    right from your doorstep.
                 </h1>
-                <p>Your journey to seamless pickups starts here.</p>
-                <span class="badge">Fast • Secure • Local</span>
+
+                <p class="hero-subtitle">
+                    Join our innovative pickup service and experience seamless delivery solutions.
+                </p>
+                <div class="badge-container">
+                    <span class="badge">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        Secure & Fast
+                    </span>
+
+                    <span class="badge">
+                        <i class="fa-solid fa-headset"></i>
+                        24/7 Support
+                    </span>
+
+                    <span class="badge">
+                        <i class="fa-solid fa-globe"></i>
+                        Global Network
+                    </span>
+                </div>
 
             </div>
         </div>
 
-        <!-- FORM SIDE -->
+        <!-- Right Form Panel -->
         <div class="form-panel">
-            <form method="post">
-                <div class="form-header">
-                    <span class="form-accent"></span>
-                    <h2>
-                        <i class="fa-solid fa-truck-fast"></i>
-                        Create your pickup account
-                    </h2>
+            <div class="form-header">
+                <h1 class="form-title">
+                    <i class="fa-solid fa-truck-fast"></i>
 
+
+                    Create your pickup account
+                </h1>
+                <p class="form-subtitle">
+                    Fill in your details to start your journey with us.
+                </p>
+            </div>
+
+            <form method="post">
+                {% csrf_token %}
+
+                <!-- Name Fields - Side by Side -->
+                <div class="form-group name-fields">
+                    <div>
+                        <label class="form-label" for="first_name">First Name</label>
+                        <input type="text" class="form-control" id="first_name" name="first_name"
+                            placeholder="Enter your first name" required>
+                    </div>
+
+                    <div>
+                        <label class="form-label" for="last_name">Last Name</label>
+                        <input type="text" class="form-control" id="last_name" name="last_name"
+                            placeholder="Enter your last name" required>
+                    </div>
                 </div>
 
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button>
-                    <i class="fa-solid fa-user-plus"></i>
-                    Register
+                <!-- Email -->
+                <div class="form-group">
+                    <label class="form-label" for="email">Email Address</label>
+                    <input type="email" class="form-control" id="email" name="email"
+                        placeholder="Enter your email address" required>
+                </div>
+
+                <!--Phone -->
+                <div class="form-group">
+                    <label class="form-label" for="phone">Phone Number</label>
+                    <input type="tel" class="form-control" id="phone" name="phone_number" placeholder="Enter phone number"
+                        pattern="[0-9]{10}" maxlength="10" required>
+                </div>
+
+
+
+                <!-- Password -->
+                <div class="form-group">
+                    <label class="form-label" for="password">Password</label>
+                    <input type="password" class="form-control" id="password" name="password"
+                        placeholder="Create a strong password" required>
+                </div>
+
+
+
+                <!-- Submit Button -->
+                <button type="submit" class="submit-btn">
+                    <i class="fa-solid fa-rocket"></i>
+                    Create Account
                 </button>
 
             </form>
         </div>
-
     </div>
 </div>
+
+<script>
+    // Add interactive effects
+    document.addEventListener('DOMContentLoaded', function () {
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        const submitBtn = document.querySelector('.submit-btn');
+
+        // Checkbox hover effect
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function () {
+                const label = this.nextElementSibling;
+                if (this.checked) {
+                    label.style.color = '#0c4148';
+                    label.style.fontWeight = '600';
+                } else {
+                    label.style.color = '';
+                    label.style.fontWeight = '';
+                }
+            });
+        });
+
+        // Form input focus effect
+        const inputs = document.querySelectorAll('.form-control');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function () {
+                this.parentElement.style.transform = 'translateY(-2px)';
+            });
+
+            input.addEventListener('blur', function () {
+                this.parentElement.style.transform = '';
+            });
+        });
+
+        // Button click animation
+        
+    });
+</script>
 
 {% endblock %}
