@@ -1,102 +1,229 @@
-{% extends "base.html" %}
+{% extends "admin_base.html" %}
 {% load static %}
-
 {% block content %}
 
-<!-- Leaflet -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <style>
+/* ===== GLOBAL ===== */
+body{
+    margin:0;
+    font-family:'Poppins','Segoe UI',sans-serif;
+}
+*, *::before, *::after{
+    box-sizing:border-box;
+}
+
+/* ===== FULL PAGE BACKGROUND (ADD ADDRESS) ===== */
+.page-bg{
+    min-height:100vh;
+    background:
+        linear-gradient(120deg,rgba(162,225,242,.75),rgba(3,142,181,.75)),
+        url("{% static 'images/addaddressbanner.jpeg' %}") center/cover no-repeat;
+    padding-bottom:90px;
+}
+
+/* ===== PAGE WRAPPER ===== */
 .page-wrapper{
-    max-width:1100px;
-    margin:40px auto;
-    padding:0 16px;
+    max-width:1200px;
+    margin:0 auto;
+    padding:40px 18px 0;
 }
 
-.card{
-    background:rgba(255,255,255,0.35);
-    backdrop-filter:blur(22px);
-    border-radius:22px;
-    padding:26px;
-    border:1px solid rgba(255,255,255,0.35);
-    box-shadow:0 25px 60px rgba(0,0,0,0.18);
+/* ===== MAIN CARD ===== */
+.main-card{
+    background:#ffffff;
+    border-radius:28px;
+    padding:28px;
+    box-shadow:0 35px 80px rgba(0,0,0,.25);
+}
+
+/* ===== PAGE HEADER (CENTER + ICON LEFT) ===== */
+.page-header{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:18px;
+    padding:22px 26px;
     margin-bottom:28px;
+    border-radius:22px;
+    background:linear-gradient(135deg,#e0f2fe,#f0f9ff);
+    border:1px solid #bae6fd;
+    box-shadow:0 10px 25px rgba(14,116,144,0.18);
 }
 
-.title{
-    font-size:22px;
-    font-weight:600;
-    margin-bottom:16px;
+/* icon */
+.page-header .icon-box{
+    width:56px;
+    height:56px;
+    border-radius:16px;
+    background:linear-gradient(135deg,#0e7490,#0891b2);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:24px;
+    flex-shrink:0;
 }
 
-.form-grid{
+/* text container */
+.page-header .header-text{
+    text-align:left;
+}
+
+/* title */
+.page-header h2{
+    font-size:28px;
+    font-weight:700;
+    color:#0e7490;
+    margin:0;
+    line-height:1.2;
+}
+
+/* subtitle */
+.page-header p{
+    font-size:14px;
+    color:#475569;
+    margin:4px 0 0;
+}
+
+/* mobile */
+@media(max-width:600px){
+    .page-header{
+        flex-direction:column;
+        text-align:center;
+    }
+    .page-header .header-text{
+        text-align:center;
+    }
+}
+
+
+/* ===== GRID ===== */
+.grid{
     display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:16px 20px;
+    grid-template-columns:1fr 1fr;
+    gap:28px;
 }
 
-.form-group{
+/* ===== SECTION ===== */
+.section{
+    background:#f8fafc;
+    border-radius:22px;
+    padding:22px;
+    border:1px solid #e2e8f0;
     display:flex;
     flex-direction:column;
-    gap:6px;
 }
 
-.form-group.full{
-    grid-column:1/-1;
-}
-
-label{
-    font-size:13px;
-    font-weight:600;
-}
-
-input, select, textarea{
-    height:46px;
-    padding:10px 12px;
-    border-radius:12px;
-    border:1px solid #cbd5e1;
-    font-size:14px;
-}
-
-textarea{
-    resize:none;
-}
-
-.search-bar{
+/* ===== SECTION TITLE ===== */
+.section-title{
     display:flex;
+    align-items:center;
+    justify-content:center;
     gap:10px;
-    margin-bottom:14px;
-}
-
-.search-bar input{
-    flex:1;
-}
-
-.search-bar button{
-    border:none;
-    border-radius:12px;
-    padding:0 18px;
+    font-size:18px;
     font-weight:600;
-    cursor:pointer;
-    background:#0284c7;
+    padding:12px;
+    margin:-22px -22px 20px;
+    border-radius:22px 22px 0 0;
+    background:#0e7490;
     color:#fff;
 }
 
+/* ===== FIELD ===== */
+.field{margin-bottom:18px}
+.field label{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:13px;
+    font-weight:600;
+    color:#334155;
+    margin-bottom:6px;
+}
+
+/* ===== INPUTS ===== */
+input, textarea, select{
+    width:100%;
+    height:48px;
+    padding:10px 44px 10px 14px;
+    border-radius:14px;
+    border:1px solid #cbd5e1;
+    font-size:14px;
+    background:#f8fafc;
+}
+textarea{resize:none;height:80px}
+
+/* ===== SELECT ===== */
+.select-wrap{position:relative}
+.select-wrap select{appearance:none}
+.select-wrap::after{
+    content:"\f107";
+    font-family:"Font Awesome 6 Free";
+    font-weight:900;
+    position:absolute;
+    right:16px;
+    top:50%;
+    transform:translateY(-50%);
+    color:#64748b;
+}
+
+/* ===== MAP ===== */
+.map-toolbar{
+    display:flex;
+    gap:12px;
+    margin-bottom:14px;
+}
+.map-toolbar input{flex:1}
+.map-toolbar button{
+    height:44px;
+    padding:0 18px;
+    border:none;
+    border-radius:12px;
+    background:#0e7490;
+    color:#fff;
+    font-weight:600;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    cursor:pointer;
+}
+.map-toolbar button.secondary{background:#475569}
+
 #map{
-    height:420px;
+    min-height:300px;
     border-radius:18px;
-    margin-top:10px;
 }
 
-.submit-box{
-    text-align:center;
-    margin-top:28px;
+/* ===== COORDS ===== */
+.coords{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+    margin-top:14px;
+}
+.coord-box{
+    background:#ecfeff;
+    border:1px solid #67e8f9;
+    border-radius:12px;
+    padding:10px;
+    font-size:13px;
+    font-weight:600;
+    display:flex;
+    align-items:center;
+    gap:8px;
 }
 
-.submit-box button{
-    width:220px;
-    height:50px;
+/* ===== SAVE ===== */
+.save-inside{
+    margin-top:26px;
+}
+.save-inside button{
+    width:100%;
+    height:54px;
     border:none;
     border-radius:18px;
     background:linear-gradient(135deg,#0e7490,#0891b2);
@@ -105,156 +232,177 @@ textarea{
     font-weight:600;
     cursor:pointer;
 }
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:900px){
+    .grid{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+    .page-header h2{font-size:22px}
+    .page-header p{font-size:13px}
+}
 </style>
 
+<div class="page-bg">
 <div class="page-wrapper">
 
 <form method="post">
 {% csrf_token %}
 
-<!-- ================= ADDRESS DETAILS ================= -->
-<div class="card">
-    <div class="title">Address Details</div>
+<div class="main-card">
 
-    <div class="form-grid">
-        <div class="form-group">
-            <label>Label</label>
-            {{ form.label }}
-        </div>
-
-        <div class="form-group full">
-            <label>Address</label>
-            {{ form.address_line_1 }}
-        </div>
-
-        <div class="form-group">
-            <label>City</label>
-            {{ form.city }}
-        </div>
-
-        <div class="form-group">
-            <label>State</label>
-            {{ form.state }}
-        </div>
-
-        <div class="form-group">
-            <label>Pincode</label>
-            {{ form.pincode }}
-        </div>
+<!-- ===== HEADER ===== -->
+<div class="page-header">
+    <div class="icon-box">
+        <i class="fa-solid fa-location-dot"></i>
     </div>
 
-    {{ form.latitude }}
-    {{ form.longitude }}
-</div>
-
-<!-- ================= LOCATION PICKER ================= -->
-<div class="card">
-    <div class="title">Select Exact Location</div>
-
-    <div class="search-bar">
-        <input
-            type="text"
-            id="locationSearch"
-            placeholder="House No, Street, Area, City, Pincode"
-        >
-        <button type="button" onclick="searchLocation()">Search</button>
-        <button type="button" onclick="useCurrentLocation()">Use Current</button>
+    <div class="header-text">
+        <h2>Add Address</h2>
+        <p>Enter address details and pinpoint your location</p>
     </div>
-
-    <div id="map"></div>
-
-    <label style="margin-top:14px;">Detected Address</label>
-    <textarea id="detectedAddress" rows="2" readonly></textarea>
-
-    <p style="margin-top:10px;font-size:13px;">
-        <strong>Latitude:</strong> <span id="latDisplay">-</span><br>
-        <strong>Longitude:</strong> <span id="lngDisplay">-</span>
-    </p>
 </div>
 
-<div class="submit-box">
+
+<div class="grid">
+
+<!-- ===== ADDRESS ===== -->
+<div class="section">
+<div class="section-title">
+    <i class="fa-solid fa-house"></i> Address Details
+</div>
+
+<div class="field">
+    <label><i class="fa-solid fa-tag"></i> Address Label</label>
+    <div class="select-wrap">{{ form.label }}</div>
+</div>
+
+<div class="field">
+    <label><i class="fa-solid fa-location-dot"></i> Complete Address</label>
+    {{ form.address_line_1 }}
+</div>
+
+<div class="field">
+    <label><i class="fa-solid fa-city"></i> City</label>
+    {{ form.city }}
+</div>
+
+<div class="field">
+    <label><i class="fa-solid fa-map"></i> State</label>
+    {{ form.state }}
+</div>
+
+<div class="field">
+    <label><i class="fa-solid fa-envelope"></i> Pincode</label>
+    {{ form.pincode }}
+</div>
+
+{{ form.latitude }}
+{{ form.longitude }}
+
+<div class="save-inside">
     <button type="submit">Save Address</button>
+</div>
+</div>
+
+<!-- ===== MAP ===== -->
+<div class="section">
+<div class="section-title">
+    <i class="fa-solid fa-map-location-dot"></i> Location Picker
+</div>
+
+<div class="map-toolbar">
+    <input type="text" id="locationSearch" placeholder="Search area, landmark, city">
+    <button type="button" onclick="searchLocation()">
+        <i class="fa-solid fa-magnifying-glass"></i> Search
+    </button>
+    <button type="button" class="secondary" onclick="useCurrentLocation()">
+        <i class="fa-solid fa-crosshairs"></i> Current
+    </button>
+</div>
+
+<div id="map"></div>
+
+<div class="field" style="margin-top:14px">
+    <label><i class="fa-solid fa-map-pin"></i> Detected Address</label>
+    <textarea id="detectedAddress" readonly></textarea>
+</div>
+
+<div class="coords">
+    <div class="coord-box">
+        <i class="fa-solid fa-location-dot"></i>
+        Lat: <span id="latDisplay">-</span>
+    </div>
+    <div class="coord-box">
+        <i class="fa-solid fa-location-dot"></i>
+        Lng: <span id="lngDisplay">-</span>
+    </div>
+</div>
+</div>
+
+</div>
 </div>
 
 </form>
-
-{% if error %}
-<pre style="color:red">{{ error }}</pre>
-{% endif %}
-
+</div>
 </div>
 
-<!-- ================= JS ================= -->
 <script>
 let map, marker;
-const latInput = document.getElementById("id_latitude");
-const lngInput = document.getElementById("id_longitude");
-const addrBox = document.getElementById("detectedAddress");
-const latDisp = document.getElementById("latDisplay");
-const lngDisp = document.getElementById("lngDisplay");
+const latInput=document.getElementById("id_latitude");
+const lngInput=document.getElementById("id_longitude");
+const addrBox=document.getElementById("detectedAddress");
+const latDisp=document.getElementById("latDisplay");
+const lngDisp=document.getElementById("lngDisplay");
 
-function initMap(lat=20.5937, lng=78.9629){
-    map = L.map("map").setView([lat,lng], 6);
-
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png")
-        .addTo(map);
-
-    marker = L.marker([lat,lng],{draggable:true}).addTo(map);
+function initMap(lat=20.5937,lng=78.9629){
+    map=L.map("map").setView([lat,lng],6);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+    marker=L.marker([lat,lng],{draggable:true}).addTo(map);
     setLocation(lat,lng);
 
-    map.on("click", e=>{
+    map.on("click",e=>{
         marker.setLatLng(e.latlng);
-        setLocation(e.latlng.lat, e.latlng.lng);
+        setLocation(e.latlng.lat,e.latlng.lng);
     });
 
-    marker.on("dragend", ()=>{
-        const p = marker.getLatLng();
-        setLocation(p.lat, p.lng);
+    marker.on("dragend",()=>{
+        const p=marker.getLatLng();
+        setLocation(p.lat,p.lng);
     });
 }
 
 function setLocation(lat,lng){
-    const latVal = Number(lat).toFixed(6);
-    const lngVal = Number(lng).toFixed(6);
+    lat=lat.toFixed(6); lng=lng.toFixed(6);
+    latInput.value=lat; lngInput.value=lng;
+    latDisp.innerText=lat; lngDisp.innerText=lng;
 
-    latInput.value = latVal;
-    lngInput.value = lngVal;
-
-    latDisp.innerText = latVal;
-    lngDisp.innerText = lngVal;
-
-    fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latVal}&lon=${lngVal}`)
-        .then(r=>r.json())
-        .then(d=>{
-            addrBox.value = d.display_name || "Selected location";
-        });
+    fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`)
+    .then(r=>r.json())
+    .then(d=>addrBox.value=d.display_name||"");
 }
 
 function searchLocation(){
-    const q = document.getElementById("locationSearch").value;
+    const q=document.getElementById("locationSearch").value;
     if(!q) return;
-
     fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}`)
-        .then(r=>r.json())
-        .then(res=>{
-            if(!res.length) return alert("Location not found");
-            const lat = parseFloat(res[0].lat);
-            const lng = parseFloat(res[0].lon);
-            map.setView([lat,lng], 16);
-            marker.setLatLng([lat,lng]);
-            setLocation(lat,lng);
-        });
+    .then(r=>r.json())
+    .then(res=>{
+        if(!res.length) return alert("Location not found");
+        const lat=parseFloat(res[0].lat);
+        const lng=parseFloat(res[0].lon);
+        map.setView([lat,lng],16);
+        marker.setLatLng([lat,lng]);
+        setLocation(lat,lng);
+    });
 }
 
 function useCurrentLocation(){
-    navigator.geolocation.getCurrentPosition(
-        p=>{
-            map.setView([p.coords.latitude,p.coords.longitude],18);
-            marker.setLatLng([p.coords.latitude,p.coords.longitude]);
-            setLocation(p.coords.latitude,p.coords.longitude);
-        },
-        ()=>alert("Location permission denied")
-    );
+    navigator.geolocation.getCurrentPosition(p=>{
+        map.setView([p.coords.latitude,p.coords.longitude],18);
+        marker.setLatLng([p.coords.latitude,p.coords.longitude]);
+        setLocation(p.coords.latitude,p.coords.longitude);
+    });
 }
 
 initMap();

@@ -705,14 +705,14 @@
         <div class="categories-grid" id="categoriesGrid">
             {% for c in categories %}
             <div class="category-card" data-name="{{ c.name|lower }}" data-slug="{{ c.slug|lower }}" data-store="{% if c.store %}{{ c.store.name|lower }}{% else %}global{% endif %}">
-                <div class="card-image">
-                    {% if c.image %}
-                        <img src="{{ c.image.url }}" alt="{{ c.name }}">
-                    {% else %}
-                        <div class="no-image">No Image</div>
-                    {% endif %}
-                </div>
-                
+               <div class="card-image">
+    {% if c.image %}
+        <img src="{{ c.image.url }}" alt="{{ c.name }}">
+    {% else %}
+        <img src="{% static 'images/noimagecat.png' %}" alt="Default image">
+    {% endif %}
+</div>
+
                 <div class="card-content">
                     <h3 class="card-title">{{ c.name }}</h3>
                     <div class="card-slug">{{ c.slug }}</div>
@@ -734,11 +734,11 @@
                             <span class="badge badge-store">Store</span>
                         {% endif %}
                         
-                        {% if c.is_approved %}
+                        <!-- {% if c.is_approved %}
                             <span class="badge" style="background: linear-gradient(135deg, var(--success) 0%, #10b981 100%);">Approved</span>
                         {% else %}
                             <span class="badge badge-pending">Pending</span>
-                        {% endif %}
+                        {% endif %} -->
                         
                         {% if not c.is_active %}
                             <span class="badge badge-inactive">Inactive</span>

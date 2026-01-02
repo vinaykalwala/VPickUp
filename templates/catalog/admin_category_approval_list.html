@@ -4,27 +4,14 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 
 <style>
-/* =====================================================
-   BASE
-   ===================================================== */
 *{
     box-sizing:border-box;
     font-family:'Inter','Poppins','Segoe UI',sans-serif;
 }
+body{background:#f4f7fb;}
+.page{max-width:1400px;margin:40px auto;padding:0 20px 30px;}
 
-body{
-    background:#f4f7fb;
-}
-
-.page{
-    max-width:1400px;
-    margin:40px auto;
-    padding:0 20px;
-}
-
-/* =====================================================
-   HEADER CARD
-   ===================================================== */
+/* ================= HEADER ================= */
 .header-card{
     background:linear-gradient(135deg,#0e7490,#0b5f73);
     border-radius:22px;
@@ -37,20 +24,9 @@ body{
     margin-bottom:28px;
     gap:24px;
 }
+.header-left h1{font-size:30px;font-weight:800;margin-bottom:10px;}
+.header-left p{opacity:.9;max-width:650px;line-height:1.6;}
 
-.header-left h1{
-    font-size:30px;
-    font-weight:800;
-    margin-bottom:10px;
-}
-
-.header-left p{
-    opacity:.9;
-    max-width:650px;
-    line-height:1.6;
-}
-
-/* Stats */
 .header-stat{
     background:rgba(255,255,255,.15);
     backdrop-filter:blur(10px);
@@ -61,13 +37,10 @@ body{
     gap:16px;
     min-width:200px;
 }
-
 .stat-count{font-size:32px;font-weight:800;}
 .stat-label{font-size:13px;letter-spacing:.08em;opacity:.85;}
 
-/* =====================================================
-   SEARCH CARD
-   ===================================================== */
+/* ================= SEARCH ================= */
 .search-card{
     background:#fff;
     border-radius:18px;
@@ -78,7 +51,6 @@ body{
     box-shadow:0 10px 30px rgba(0,0,0,.08);
     margin-bottom:28px;
 }
-
 .search-title{
     font-size:14px;
     font-weight:700;
@@ -88,41 +60,29 @@ body{
     align-items:center;
     gap:10px;
 }
-
-.search-box{
-    flex:1;
-    position:relative;
-}
-
+.search-box{flex:1;}
 .search-box input{
     width:100%;
     padding:14px 18px 14px 48px;
     border-radius:14px;
     border:1px solid #e5e7eb;
     font-size:15px;
-    outline:none;
 }
 
-/* =====================================================
-   TABLE CARD
-   ===================================================== */
+/* ================= TABLE ================= */
 .table-card{
     background:#fff;
     border-radius:18px;
     box-shadow:0 15px 35px rgba(0,0,0,.08);
     overflow:hidden;
 }
-
-/* Sticky title (mobile) */
 .table-header{
     padding:22px 26px;
     border-bottom:1px solid #e5e7eb;
     display:flex;
     justify-content:space-between;
     align-items:center;
-    background:#fff;
 }
-
 .table-header h2{
     font-size:20px;
     font-weight:700;
@@ -130,7 +90,6 @@ body{
     align-items:center;
     gap:10px;
 }
-
 .table-count{
     background:#0e7490;
     color:#fff;
@@ -140,18 +99,8 @@ body{
     font-weight:700;
 }
 
-/* =====================================================
-   TABLE
-   ===================================================== */
-.table-scroll{
-    width:100%;
-}
-
-table{
-    width:100%;
-    border-collapse:collapse;
-}
-
+.table-scroll{width:100%;}
+table{width:100%;border-collapse:collapse;}
 thead{background:#f9fafb;}
 
 th{
@@ -160,43 +109,67 @@ th{
     color:#6b7280;
     text-transform:uppercase;
     letter-spacing:.08em;
-    text-align:left;
+    text-align:center; /* 🔥 */
 }
 
 td{
     padding:18px 22px;
     font-size:15px;
     color:#1f2937;
-    vertical-align:top;
+    vertical-align:middle;
+    text-align:center; /* 🔥 */
 }
 
-tbody tr{
-    border-top:1px solid #e5e7eb;
-    transition:.2s;
-}
-
+tbody tr{border-top:1px solid #e5e7eb;}
 tbody tr:hover{background:#f0f9ff;}
 
-/* Vertical dividers */
 th:not(:last-child),
 td:not(:last-child){
     border-right:1px solid #e5e7eb;
 }
 
-/* =====================================================
-   ACTION BUTTONS (NO EXTRA SPACE)
-   ===================================================== */
-td:last-child{
-    width:1%;
-    white-space:nowrap;
+td:last-child{white-space:nowrap;}
+
+/* ================= CATEGORY CELL ================= */
+.category-cell{
+    display:flex;
+    align-items:center;
+    justify-content:center; /* 🔥 */
+    gap:14px;
+}
+.category-name{
+    font-weight:600;
+}
+.category-img{
+    width:46px;
+    height:46px;
+    border-radius:12px;
+    object-fit:cover;
+    border:1px solid #e5e7eb;
+    box-shadow:0 6px 14px rgba(0,0,0,.12);
+}
+.category-img.placeholder{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#f1f5f9;
+    color:#94a3b8;
+    font-size:18px;
 }
 
+td img.category-img{
+    display:block;
+    margin:auto;
+}
+
+
+/* ================= ACTIONS ================= */
 .actions{
-    display:inline-flex;
+    display:flex;
+    justify-content:center; /* 🔥 */
     align-items:center;
     gap:12px;
 }
-
 .actions button{
     border:none;
     border-radius:12px;
@@ -208,201 +181,303 @@ td:last-child{
     align-items:center;
     gap:8px;
 }
-
 .approve-btn{background:#22c55e;color:#fff;}
 .reject-btn{background:#ef4444;color:#fff;}
 
-/* =====================================================
-   MODAL
-   ===================================================== */
+/* ================= MODAL ================= */
 #confirmModal{
     position:fixed;
     inset:0;
-    background:rgba(0,0,0,.6);
+    background:rgba(15,23,42,.6);
     display:none;
     align-items:center;
     justify-content:center;
     z-index:9999;
 }
-
 .modal-box{
     background:#fff;
-    padding:32px;
-    border-radius:20px;
     max-width:420px;
-    width:90%;
+    width:100%;
+    padding:36px 32px;
+    border-radius:24px;
     text-align:center;
+    box-shadow:0 40px 80px rgba(0,0,0,.25);
 }
+.modal-icon{
+    width:72px;
+    height:72px;
+    margin:0 auto 18px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:32px;
+}
+.modal-icon.approve{background:#dcfce7;color:#16a34a;}
+.modal-icon.reject{background:#fee2e2;color:#dc2626;}
 
 .modal-actions{
     display:flex;
     gap:14px;
-    justify-content:center;
-    margin-top:22px;
+    margin-top:26px;
 }
+.modal-cancel,
+.modal-confirm{
+    flex:1;
+    padding:14px;
+    border-radius:14px;
+    font-weight:700;
+    cursor:pointer;
+    border:none;
+}
+.modal-confirm{background:#0e7490;color:#fff;}
+.modal-confirm.reject{background:#ef4444;}
+.modal-cancel{background:#f1f5f9;}
 
 /* =====================================================
    RESPONSIVE
    ===================================================== */
 
-/* Tablet & below */
-@media (max-width:992px){
+/* ---------- Large tablets & below ---------- */
+@media (max-width: 1024px){
 
     .header-card{
         flex-direction:column;
         align-items:flex-start;
+        gap:20px;
     }
 
-    .header-stat{width:100%;}
+    .header-stat{
+        width:100%;
+        justify-content:flex-start;
+    }
+
+    .page{
+        margin:30px auto;
+    }
+}
+
+/* ---------- Tablets ---------- */
+@media (max-width: 900px){
 
     .search-card{
         flex-direction:column;
         align-items:stretch;
+        gap:14px;
     }
 
-    /* Table horizontal scroll only */
+    .search-title{
+        justify-content:center;
+    }
+
+    /* Enable horizontal scroll only for table */
     .table-scroll{
         overflow-x:auto;
         -webkit-overflow-scrolling:touch;
     }
 
-    table{min-width:900px;}
+    table{
+        min-width:900px;
+    }
+}
 
-    /* Sticky & centered title */
+/* ---------- Mobile ---------- */
+@media (max-width: 768px){
+
+    .header-left h1{
+        font-size:22px;
+    }
+
+    .header-left p{
+        font-size:14px;
+    }
+
+    .stat-count{
+        font-size:26px;
+    }
+
     .table-header{
-        position:sticky;
-        top:0;
-        z-index:20;
-        text-align:center;
         flex-direction:column;
-        gap:6px;
-        box-shadow:0 6px 18px rgba(0,0,0,.08);
+        gap:8px;
+        text-align:center;
     }
 
     .table-header h2{
         justify-content:center;
-        width:100%;
     }
-}
 
-/* Mobile */
-@media (max-width:768px){
+    .table-count{
+        font-size:12px;
+    }
 
-    .header-left h1{font-size:22px;}
-    .stat-count{font-size:26px;}
+    table{
+        min-width:820px;
+    }
 
-    table{min-width:800px;}
-
+    /* Actions stack if needed */
     .actions{
         flex-direction:column;
-        align-items:flex-start;
     }
-
-    td:last-child{width:auto;}
 }
 
-/* Small mobile */
-@media (max-width:420px){
+/* ---------- Small Mobile ---------- */
+@media (max-width: 480px){
 
-    .header-left h1{font-size:18px;}
+    .page{
+        padding:0 14px;
+        margin:20px auto;
+    }
+
+    .header-left h1{
+        font-size:20px;
+    }
+
+    .header-left p{
+        font-size:13px;
+    }
+
+    .modal-box{
+        padding:26px 22px;
+    }
+
+    .modal-box h3{
+        font-size:18px;
+    }
+
+    .modal-box p{
+        font-size:13px;
+    }
 
     .modal-actions{
         flex-direction:column;
     }
 }
 
+/* ---------- Very small devices ---------- */
+@media (max-width: 360px){
+
+    .header-left h1{
+        font-size:18px;
+    }
+
+    .stat-count{
+        font-size:22px;
+    }
+
+    .actions button{
+        padding:8px 14px;
+        font-size:13px;
+    }
+}
 
 </style>
 
 <div class="page">
 
-    <!-- HEADER -->
-    <div class="header-card">
-        <div class="header-left">
-            <h1>Category Management</h1>
-            <p>Review and manage store category requests. Approve them to make available globally or reject.</p>
+<!-- HEADER -->
+<div class="header-card">
+    <div class="header-left">
+        <h1>Category Management</h1>
+        <p>Review and manage store category requests.</p>
+    </div>
+    <div class="header-stat">
+        <i class="fa-solid fa-layer-group"></i>
+        <div>
+            <div class="stat-count">{{ categories|length }}</div>
+            <div class="stat-label">TOTAL REQUESTS</div>
         </div>
+    </div>
+</div>
 
-        <div class="header-stat">
-            <i class="fa-solid fa-layer-group"></i>
-            <div>
-                <div class="stat-count">{{ categories|length }}</div>
-                <div class="stat-label">TOTAL REQUESTS</div>
+<!-- SEARCH -->
+<div class="search-card">
+    <div class="search-title">
+        <i class="fa-solid fa-magnifying-glass"></i> SEARCH
+    </div>
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Search by category, store, email">
+    </div>
+</div>
+
+<!-- TABLE -->
+<div class="table-card">
+<div class="table-header">
+    <h2><i class="fa-regular fa-rectangle-list"></i> Category Requests</h2>
+    <span class="table-count">{{ categories|length }} items</span>
+</div>
+
+<div class="table-scroll">
+<table id="categoryTable">
+<thead>
+<tr>
+    <th>Image</th>
+    <th>Category</th>
+    <th>Store</th>
+    <th>Created By</th>
+    <th>Actions</th>
+</tr>
+</thead>
+<tbody>
+{% for c in categories %}
+<tr>
+
+    <!-- 1️⃣ IMAGE CELL -->
+    <td>
+        {% if c.image %}
+            <img src="{{ c.image.url }}" class="category-img">
+        {% else %}
+            <div class="category-img placeholder">
+                <i class="fa-regular fa-image"></i>
             </div>
-        </div>
-    </div>
+        {% endif %}
+    </td>
 
-    <!-- SEARCH -->
-    <div class="search-card">
-        <div class="search-title">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            SEARCH CATEGORIES
-        </div>
-        <div class="search-box">
-            <input type="text" id="searchInput" placeholder="Search by category, store, email...">
-        </div>
-    </div>
+    <!-- 2️⃣ CATEGORY NAME CELL -->
+    <td>
+        <strong>{{ c.name }}</strong>
+    </td>
 
-    <!-- TABLE -->
-    <div class="table-card">
-        <div class="table-header fixed-header">
-            <h2>
-                <i class="fa-regular fa-rectangle-list"></i>
-                Category Requests
-            </h2>
-            <span class="table-count">{{ categories|length }} items</span>
-        </div>
+    <!-- 3️⃣ STORE CELL -->
+    <td>{{ c.store.name }}</td>
 
-        <div class="table-scroll">
-        <table id="categoryTable">
-            <thead>
-                <tr>
-                    <th>Category Name</th>
-                    <th>Store</th>
-                    <th>Created By</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for c in categories %}
-                <tr>
-                    <td>{{ c.name }}</td>
-                    <td>{{ c.store.name }}</td>
-                    <td>{{ c.created_by.email }}</td>
-                    <td>
-                        <form method="post" action="{% url 'admin_category_approve' c.slug %}">
-                            {% csrf_token %}
-                            <div class="actions">
-                                <button type="button" class="approve-btn" onclick="openModal('approve',this)">
-                                    <i class="fa-solid fa-check"></i> APPROVE
-                                </button>
-                                <button type="button" class="reject-btn" onclick="openModal('reject',this)">
-                                    <i class="fa-solid fa-xmark"></i> REJECT
-                                </button>
-                            </div>
-                        </form>
-                    </td>
-                </tr>
-            {% empty %}
-                <tr><td colspan="4" class="no-data">No pending categories</td></tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
+    <!-- 4️⃣ CREATED BY -->
+    <td>{{ c.created_by.email }}</td>
+
+    <!-- 5️⃣ ACTIONS -->
+    <td>
+        <form method="post" action="{% url 'admin_category_approve' c.slug %}">
+            {% csrf_token %}
+            <div class="actions">
+                <button type="button" class="approve-btn" onclick="openModal('approve',this)">
+                    <i class="fa-solid fa-check"></i> APPROVE
+                </button>
+                <button type="button" class="reject-btn" onclick="openModal('reject',this)">
+                    <i class="fa-solid fa-xmark"></i> REJECT
+                </button>
+            </div>
+        </form>
+    </td>
+
+</tr>
+{% endfor %}
+</tbody>
+
+</table>
+</div>
 </div>
 </div>
 
 <!-- MODAL -->
 <div id="confirmModal">
-    <div class="modal-box">
-        <div class="modal-icon" id="modalIcon"></div>
-        <h3 id="modalTitle"></h3>
-        <p id="modalMessage"></p>
-        <div class="modal-actions">
-            <button class="cancel-btn" onclick="closeModal()">Cancel</button>
-            <button class="confirm-btn" id="confirmActionBtn">Confirm</button>
-        </div>
+<div class="modal-box">
+    <div class="modal-icon" id="modalIcon"></div>
+    <h3 id="modalTitle"></h3>
+    <p id="modalMessage"></p>
+    <div class="modal-actions">
+        <button class="modal-cancel" onclick="closeModal()">Cancel</button>
+        <button class="modal-confirm" id="confirmActionBtn">Confirm</button>
     </div>
+</div>
 </div>
 
 <script>
@@ -431,20 +506,24 @@ function openModal(action,btn){
         icon.innerHTML='<i class="fa-solid fa-circle-check"></i>';
         title.innerText="Approve Category?";
         msg.innerText="This category will be approved and made global.";
-        confirm.className="confirm-btn";
+        confirm.className="modal-confirm";
     }else{
         icon.className="modal-icon reject";
         icon.innerHTML='<i class="fa-solid fa-circle-xmark"></i>';
         title.innerText="Reject Category?";
         msg.innerText="This category will be permanently rejected.";
-        confirm.className="confirm-btn reject";
+        confirm.className="modal-confirm reject";
     }
     confirm.onclick=submitAction;
 }
-function closeModal(){document.getElementById("confirmModal").style.display="none";}
+function closeModal(){
+    document.getElementById("confirmModal").style.display="none";
+}
 function submitAction(){
     const i=document.createElement("input");
-    i.type="hidden";i.name="action";i.value=selectedAction;
+    i.type="hidden";
+    i.name="action";
+    i.value=selectedAction;
     selectedForm.appendChild(i);
     selectedForm.submit();
 }

@@ -14,57 +14,47 @@
 }
 
 body{
-    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    background:linear-gradient(135deg,#f8fafc,#f1f5f9);
     color:#0f172a;
-    min-height: 100vh;
+    min-height:100vh;
 }
 
 /* ================= PAGE ================= */
 .page{
     max-width:1400px;
     margin:48px auto;
-    padding:0 32px;
+    padding:0 32px 60px;
 }
 
 /* ================= HERO SHOP ================= */
 .shop-section{
-    background: linear-gradient(145deg, #ffffff 0%, #fafcff 100%);
+    background:#ffffff;
     border-radius:32px;
     padding:48px 40px;
-    box-shadow: 
-        0 25px 50px -12px rgba(15, 23, 42, 0.08),
-        inset 0 1px 0 0 rgba(255, 255, 255, 0.5);
+    box-shadow:0 25px 50px rgba(15,23,42,0.08);
     margin-bottom:56px;
     text-align:center;
-    position: relative;
-    overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.8);
+    position:relative;
 }
 
-.shop-section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, #0891b2, #0e7490, #0284c7);
-    border-radius: 32px 32px 0 0;
+.shop-section::before{
+    content:'';
+    position:absolute;
+    top:0;left:0;right:0;
+    height:4px;
+    background:linear-gradient(90deg,#0891b2,#0e7490,#0284c7);
 }
 
 .shop-title{
     font-size:32px;
     font-weight:700;
     margin-bottom:32px;
-    color:#0f172a;
-    background: linear-gradient(90deg, #0e7490, #0891b2);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    letter-spacing: -0.5px;
+    background:linear-gradient(90deg,#0e7490,#0891b2);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
 }
 
-/* ===== CATEGORY CIRCLES ===== */
+/* ================= CATEGORY ICONS ================= */
 .shop-categories{
     display:flex;
     justify-content:center;
@@ -78,15 +68,14 @@ body{
     flex-direction:column;
     align-items:center;
     gap:12px;
-    transition: all 0.3s ease;
-    padding: 8px;
-    border-radius: 20px;
+    padding:10px;
+    border-radius:20px;
+    transition:.3s;
 }
 
-.shop-item:hover {
-    transform: translateY(-8px);
-    background: rgba(255, 255, 255, 0.7);
-    box-shadow: 0 12px 24px rgba(8, 145, 178, 0.15);
+.shop-item:hover{
+    transform:translateY(-6px);
+    box-shadow:0 12px 24px rgba(8,145,178,.15);
 }
 
 .shop-item img{
@@ -94,33 +83,19 @@ body{
     height:96px;
     border-radius:50%;
     object-fit:cover;
-    border: 3px solid #ffffff;
-    background: #fff;
-    transition:all .3s ease;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-}
-
-.shop-item:hover img{
-    transform:scale(1.08);
-    border-color:#0891b2;
-    box-shadow: 0 12px 24px rgba(8, 145, 178, 0.2);
+    background:#fff;
+    border:3px solid #fff;
 }
 
 .shop-item span{
     font-size:15px;
     font-weight:600;
-    color:#334155;
-    transition: color 0.3s ease;
 }
 
-.shop-item:hover span {
-    color: #0891b2;
-}
-
-/* ===== BIG SEARCH ===== */
+/* ================= SEARCH ================= */
 .big-search{
     max-width:720px;
-    margin:0 auto;
+    margin:auto;
     position:relative;
 }
 
@@ -128,23 +103,15 @@ body{
     width:100%;
     padding:22px 70px 22px 28px;
     border-radius:999px;
-    border: 2px solid #e2e8f0;
+    border:2px solid #e2e8f0;
     font-size:16px;
-    background:#fff;
-    box-shadow: 
-        0 15px 35px rgba(0,0,0,0.08),
-        0 0 0 1px rgba(255, 255, 255, 0.9);
-    transition: all 0.3s ease;
-    font-weight: 500;
-    color: #334155;
+    transition:all 0.3s ease;
 }
 
-.big-search input:focus {
-    outline: none;
-    border-color: #0891b2;
-    box-shadow: 
-        0 20px 40px rgba(8, 145, 178, 0.15),
-        0 0 0 4px rgba(8, 145, 178, 0.1);
+.big-search input:focus{
+    outline:none;
+    border-color:#0891b2;
+    box-shadow:0 0 0 3px rgba(8,145,178,0.1);
 }
 
 .big-search i{
@@ -153,82 +120,79 @@ body{
     top:50%;
     transform:translateY(-50%);
     color:#64748b;
-    font-size:18px;
-    transition: color 0.3s ease;
 }
 
-.big-search input:focus + i {
-    color: #0891b2;
+/* ================= COMBINED WRAPPER ================= */
+.subcategory-wrapper{
+    border-radius:32px;
+    overflow:hidden;
+    background:#ffffff;
+    box-shadow:0 30px 70px rgba(15,23,42,0.12);
 }
 
 /* ================= HEADER ================= */
 .page-header{
+    background:#0891b2;
+    padding:36px 40px;
     display:flex;
     justify-content:space-between;
     align-items:center;
-    margin-bottom:48px;
-    padding-bottom: 24px;
-    border-bottom: 2px solid #f1f5f9;
+    color:#ffffff;
 }
 
 .page-header h1{
-    font-size:32px;
+    font-size:30px;
     font-weight:700;
     display:flex;
     align-items:center;
-    gap:16px;
-    color: #0f172a;
+    gap:14px;
 }
 
-.page-header h1 i {
-    background: linear-gradient(135deg, #0891b2, #0e7490);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    font-size: 36px;
+.page-header h1 i{
+    font-size:34px;
 }
 
+/* ================= ADD BUTTON ================= */
 .add-btn{
-    background: linear-gradient(135deg, #0e7490, #0891b2);
-    color:#fff;
-    padding:16px 28px;
+    background:linear-gradient(135deg,#ffffff,#f8fafc);
+    color:#0891b2;
+    padding:14px 28px;
     border-radius:18px;
-    text-decoration:none;
-    font-weight:600;
+    font-weight:700;
     display:flex;
     align-items:center;
-    gap:12px;
-    transition: all 0.3s ease;
-    box-shadow: 0 12px 24px rgba(8, 145, 178, 0.25);
-    border: none;
-    cursor: pointer;
-    font-size: 15px;
-    position: relative;
-    overflow: hidden;
+    gap:10px;
+    text-decoration:none;
+    transition:all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow:0 8px 20px rgba(8,145,178,0.15);
+    position:relative;
+    overflow:hidden;
 }
 
-.add-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transition: 0.5s;
-}
-
-.add-btn:hover::before {
-    left: 100%;
+.add-btn::before{
+    content:'';
+    position:absolute;
+    top:0;
+    left:-100%;
+    width:100%;
+    height:100%;
+    background:linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition:0.5s;
 }
 
 .add-btn:hover{
-    transform: translateY(-2px);
-    box-shadow: 0 16px 32px rgba(8, 145, 178, 0.35);
+    transform:translateY(-4px) scale(1.02);
+    box-shadow:0 15px 30px rgba(8,145,178,0.25);
 }
 
-.add-btn:active{
-    transform: translateY(0);
+.add-btn:hover::before{
+    left:100%;
+}
+
+/* ================= GRID SECTION ================= */
+.grid-section{
+    background:#ffffff;
+    padding:42px;
 }
 
 /* ================= GRID ================= */
@@ -240,77 +204,54 @@ body{
 
 /* ================= CARD ================= */
 .subcategory-card{
-    background:#fff;
+    background:#ffffff;
     border-radius:24px;
     overflow:hidden;
-    box-shadow: 
-        0 20px 40px rgba(15, 23, 42, 0.08),
-        0 0 0 1px rgba(255, 255, 255, 0.9);
+    border:1px solid #e2e8f0;
+    box-shadow:0 20px 40px rgba(15,23,42,.08);
     display:flex;
     flex-direction:column;
     transition:.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    border: 1px solid rgba(226, 232, 240, 0.6);
-    position: relative;
 }
 
-.subcategory-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, #0891b2, #0e7490);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
 
-.subcategory-card:hover::before {
-    opacity: 1;
-}
-
-.subcategory-card:hover{
-    transform:translateY(-8px);
-    box-shadow: 
-        0 30px 60px rgba(15, 23, 42, 0.12),
-        0 0 0 1px rgba(255, 255, 255, 0.9);
-}
-
-/* ===== IMAGE ===== */
+/* IMAGE */
 .card-image{
     height:200px;
     display:flex;
     align-items:center;
     justify-content:center;
-    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-    padding: 20px;
-    position: relative;
-    overflow: hidden;
+    background:linear-gradient(135deg,#f8fafc,#e2e8f0);
+    overflow:hidden;
+    position:relative;
 }
 
-.card-image::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, #e2e8f0, transparent);
+.card-image::before{
+    content:'';
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    background:linear-gradient(45deg, rgba(8,145,178,0.1), transparent);
+    opacity:0;
+    transition:opacity 0.3s ease;
+}
+
+.subcategory-card:hover .card-image::before{
+    opacity:1;
 }
 
 .card-image img{
     max-width:100%;
     max-height:100%;
     object-fit:contain;
-    transition: transform 0.5s ease;
-    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.1));
+    transition:transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.subcategory-card:hover .card-image img {
-    transform: scale(1.05);
-}
 
-/* ===== CONTENT ===== */
+
+/* CONTENT */
 .card-content{
     padding:28px;
     display:flex;
@@ -321,168 +262,361 @@ body{
 .card-title{
     font-size:20px;
     font-weight:700;
+    margin-bottom:8px;
     color:#0f172a;
-    margin-bottom: 8px;
-    line-height: 1.3;
+    position:relative;
+    display:inline-block;
+}
+
+.card-title::after{
+    content:'';
+    position:absolute;
+    bottom:-4px;
+    left:0;
+    width:40px;
+    height:3px;
+    background:linear-gradient(90deg,#0891b2,#0e7490);
+    border-radius:2px;
+    transition:width 0.3s ease;
+}
+
+.subcategory-card:hover .card-title::after{
+    width:60px;
 }
 
 .card-slug{
     font-size:13px;
     color:#64748b;
+    background:#f1f5f9;
+    padding:6px 12px;
+    border-radius:20px;
+    width:fit-content;
     margin-bottom:16px;
-    font-weight: 500;
-    letter-spacing: 0.3px;
-    background: #f8fafc;
-    padding: 6px 12px;
-    border-radius: 20px;
-    display: inline-block;
-    width: fit-content;
+    font-family:'Courier New', monospace;
 }
 
 .card-meta{
     font-size:14px;
     color:#475569;
     margin-bottom:24px;
-    line-height: 1.6;
-    flex: 1;
+    flex:1;
+    line-height:1.6;
 }
 
-.card-meta span {
-    font-weight: 600;
-    color: #0f172a;
+.card-meta strong{
+    color:#0f172a;
+    font-weight:600;
 }
 
-/* ===== ACTIONS ===== */
+/* ================= BUTTONS - REDESIGNED ================= */
 .card-actions{
-    margin-top:auto;
     display:grid;
     grid-template-columns:1fr 1fr;
     gap:16px;
+    margin-top:8px;
 }
 
 .btn{
-    padding:14px 0;
-    border-radius:16px;
+    padding:14px 20px;
+    border-radius:14px;
     font-weight:600;
-    text-align:center;
+    font-size:14px;
     border:none;
     cursor:pointer;
-    width:100%;
-    transition: all 0.3s ease;
-    font-size: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    letter-spacing: 0.3px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    text-decoration:none;
+    transition:all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+    letter-spacing:0.3px;
 }
 
+.btn::before{
+    content:'';
+    position:absolute;
+    top:50%;
+    left:50%;
+    width:0;
+    height:0;
+    border-radius:50%;
+    background:rgba(255,255,255,0.2);
+    transform:translate(-50%,-50%);
+    transition:width 0.6s, height 0.6s;
+}
+
+.btn:hover::before{
+    width:300px;
+    height:300px;
+}
+
+.btn i{
+    font-size:15px;
+    transition:transform 0.3s ease;
+}
+
+.btn:hover i{
+    transform:scale(1.2);
+}
+
+/* Edit Button - Beautiful Gradient */
 .btn-edit{
-    background: linear-gradient(135deg, #0284c7, #0ea5e9);
-    color:#fff;
-    box-shadow: 0 8px 16px rgba(2, 132, 199, 0.2);
+    background:linear-gradient(135deg,#22c55e,#16a34a,#10b981);
+    color:#ffffff;
+    box-shadow:0 8px 25px rgba(34,197,94,0.3);
+    border:2px solid rgba(255,255,255,0.2);
 }
 
-.btn-edit:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 24px rgba(2, 132, 199, 0.3);
+.btn-edit:hover{
+    transform:translateY(-4px) scale(1.05);
+    box-shadow:0 15px 35px rgba(34,197,94,0.4);
+    background:linear-gradient(135deg,#16a34a,#10b981,#0d9c6e);
+    color:#ffffff;
 }
 
+/* Delete Button - Attractive Red */
 .btn-delete{
-    background: linear-gradient(135deg, #dc2626, #ef4444);
-    color:#fff;
-    box-shadow: 0 8px 16px rgba(220, 38, 38, 0.2);
+    background:linear-gradient(135deg,#ef4444,#dc2626,#b91c1c);
+    color:#ffffff;
+    box-shadow:0 8px 25px rgba(239,68,68,0.3);
+    border:2px solid rgba(255,255,255,0.2);
 }
 
-.btn-delete:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 24px rgba(220, 38, 38, 0.3);
+.btn-delete:hover{
+    transform:translateY(-4px) scale(1.05);
+    box-shadow:0 15px 35px rgba(239,68,68,0.4);
+    background:linear-gradient(135deg,#dc2626,#b91c1c,#991b1b);
+    color:#ffffff;
+}
+
+/* Button Animation */
+@keyframes buttonPulse{
+    0%{transform:scale(1);}
+    50%{transform:scale(1.05);}
+    100%{transform:scale(1);}
+}
+
+.btn:active{
+    animation:buttonPulse 0.3s ease;
+}
+
+/* ================= DELETE MODAL ================= */
+.delete-modal{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(15,23,42,0.85);
+    backdrop-filter:blur(8px);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:1000;
+    padding:20px;
+}
+
+.delete-modal.active{
+    display:flex;
+}
+
+.delete-box{
+    background:#ffffff;
+    width:100%;
+    max-width:500px;
+    border-radius:28px;
+    overflow:hidden;
+    box-shadow:0 50px 100px rgba(0,0,0,0.3);
+    animation:modalSlideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes modalSlideIn{
+    from{
+        opacity:0;
+        transform:translateY(-30px) scale(0.95);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0) scale(1);
+    }
+}
+
+.delete-header{
+    background:linear-gradient(135deg,#ef4444,#dc2626,#b91c1c);
+    padding:32px;
+    color:#ffffff;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+}
+
+.delete-header::before{
+    content:'';
+    position:absolute;
+    top:-50%;
+    left:-50%;
+    width:200%;
+    height:200%;
+    background:linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+    transform:rotate(45deg);
+    animation:shine 3s infinite linear;
+}
+
+@keyframes shine{
+    0%{transform:translateX(-100%) translateY(-100%) rotate(45deg);}
+    100%{transform:translateX(100%) translateY(100%) rotate(45deg);}
+}
+
+.delete-header i{
+    font-size:56px;
+    margin-bottom:16px;
+    position:relative;
+    z-index:1;
+    animation:pulse 2s infinite ease-in-out;
+}
+
+@keyframes pulse{
+    0%,100%{transform:scale(1);}
+    50%{transform:scale(1.1);}
+}
+
+.delete-header h2{
+    font-size:26px;
+    font-weight:700;
+    position:relative;
+    z-index:1;
+    letter-spacing:0.5px;
+}
+
+.delete-content{
+    padding:40px 32px;
+    text-align:center;
+}
+
+.delete-text{
+    font-size:17px;
+    color:#475569;
+    line-height:1.7;
+    margin-bottom:40px;
+    font-weight:500;
+}
+
+.delete-text b{
+    color:#0f172a;
+    background:linear-gradient(135deg,#ef4444,#dc2626);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    font-weight:700;
+}
+
+.delete-actions{
+    display:flex;
+    gap:20px;
+}
+
+.delete-cancel{
+    flex:1;
+    background:linear-gradient(135deg,#f1f5f9,#e2e8f0);
+    color:#475569;
+    padding:16px;
+    border-radius:14px;
+    font-weight:600;
+    border:none;
+    cursor:pointer;
+    transition:all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    border:2px solid transparent;
+}
+
+.delete-cancel:hover{
+    transform:translateY(-4px);
+    background:linear-gradient(135deg,#e2e8f0,#cbd5e1);
+    color:#0f172a;
+    box-shadow:0 10px 25px rgba(148,163,184,0.2);
+}
+
+.delete-confirm{
+    flex:1;
+    background:linear-gradient(135deg,#ef4444,#dc2626,#b91c1c);
+    color:#ffffff;
+    padding:16px;
+    border-radius:14px;
+    font-weight:600;
+    border:none;
+    cursor:pointer;
+    transition:all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    border:2px solid rgba(255,255,255,0.2);
+    position:relative;
+    overflow:hidden;
+}
+
+.delete-confirm::before{
+    content:'';
+    position:absolute;
+    top:0;
+    left:-100%;
+    width:100%;
+    height:100%;
+    background:linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition:0.6s;
+}
+
+.delete-confirm:hover::before{
+    left:100%;
+}
+
+.delete-confirm:hover{
+    transform:translateY(-4px);
+    box-shadow:0 15px 35px rgba(239,68,68,0.4);
+    background:linear-gradient(135deg,#dc2626,#b91c1c,#991b1b);
 }
 
 /* ================= RESPONSIVE ================= */
 @media(max-width:1200px){
-    .subcategories-grid{
-        grid-template-columns:repeat(3,1fr);
-    }
+    .subcategories-grid{grid-template-columns:repeat(3,1fr);}
 }
 
 @media(max-width:900px){
-    .subcategories-grid{
-        grid-template-columns:repeat(2,1fr);
-        gap: 24px;
-    }
-    .page{
-        padding: 0 24px;
-    }
+    .subcategories-grid{grid-template-columns:repeat(2,1fr);}
+    .grid-section{padding:32px;}
+    .btn{padding:12px 16px;}
 }
 
 @media(max-width:768px){
-    .shop-categories {
-        gap: 24px;
-    }
-    
-    .shop-item img {
-        width: 80px;
-        height: 80px;
-    }
-    
-    .shop-title {
-        font-size: 28px;
-    }
-}
-
-@media(max-width:520px){
-    .subcategories-grid{
-        grid-template-columns:1fr;
-    }
     .page-header{
         flex-direction:column;
         gap:20px;
-        text-align: center;
+        text-align:center;
     }
-    .page{
-        padding: 0 20px;
+    .shop-item img{
+        width:80px;height:80px;
     }
-    .shop-section {
-        padding: 32px 24px;
+    .delete-actions{
+        flex-direction:column;
     }
+    .delete-header{padding:24px;}
+    .delete-content{padding:32px 24px;}
 }
 
-/* ================= ANIMATIONS ================= */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
+@media(max-width:520px){
+    .subcategories-grid{grid-template-columns:1fr;}
+    .page{padding:0 18px;}
+    .shop-section{padding:32px 22px;}
+    .grid-section{padding:24px;}
+    .card-actions{
+        grid-template-columns:1fr;
     }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.subcategory-card {
-    animation: fadeIn 0.5s ease forwards;
-    animation-delay: calc(var(--card-index) * 0.1s);
-    opacity: 0;
-}
-
-/* ================= SCROLLBAR ================= */
-::-webkit-scrollbar {
-    width: 10px;
-}
-
-::-webkit-scrollbar-track {
-    background: #f1f5f9;
-    border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb {
-    background: linear-gradient(135deg, #0891b2, #0e7490);
-    border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(135deg, #0e7490, #0891b2);
+    .btn{padding:14px 20px;}
 }
 </style>
 
@@ -507,66 +641,102 @@ body{
     </div>
 </div>
 
-<!-- ===== HEADER ===== -->
-<div class="page-header">
-    <h1><i class="fa-solid fa-layer-group"></i> SubCategories</h1>
-    <a href="{% url 'subcategory_create' %}" class="add-btn">
-        <i class="fa-solid fa-plus"></i> Add SubCategory
-    </a>
-</div>
-
-<!-- ===== GRID ===== -->
-<div class="subcategories-grid">
-{% for s in subcategories %}
-<div class="subcategory-card"
-     data-name="{{ s.name|lower }}"
-     data-slug="{{ s.slug|lower }}"
-     data-category="{{ s.category.name|lower }}"
-     style="--card-index: {{ forloop.counter0 }}">
-
-    <div class="card-image">
-        {% if s.image %}
-            <img src="{{ s.image.url }}" alt="{{ s.name }}">
-        {% endif %}
-    </div>
-
-    <div class="card-content">
-        <div class="card-title">{{ s.name }}</div>
-        <div class="card-slug">{{ s.slug }}</div>
-
-        <div class="card-meta">
-            <span>Category:</span> {{ s.category.name }}<br>
-            <span>Store:</span> {{ s.store.name|default:"Global" }}
+<!-- ===== DELETE CONFIRMATION MODAL ===== -->
+<div class="delete-modal" id="deleteModal">
+    <div class="delete-box">
+        <div class="delete-header">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <h2>Confirm Delete</h2>
         </div>
-
-        <div class="card-actions">
-            <a href="{% url 'subcategory_update' s.slug %}" class="btn btn-edit">
-                <i class="fa-solid fa-pen"></i> Edit
-            </a>
-            <form method="post" action="{% url 'subcategory_delete' s.slug %}">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-delete">
-                    <i class="fa-solid fa-trash"></i> Delete
+        <div class="delete-content">
+            <p class="delete-text" id="deleteText">
+                Are you sure you want to delete this subcategory? This action cannot be undone.
+            </p>
+            <div class="delete-actions">
+                <button type="button" class="delete-cancel" onclick="closeDeleteModal()">
+                    <i class="fa-solid fa-xmark"></i> Cancel
                 </button>
-            </form>
+                <form method="post" id="deleteForm" style="display: contents;">
+                    {% csrf_token %}
+                    <button type="submit" class="delete-confirm">
+                        <i class="fa-solid fa-trash"></i> Delete
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 </div>
-{% endfor %}
+
+<!-- ===== HEADER + GRID WRAPPER ===== -->
+<div class="subcategory-wrapper">
+
+    <!-- HEADER -->
+    <div class="page-header">
+        <h1><i class="fa-solid fa-layer-group"></i> SubCategories</h1>
+        <a href="{% url 'subcategory_create' %}" class="add-btn">
+            <i class="fa-solid fa-plus"></i> Add SubCategory
+        </a>
+    </div>
+
+    <!-- GRID -->
+    <div class="grid-section">
+        <div class="subcategories-grid">
+
+        {% for s in subcategories %}
+            <div class="subcategory-card"
+                 data-name="{{ s.name|lower }}"
+                 data-slug="{{ s.slug|lower }}"
+                 data-category="{{ s.category.name|lower }}">
+
+                <div class="card-image">
+                    {% if s.image %}
+                        <img src="{{ s.image.url }}" alt="{{ s.name }}">
+                    {% else %}
+        <img src="{% static 'images/noimagecat.png' %}" alt="Default image">
+                    {% endif %}
+                </div>
+
+                <div class="card-content">
+                    <div class="card-title">{{ s.name }}</div>
+                    <div class="card-slug">{{ s.slug }}</div>
+
+                    <div class="card-meta">
+                        <strong>Category:</strong> {{ s.category.name }}<br>
+                        <strong>Store:</strong> {{ s.store.name|default:"Global" }}
+                    </div>
+
+                    <div class="card-actions">
+                        <a href="{% url 'subcategory_update' s.slug %}" class="btn btn-edit">
+                            <i class="fa-solid fa-pen-to-square"></i> Edit
+                        </a>
+                        <button type="button" class="btn btn-delete" onclick="openDeleteModal('{{ s.slug }}', '{{ s.name }}')">
+                            <i class="fa-solid fa-trash-can"></i> Delete
+                        </button>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+        </div>
+    </div>
+
 </div>
 
 </div>
 
 <script>
+// Search functionality
 const searchInput = document.getElementById("searchInput");
 const cards = document.querySelectorAll(".subcategory-card");
 
-searchInput.addEventListener("keyup", ()=>{
+searchInput.addEventListener("keyup", () => {
     const val = searchInput.value.toLowerCase().trim();
-    cards.forEach(card=>{
+    cards.forEach(card => {
         const text = 
             card.dataset.name +
+            " " +
             card.dataset.slug +
+            " " +
             card.dataset.category;
         
         const shouldShow = text.includes(val);
@@ -578,11 +748,68 @@ searchInput.addEventListener("keyup", ()=>{
 
 // Add input focus animation
 searchInput.addEventListener('focus', function() {
-    this.parentElement.classList.add('focused');
+    this.style.boxShadow = "0 0 0 3px rgba(8,145,178,0.15)";
+    this.style.borderColor = "#0891b2";
+    this.style.transform = "scale(1.02)";
 });
 
 searchInput.addEventListener('blur', function() {
-    this.parentElement.classList.remove('focused');
+    this.style.boxShadow = "none";
+    this.style.borderColor = "#e2e8f0";
+    this.style.transform = "scale(1)";
+});
+
+// Delete modal functionality
+const deleteModal = document.getElementById("deleteModal");
+const deleteForm = document.getElementById("deleteForm");
+const deleteText = document.getElementById("deleteText");
+
+function openDeleteModal(slug, name) {
+    deleteText.innerHTML = `Are you sure you want to delete <b>"${name}"</b>?<br>This action cannot be undone.`;
+    deleteForm.action = `/subcategory/delete/${slug}/`;
+    deleteModal.classList.add("active");
+    
+    // Prevent background scrolling
+    document.body.style.overflow = "hidden";
+    
+    // Add ripple effect to the button that was clicked
+    const deleteBtn = document.querySelector(`[onclick="openDeleteModal('${slug}', '${name}')"]`);
+    if (deleteBtn) {
+        deleteBtn.style.animation = "buttonPulse 0.3s ease";
+        setTimeout(() => {
+            deleteBtn.style.animation = "";
+        }, 300);
+    }
+}
+
+function closeDeleteModal() {
+    deleteModal.classList.remove("active");
+    document.body.style.overflow = "auto";
+}
+
+// Close modal when clicking outside
+deleteModal.addEventListener("click", function(event) {
+    if (event.target === deleteModal) {
+        closeDeleteModal();
+    }
+});
+
+// Close modal with Escape key
+document.addEventListener("keydown", function(event) {
+    if (event.key === "Escape" && deleteModal.classList.contains("active")) {
+        closeDeleteModal();
+    }
+});
+
+// Add hover effects to all buttons
+document.querySelectorAll('.btn').forEach(button => {
+    button.addEventListener('mouseenter', function() {
+        this.style.transform = "translateY(-4px) scale(1.05)";
+    });
+    
+    button.addEventListener('mouseleave', function() {
+        this.style.transform = "translateY(0) scale(1)";
+    });
 });
 </script>
 
