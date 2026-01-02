@@ -415,11 +415,11 @@ class CustomerProfileEditView(APIView):
         messages.success(request, 'Profile updated')
         return redirect('profile')
 
-class StoreOwnerProfileEditView(APIView):
-    authentication_classes = [SessionAuthentication]
-    permission_classes = [IsAuthenticated]
+#class StoreOwnerProfileEditView(APIView):
+    #authentication_classes = [SessionAuthentication]
+    #permission_classes = [IsAuthenticated]
 
-    def get(self, request):
+    #def get(self, request):
         return render(
             request,
             'accounts/store_owner_profile_edit.html',
@@ -431,7 +431,7 @@ class StoreOwnerProfileEditView(APIView):
             }
         )
 
-    def post(self, request):
+    #def post(self, request):
         # Prepare data dictionary for serializer that includes files
         profile_data = request.POST.copy()
         if request.FILES:
@@ -463,6 +463,61 @@ class StoreOwnerProfileEditView(APIView):
         ps.save()
         messages.success(request, 'Profile updated')
         return redirect('profile')
+    
+
+class StoreOwnerProfileEditView(APIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        return render(
+            request,
+            'accounts/store_owner_profile_edit.html',
+            {
+                'user_form': UserForm(instance=request.user),
+                'profile_form': StoreOwnerProfileForm(
+                    instance=request.user.store_owner_profile
+                )
+            }
+        )
+
+    def post(self, request):
+        user = request.user
+        profile = user.store_owner_profile
+
+        user_form = UserForm(request.POST, instance=user)
+        profile_form = StoreOwnerProfileForm(
+            request.POST,
+            request.FILES or None,
+            instance=profile
+        )
+
+        if not user_form.is_valid() or not profile_form.is_valid():
+            return render(
+                request,
+                'accounts/store_owner_profile_edit.html',
+                {
+                    'user_form': user_form,
+                    'profile_form': profile_form,
+                    'error': 'Please correct the errors below'
+                }
+            )
+
+        # Save user details
+        user_form.save()
+
+        # ✅ CRITICAL: update image only if user uploaded new one
+        if 'profile_image' in request.FILES:
+            profile.profile_image = request.FILES['profile_image']
+
+        profile_form.save(commit=False)
+        profile.save()
+
+        messages.success(request, 'Profile updated successfully')
+        return redirect('profile')
+
+
+
 class AddressCreateView(APIView):
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
