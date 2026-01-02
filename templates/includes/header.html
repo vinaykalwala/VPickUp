@@ -22,9 +22,6 @@
   z-index: 9999;
   background: linear-gradient(135deg, #0e7490);
 }
-body {
-  padding-top: 65px; /* adjust if header height changes */
-}
 
 /* INNER */
 .vp-header-top-wrap {
@@ -80,8 +77,33 @@ body {
 
 .vp-login {
   color: #ffffff;
-  border: 1px solid rgba(255,255,255,0.6);
+  padding: 10px 16px !important;
+  border-radius: 999px;
+
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(8px);
+
+  font-weight: 600;
+  letter-spacing: 0.2px;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  transition: all 0.25s ease;
 }
+
+.vp-login:hover {
+  background: rgba(255, 255, 255, 0.28);
+  border-color: rgba(255, 255, 255, 0.6);
+  transform: translateY(-1px);
+}
+
+.vp-login:active {
+  transform: translateY(0);
+}
+
 
 .vp-signup {
   background: #ffffff;
@@ -145,9 +167,7 @@ body {
     flex-wrap: wrap;
     row-gap: 0.6rem;
   }
-  body {
-  padding-top: 110px; /* adjust if header height changes */
-}
+ 
   .vp-logo {
     order: 1;
   }
@@ -169,53 +189,58 @@ body {
 }
 
 /* ================= EXTRA SMALL DEVICES ≤450px ================= */
-@media (max-width: 450px) {
+@media (max-width: 480px) {
 
+  /* Header wrapper */
   .vp-header-top-wrap {
     flex-wrap: wrap;
-    row-gap: 0.6rem;
+    align-items: center;
+    padding: 0.6rem 1rem;
+    gap: 0.5rem;
   }
 
-  /* LOGO FIRST */
+  /* LOGO — left */
   .vp-logo {
     order: 1;
-    font-size: 1.4rem;
+    font-size: 1.35rem;
+    flex: 0 0 auto;
   }
 
-  /* LOGIN / SIGNUP SECOND */
-  .vp-auth {
+  /* ICONS — right */
+  .vp-header-icons {
     order: 2;
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+  }
+
+  /* SEARCH — full row */
+  .vp-search {
+    order: 3;
+    flex: 0 0 100%;
+    width: 100%;
+  }
+
+  .vp-search input {
+    width: 100%;
+    font-size: 0.85rem;
+    padding: 0.55rem 0.9rem;
+  }
+
+  /* AUTH — centered row */
+  .vp-auth {
+    order: 4;
+    flex: 0 0 100%;
+    justify-content: center;
+    margin-top: 0.3rem;
   }
 
   .vp-auth a {
-    padding: 0.35rem 0.6rem;
-    font-size: 0.72rem;
-  }
-
-  /* ICONS THIRD (RIGHT SIDE) */
-  .vp-header-icons {
-    order: 3;
-    margin-left: auto;
-  }
-
-  .vp-icon-btn {
-    width: 34px;
-    height: 34px;
-  }
-
-  /* SEARCH ALWAYS LAST (NEW ROW) */
-  .vp-search {
-    order: 10;
-    width: 100%;
-    flex: 0 0 100%;
-    margin-top: 0.6rem;
-  }
-
-  /* ADJUST BODY OFFSET FOR 2-ROW HEADER */
-  body {
-    padding-top: 115px;
+    font-size: 0.75rem;
+    padding: 0.35rem 0.7rem;
   }
 }
+
 /* ================= ULTRA SMALL DEVICES (380px – 300px) ================= */
 @media (max-width: 380px) {
 
@@ -265,9 +290,7 @@ body {
   }
 
   /* BODY OFFSET FOR FIXED HEADER */
-  body {
-    padding-top: 105px;
-  }
+ 
 }
 /* ================= CATEGORY ITEM (NO BACKGROUND) ================= */
 
@@ -387,8 +410,87 @@ body {
   visibility: visible;
   transform: translateY(0);
 }
+/* ================= LOCATION BAR (UPDATED COLOR) ================= */
+.vp-location-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 280px;
+  padding: 6px 12px;
+border-radius: 50px;
+  background:#ffffff; /* 👈 pill background */
+  color:#0e7490 !important;                     /* 👈 readable text */
+
+  cursor: pointer;
+  font-size: 0.85rem !important;
+  white-space: nowrap;
+  border: 1px dashed #06b6d4;
+}
+
+.vp-location-icon {
+  flex-shrink: 0;
+  font-size: 1rem;
+  color: #ecfeff;
+}
+/* ================= MARQUEE TEXT ================= */
+.vp-location-text {
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  position: relative;
+  max-width: 220px;
+}
+
+.vp-location-text span {
+  display: inline-block;
+  padding-left: 100%;
+  animation: vp-marquee 10s linear infinite;
+}
+
+/* Animation */
+@keyframes vp-marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
 
 
+.vp-location-icon {
+  font-size: 1.2rem;
+  color:#0e7490;   /* matches pill text */
+  flex-shrink: 0;
+}
+/* Dashboard icon hidden on desktop */
+.vp-dashboard-icon {
+  display: none;
+}
+/* Hide dashboard text on mobile */
+@media (max-width: 480px) {
+  .vp-auth a[href*="dashboard"] {
+    display: none;
+  }
+}
+@media (max-width: 480px) {
+  .vp-dashboard-icon {
+    display: flex;
+  }
+}
+/* ================= MOBILE GUEST ALIGNMENT ================= */
+@media (max-width: 728px) {
+
+  /* Guest auth goes top-right */
+  .vp-auth-guest {
+    order: 2;
+    margin-left: auto;
+    justify-content: flex-end;
+    flex: 0 0 auto;
+  }
+
+  /* Prevent auth from taking full row */
+  .vp-auth-guest a {
+    white-space: nowrap;
+  }
+
+}
 
 </style>
 
@@ -405,7 +507,7 @@ body {
       </div>
 
       <!-- LOGIN / SIGNUP -->
-     <div class="vp-auth">
+<div class="vp-auth vp-auth-guest">
 {% if not request.user.is_authenticated %}
   <a href="{% url 'login' %}" class="vp-login">
     <i class="fa-solid fa-right-to-bracket"></i> Login/Signup
@@ -440,7 +542,18 @@ body {
     </a>
 
     <!-- Dashboard -->
- 
+ <!-- Dashboard (icon for mobile) -->
+<a href="{% url 'dashboard' %}" 
+   class="vp-icon-btn vp-dashboard-icon" 
+   title="Dashboard">
+  <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+    <rect x="3" y="3" width="7" height="7"/>
+    <rect x="14" y="3" width="7" height="7"/>
+    <rect x="3" y="14" width="7" height="7"/>
+    <rect x="14" y="14" width="7" height="7"/>
+  </svg>
+</a>
+
     <!-- Profile -->
    <!-- USER AVATAR DROPDOWN -->
 <div class="vp-user-menu">
@@ -473,17 +586,34 @@ body {
  <div class="vp-header-bottom">
   <div class="vp-header-bottom-wrap">
 
-    {% if request.user.is_authenticated %}
-  <div style="color:white;font-size:0.8rem;cursor:pointer"
-       onclick="window.location.href='{% url 'profile' %}'">
-    📍
+  {% if request.user.is_authenticated %}
+  <div class="vp-location-bar"
+       onclick="window.location.href='{% url 'profile' %}'"
+       title="Change delivery location">
+
+    <span class="vp-location-icon"><i class="fa-solid fa-location-dot vp-location-icon"></i>
+</span>
+
     {% if selected_address %}
-      {{ selected_address.city }}, {{ selected_address.state }}
+      <span class="vp-location-text">
+        <span>
+          {{ selected_address.label|title }} ·
+          {{ selected_address.address_line_1 }},
+          {{ selected_address.city }},
+          {{ selected_address.state }} –
+          {{ selected_address.pincode }}
+        </span>
+      </span>
     {% else %}
-      Select Location
+      <span class="vp-location-text">
+        <span>Select Location</span>
+      </span>
     {% endif %}
+
   </div>
 {% endif %}
+
+ 
 
     
     {% for cat in header_categories %}
@@ -554,3 +684,13 @@ body {
 />
 
 </header>
+<script>
+  function adjustHeaderOffset() {
+    const header = document.querySelector('.vp-header-top');
+    if (!header) return;
+    document.body.style.paddingTop = header.offsetHeight + 'px';
+  }
+
+  window.addEventListener('load', adjustHeaderOffset);
+  window.addEventListener('resize', adjustHeaderOffset);
+</script>
