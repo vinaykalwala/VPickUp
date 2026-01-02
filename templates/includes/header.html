@@ -472,6 +472,19 @@ body {
 
  <div class="vp-header-bottom">
   <div class="vp-header-bottom-wrap">
+
+    {% if request.user.is_authenticated %}
+  <div style="color:white;font-size:0.8rem;cursor:pointer"
+       onclick="window.location.href='{% url 'profile' %}'">
+    📍
+    {% if selected_address %}
+      {{ selected_address.city }}, {{ selected_address.state }}
+    {% else %}
+      Select Location
+    {% endif %}
+  </div>
+{% endif %}
+
     
     {% for cat in header_categories %}
       <div class="category-item">
