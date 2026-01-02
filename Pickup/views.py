@@ -19,8 +19,8 @@ def faq(request):
 from .models import HomeSlider
 
 def home(request):
-    if request.user.is_authenticated:
-        return redirect('dashboard')
+    # if request.user.is_authenticated:
+    #     return redirect('dashboard')
 
     sliders = (
         HomeSlider.objects
