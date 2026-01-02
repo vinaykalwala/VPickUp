@@ -6,333 +6,1248 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 <style>
-*{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
-    font-family:'Poppins','Segoe UI',sans-serif;
+:root {
+    --primary: #0e7490;
+    --primary-light: rgba(14, 116, 144, 0.1);
+    --primary-lighter: rgba(14, 116, 144, 0.05);
+    --primary-dark: #0c636e;
+    --surface: #ffffff;
+    --surface-light: #f8fafc;
+    --surface-lighter: #f1f5f9;
+    --text-primary: #1e293b;
+    --text-secondary: #475569;
+    --text-tertiary: #94a3b8;
+    --border: #e2e8f0;
+    --border-light: #f1f5f9;
+    --success: #10b981;
+    --error: #ef4444;
+    --warning: #f59e0b;
+    --info: #3b82f6;
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+    --radius-xl: 18px;
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    --shadow-primary: 0 0 0 3px rgba(14, 116, 144, 0.15);
 }
 
-body{
-    background:linear-gradient(135deg,#eef2f6,#e6edf3);
-    color:#0f172a;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-/* ================= PAGE ================= */
-.page{
-    max-width:1250px;
-    margin:30px auto;
-    padding:0 20px;
+body {
+    background: #f8fafc;
+    min-height: 100vh;
+    color: var(--text-primary);
+    line-height: 1.5;
 }
 
-/* ================= CONTAINER ================= */
-.container{
-    background:rgba(255,255,255,0.95);
+/* ================= PAGE CONTAINER ================= */
+.page-wrapper {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 1.5rem;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@media (max-width: 768px) {
+    .page-wrapper {
+        padding: 1rem;
+        align-items: flex-start;
+        padding-top: 2rem;
+    }
+}
+
+/* ================= MAIN CARD ================= */
+.premium-card {
+    background: var(--surface);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-xl);
+    width: 100%;
+    max-width: 1100px;
+    animation: cardAppear 0.6s ease-out;
+}
+
+@keyframes cardAppear {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ================= CARD HEADER ================= */
+.card-header {
+    background: var(--primary);
+    padding: 2.5rem 3rem;
+    position: relative;
+    overflow: hidden;
+}
+
+@media (max-width: 1024px) {
+    .card-header {
+        padding: 2rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .card-header {
+        padding: 1.5rem;
+    }
+}
+
+.header-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+}
+
+.header-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.header-icon {
+    width: 3.5rem;
+    height: 3.5rem;
+    background: rgba(255, 255, 255, 0.2);
     backdrop-filter: blur(10px);
-    border-radius:26px;
-    box-shadow:0 30px 70px rgba(0,0,0,0.12);
-    overflow:hidden;
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    flex-shrink: 0;
 }
 
-/* ================= HEADER ================= */
-.header{
-    background:linear-gradient(135deg,#0e7490,#0891b2);
-    padding:20px;
-    text-align:center;
+.header-icon i {
+    font-size: 1.5rem;
+    color: white;
 }
 
-.header-content{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:14px;
+.header-text h1 {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.02em;
 }
 
-.header-icon{
-    width:44px;
-    height:44px;
-    border-radius:14px;
-    background:rgba(255,255,255,0.18);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:20px;
-    color:#ffffff;
+.header-text p {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.6;
 }
 
-.header h1{
-    font-size:22px;
-    font-weight:600;
-    color:#ffffff;
-}
-
-/* ================= LAYOUT ================= */
-.layout{
-    display:grid;
-    grid-template-columns:1.1fr 0.9fr;
-    min-height:520px;
-}
-
-/* ================= FORM ================= */
-.form-panel{
-    padding:36px;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-}
-
-.form-group{
-    margin-bottom:18px;
-}
-
-/* LABEL */
-label{
-    font-size:13px;
-    font-weight:600;
-    margin-bottom:6px;
-    display:block;
-    color:#334155;
-}
-
-/* INPUTS */
-input, select{
-    width:100%;
-    padding:14px 16px;
-    border-radius:16px;
-    border:1px solid #cbd5e1;
-    font-size:14px;
-    background:#f8fafc;
-    transition:.25s;
-}
-
-input:focus, select:focus{
-    outline:none;
-    border-color:#0891b2;
-    box-shadow:0 0 0 4px rgba(8,145,178,0.15);
-    background:#ffffff;
-}
-
-/* ================= FILE FIELD (CREATE + EDIT) ================= */
-
-/* Django "Currently:" text */
-.form-panel a{
-    color:#0891b2;
-    font-weight:500;
-    text-decoration:none;
-}
-
-.form-panel a:hover{
-    text-decoration:underline;
-}
-
-/* Wrap Django file widgets nicely */
-.form-panel input[type="file"]{
-    margin-top:10px;
-    padding:10px;
-    background:#ffffff;
-    border-radius:14px;
-    border:1px solid #cbd5e1;
-}
-
-/* File button */
-input[type="file"]::file-selector-button{
-    padding:10px 16px;
-    margin-right:12px;
-    border:none;
-    border-radius:12px;
-    background:linear-gradient(135deg,#0e7490,#0891b2);
-    color:#ffffff;
-    font-weight:600;
-    cursor:pointer;
-}
-
-/* ================= CLEAR CHECKBOX (FILE FIELD) ================= */
-.form-panel input[type="checkbox"]{
-    accent-color:#0891b2;
-    cursor:pointer;
-}
-
-.form-panel .clearable-file-input{
-    display:flex;
-    align-items:center;
-    gap:8px;
-    margin-top:8px;
-    font-size:13px;
-    color:#334155;
-}
-
-/* ================= ACTIVE CHECKBOX ================= */
-.checkbox-row{
-    margin-top:14px;
-}
-
-.checkbox-wrapper{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    cursor:pointer;
-}
-
-.checkbox-wrapper input{
-    width:18px;
-    height:18px;
-    margin:0;
-}
-
-.checkbox-wrapper span{
-    font-size:14px;
-    font-weight:500;
-    line-height:1;
-}
-
-/* ================= ACTION ================= */
-.actions{
-    margin-top:28px;
-}
-
-.submit-btn{
-    width:100%;
-    padding:16px;
-    border-radius:20px;
-    border:none;
-    background:linear-gradient(135deg,#0e7490,#0891b2);
-    color:#ffffff;
-    font-size:16px;
-    font-weight:600;
-    cursor:pointer;
-    box-shadow:0 14px 40px rgba(8,145,178,0.45);
-    transition:.25s;
-}
-
-.submit-btn:hover{
-    transform:translateY(-2px);
-    box-shadow:0 18px 50px rgba(8,145,178,0.6);
-}
-
-/* ================= IMAGE ================= */
-.image-panel{
-    background:radial-gradient(circle at top,#e0f2fe,#f8fafc);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:32px;
-}
-
-.illustration-img{
-    width:100%;
-    max-width:480px;
-    height:440px;
-    object-fit:contain;
-    filter:drop-shadow(0 25px 40px rgba(0,0,0,0.15));
-}
-
-/* ================= SELECT2 ================= */
-.select2-container .select2-selection--single{
-    height:52px;
-    border-radius:16px;
-    border:1px solid #cbd5e1;
-}
-
-.select2-selection__rendered{
-    line-height:52px !important;
-    padding-left:12px !important;
-}
-
-.select2-selection__arrow{
-    height:52px !important;
-}
-
-/* ================= RESPONSIVE ================= */
-@media(max-width:900px){
-    .layout{
-        grid-template-columns:1fr;
+@media (max-width: 768px) {
+    .header-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
     }
-
-    .image-panel{
-        order:-1;
-        padding:26px;
+    
+    .header-icon {
+        width: 3rem;
+        height: 3rem;
     }
-
-    .illustration-img{
-        height:300px;
+    
+    .header-text h1 {
+        font-size: 1.5rem;
     }
-
-    .form-panel{
-        padding:28px;
+    
+    .header-text p {
+        font-size: 0.95rem;
     }
+}
+
+/* ================= FORM LAYOUT ================= */
+.form-container {
+    padding: 3rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: start;
+}
+
+@media (max-width: 1024px) {
+    .form-container {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+        padding: 2.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .form-container {
+        padding: 2rem;
+        gap: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .form-container {
+        padding: 1.5rem;
+        gap: 1.5rem;
+    }
+}
+
+/* ================= FORM SECTION ================= */
+.form-section {
+    padding-right: 1rem;
+}
+
+@media (max-width: 1024px) {
+    .form-section {
+        padding-right: 0;
+    }
+}
+
+/* ================= FORM GROUP ================= */
+.form-group {
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.form-label {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.01em;
+}
+
+.form-label .required {
+    color: var(--error);
+    margin-left: 0.25rem;
+}
+
+/* ================= INPUT FIELD STYLES ================= */
+.input-container {
+    position: relative;
+    width: 100%;
+}
+
+.premium-input {
+    width: 100%;
+    padding: 1rem 1rem 1rem 3rem;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    background: var(--surface-lighter);
+    border: 2px solid var(--border);
+    border-radius: var(--radius-lg);
+    transition: all 0.25s ease;
+    outline: none;
+    line-height: 1.5;
+}
+
+.premium-input:hover {
+    border-color: #cbd5e1;
+    background: white;
+}
+
+.premium-input:focus {
+    border-color: var(--primary);
+    background: white;
+    box-shadow: var(--shadow-primary);
+}
+
+.input-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-tertiary);
+    font-size: 1.125rem;
+    transition: color 0.25s ease;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.premium-input:focus + .input-icon {
+    color: var(--primary);
+}
+
+.input-helper {
+    font-size: 0.85rem;
+    color: var(--text-tertiary);
+    margin-top: 0.5rem;
+    display: block;
+    line-height: 1.4;
+}
+
+/* ================= SELECT2 CUSTOM STYLES ================= */
+.select2-container {
+    width: 100% !important;
+}
+
+.select2-container--default .select2-selection--single {
+    height: 3.5rem;
+    border: 2px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--surface-lighter);
+    padding-left: 3rem;
+    transition: all 0.25s ease;
+}
+
+.select2-container--default .select2-selection--single:hover {
+    border-color: #cbd5e1;
+    background: white;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 3.5rem;
+    padding-left: 0;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 3.5rem;
+    right: 1rem;
+    color: var(--text-tertiary);
+}
+
+.select2-container--default.select2-container--focus .select2-selection--single {
+    border-color: var(--primary);
+    box-shadow: var(--shadow-primary);
+    background: white;
+}
+
+/* Dropdown Styling */
+.select2-dropdown {
+    border: 2px solid var(--primary);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    background: white;
+    margin-top: 4px;
+    overflow: hidden;
+}
+
+.select2-results__option {
+    padding: 0.875rem 1rem;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    transition: all 0.2s ease;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.select2-results__option:last-child {
+    border-bottom: none;
+}
+
+.select2-results__option:hover {
+    background: var(--primary-lighter);
+    color: var(--primary);
+}
+
+.select2-results__option--highlighted[aria-selected] {
+    background: var(--primary);
+    color: white;
+}
+
+.select2-search--dropdown {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.select2-search--dropdown .select2-search__field {
+    padding: 0.75rem 1rem;
+    border: 2px solid var(--border);
+    border-radius: var(--radius-md);
+    font-size: 0.95rem;
+    width: 100%;
+}
+
+.select2-search--dropdown .select2-search__field:focus {
+    border-color: var(--primary);
+    outline: none;
+    box-shadow: var(--shadow-primary);
+}
+
+/* ================= IMAGE UPLOAD BUTTON ================= */
+.image-upload-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.image-upload-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.75rem;
+    background: var(--surface-lighter);
+    border: 2px solid var(--border);
+    border-radius: var(--radius-lg);
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    text-decoration: none;
+    width: fit-content;
+}
+
+.image-upload-button:hover {
+    border-color: var(--primary);
+    background: white;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.upload-button-icon {
+    color: var(--primary);
+    font-size: 1.25rem;
+}
+
+.image-preview-wrapper {
+    display: none;
+    flex-direction: column;
+    gap: 1rem;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.image-preview {
+    width: 140px;
+    height: 140px;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 2px solid var(--border);
+    background: var(--surface-lighter);
+    position: relative;
+    box-shadow: var(--shadow-sm);
+}
+
+.preview-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.preview-image:hover {
+    transform: scale(1.05);
+}
+
+.remove-image-btn {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    width: 2rem;
+    height: 2rem;
+    background: rgba(239, 68, 68, 0.95);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 0.875rem;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s ease;
+    opacity: 0;
+}
+
+.image-preview:hover .remove-image-btn {
+    opacity: 1;
+}
+
+.remove-image-btn:hover {
+    background: var(--error);
+    transform: scale(1.1);
+}
+
+.file-input-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* ================= CHECKBOX STYLES ================= */
+.checkbox-wrapper {
+    background: var(--surface-lighter);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    border: 2px solid var(--border);
+    transition: all 0.25s ease;
+}
+
+.checkbox-wrapper:hover {
+    border-color: var(--primary);
+    background: white;
+}
+
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    cursor: pointer;
+}
+
+.custom-checkbox {
+    width: 1.375rem;
+    height: 1.375rem;
+    border-radius: 5px;
+    border: 2px solid var(--border);
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.checkbox-container input:checked + .custom-checkbox {
+    background: var(--primary);
+    border-color: var(--primary);
+}
+
+.checkbox-container input:checked + .custom-checkbox::after {
+    content: '✓';
+    color: white;
+    font-size: 0.75rem;
+    font-weight: bold;
+}
+
+.checkbox-label {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    user-select: none;
+}
+
+.checkbox-description {
+    font-size: 0.875rem;
+    color: var(--text-tertiary);
+    margin-top: 0.75rem;
+    margin-left: 2.375rem;
+    line-height: 1.5;
+}
+
+/* ================= SUBMIT BUTTON ================= */
+.submit-section {
+    margin-top: 2.5rem;
+}
+
+.submit-button {
+    width: 100%;
+    padding: 1.25rem 2rem;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: var(--radius-lg);
+    font-size: 1.125rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    letter-spacing: -0.01em;
+}
+
+.submit-button:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.submit-button:active {
+    transform: translateY(0);
+}
+
+.submit-button i {
+    font-size: 1.25rem;
+}
+
+/* ================= VISUAL SECTION ================= */
+.visual-section {
+    position: relative;
+}
+
+.visual-card {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-radius: var(--radius-xl);
+    padding: 2.5rem;
+    height: 100%;
+    border: 1px solid var(--border-light);
+    position: sticky;
+    top: 2rem;
+}
+
+@media (max-width: 1024px) {
+    .visual-card {
+        position: static;
+    }
+}
+
+.visual-image-container {
+    width: 100%;
+    height: 240px;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow-lg);
+}
+
+.visual-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.visual-image:hover {
+    transform: scale(1.05);
+}
+
+.visual-tips {
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: 1.75rem;
+    border: 1px solid var(--border-light);
+    box-shadow: var(--shadow-md);
+}
+
+.tip-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.tip-icon {
+    width: 2.75rem;
+    height: 2.75rem;
+    background: var(--primary);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+.tip-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.tip-content {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.tip-content ul {
+    list-style: none;
+    margin-top: 1rem;
+}
+
+.tip-content li {
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+}
+
+.tip-content li:before {
+    content: '✓';
+    color: var(--success);
+    font-weight: bold;
+    font-size: 1rem;
+    flex-shrink: 0;
+    margin-top: 0.125rem;
+}
+
+/* ================= ERROR STATES ================= */
+.error-message {
+    font-size: 0.875rem;
+    color: var(--error);
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    background: rgba(239, 68, 68, 0.05);
+    border-radius: var(--radius-md);
+    border-left: 3px solid var(--error);
+}
+
+.error-message i {
+    font-size: 1rem;
+}
+
+.input-error {
+    border-color: var(--error) !important;
+}
+
+.input-error:focus {
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+}
+
+/* ================= SUCCESS STATES ================= */
+.success-message {
+    font-size: 0.875rem;
+    color: var(--success);
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    background: rgba(16, 185, 129, 0.05);
+    border-radius: var(--radius-md);
+    border-left: 3px solid var(--success);
+}
+
+/* ================= LOADING STATES ================= */
+.loading {
+    position: relative;
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.loading:after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 2px solid var(--border);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-left: -0.75rem;
+    margin-top: -0.75rem;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ================= RESPONSIVE ADJUSTMENTS ================= */
+@media (max-width: 768px) {
+    .image-upload-button {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .image-preview {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .visual-image-container {
+        height: 200px;
+    }
+}
+
+@media (max-width: 480px) {
+    .premium-input {
+        padding: 0.875rem 0.875rem 0.875rem 2.75rem;
+        font-size: 0.95rem;
+    }
+    
+    .input-icon {
+        left: 0.875rem;
+        font-size: 1rem;
+    }
+    
+    .select2-container--default .select2-selection--single {
+        padding-left: 2.75rem;
+        height: 3.25rem;
+    }
+    
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        line-height: 3.25rem;
+    }
+    
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+        height: 3.25rem;
+    }
+    
+    .image-preview {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .submit-button {
+        padding: 1rem 1.5rem;
+        font-size: 1rem;
+    }
+    
+    .visual-card {
+        padding: 1.5rem;
+    }
+    
+    .visual-image-container {
+        height: 180px;
+        margin-bottom: 1.5rem;
+    }
+    
+    .visual-tips {
+        padding: 1.5rem;
+    }
+}
+
+/* ================= ANIMATIONS ================= */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.form-group {
+    animation: fadeIn 0.4s ease-out;
+    animation-fill-mode: both;
+}
+
+.form-group:nth-child(1) { animation-delay: 0.1s; }
+.form-group:nth-child(2) { animation-delay: 0.2s; }
+.form-group:nth-child(3) { animation-delay: 0.3s; }
+.form-group:nth-child(4) { animation-delay: 0.4s; }
+.submit-section { animation-delay: 0.5s; }
+
+.select2-dropdown {
+    animation: slideIn 0.2s ease-out;
 }
 </style>
 
-<div class="page">
-<div class="container">
-
-<div class="header">
-    <div class="header-content">
-        <div class="header-icon">
-            <i class="fa-solid fa-tags"></i>
-
+<div class="page-wrapper">
+    <div class="premium-card">
+        <!-- Card Header -->
+        <div class="card-header">
+            <div class="header-backdrop"></div>
+            <div class="header-content">
+                <div class="header-icon">
+                    <i class="fas fa-layer-group"></i>
+                </div>
+                <div class="header-text">
+                    <h1>Create New Subcategory</h1>
+                    <p>Add a new subcategory to organize your products efficiently</p>
+                </div>
+            </div>
         </div>
-        <h1>Create SubCategory</h1>
+
+        <!-- Form Content -->
+        <div class="form-container">
+            <!-- Form Section -->
+            <div class="form-section">
+                <form method="post" enctype="multipart/form-data" id="subcategoryForm">
+                    {% csrf_token %}
+                    
+                    <!-- Parent Category Field -->
+                    <div class="form-group">
+                        <label class="form-label">
+                            Parent Category
+                            <span class="required">*</span>
+                        </label>
+                        <div class="input-container">
+                            <i class="fas fa-folder input-icon"></i>
+                            {{ form.category }}
+                        </div>
+                        <small class="input-helper">Choose the main category for this subcategory</small>
+                        {% if form.category.errors %}
+                            <div class="error-message">
+                                <i class="fas fa-exclamation-circle"></i>
+                                {{ form.category.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Subcategory Name Field -->
+                    <div class="form-group">
+                        <label class="form-label">
+                            Subcategory Name
+                            <span class="required">*</span>
+                        </label>
+                        <div class="input-container">
+                            <i class="fas fa-tag input-icon"></i>
+                            <input type="text" 
+                                   name="{{ form.name.name }}"
+                                   value="{{ form.name.value|default:'' }}"
+                                   class="premium-input"
+                                   placeholder="e.g., Smartphones, Laptops, Accessories"
+                                   required>
+                        </div>
+                        <small class="input-helper">Enter a clear and descriptive name for the subcategory</small>
+                        {% if form.name.errors %}
+                            <div class="error-message">
+                                <i class="fas fa-exclamation-circle"></i>
+                                {{ form.name.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Image Upload Field -->
+                    <div class="form-group">
+                        <label class="form-label">
+                            Subcategory Image
+                        </label>
+                        <div class="image-upload-wrapper">
+                            <!-- Hidden file input -->
+                            <input type="file" 
+                                   name="{{ form.image.name }}" 
+                                   id="imageUpload" 
+                                   class="file-input-hidden"
+                                   accept="image/*">
+                            
+                            <!-- Custom upload button -->
+                            <button type="button" class="image-upload-button" id="uploadTrigger">
+                                <i class="fas fa-image upload-button-icon"></i>
+                                <span id="uploadText">Upload Image</span>
+                            </button>
+                            
+                            <!-- Preview container -->
+                            <div class="image-preview-wrapper" id="imagePreviewWrapper">
+                                <div class="image-preview">
+                                    <img id="previewImage" class="preview-image" alt="Image Preview">
+                                    <button type="button" class="remove-image-btn" id="removeImage">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <small class="input-helper">Upload an image that represents this subcategory</small>
+                        {% if form.image.errors %}
+                            <div class="error-message">
+                                <i class="fas fa-exclamation-circle"></i>
+                                {{ form.image.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Active Status Field -->
+                    <div class="form-group">
+                        <label class="form-label">Status</label>
+                        <div class="checkbox-wrapper">
+                            <label class="checkbox-container">
+                                {{ form.is_active }}
+                                <span class="custom-checkbox"></span>
+                                <span class="checkbox-label">Make this subcategory active</span>
+                            </label>
+                            <p class="checkbox-description">
+                                Active subcategories are visible to customers and can be used for product categorization
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="submit-section">
+                        <button type="submit" class="submit-button">
+                            <i class="fas fa-plus-circle"></i>
+                            Create Subcategory
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Visual Section -->
+            <div class="visual-section">
+                <div class="visual-card">
+                    <div class="visual-image-container">
+                        <img src="{% static 'images/categeory1.jpeg' %}" alt="Category Organization" class="visual-image">
+                    </div>
+                    
+                    <div class="visual-tips">
+                        <div class="tip-header">
+                            <div class="tip-icon">
+                                <i class="fas fa-lightbulb"></i>
+                            </div>
+                            <div class="tip-title">Best Practices</div>
+                        </div>
+                        <div class="tip-content">
+                            <p>Follow these guidelines for effective subcategory creation:</p>
+                            <ul>
+                                <li>Use descriptive and clear naming conventions</li>
+                                <li>Maintain consistency across similar subcategories</li>
+                                <li>Upload high-quality, relevant images</li>
+                                <li>Organize hierarchically under appropriate parent categories</li>
+                                <li>Regularly review and update inactive subcategories</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
-
-
-<div class="layout">
-
-    <!-- FORM -->
-    <div class="form-panel">
-        <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-
-            <div class="form-group">
-                {{ form.category.label_tag }}
-                {{ form.category }}
-            </div>
-
-            <div class="form-group">
-                {{ form.name.label_tag }}
-                {{ form.name }}
-            </div>
-
-            <div class="form-group">
-                {{ form.image.label_tag }}
-                {{ form.image }}
-            </div>
-
-            <div class="checkbox-row">
-                <label class="checkbox-wrapper">
-                    {{ form.is_active }}
-                    <span>Is active</span>
-                </label>
-            </div>
-
-
-            <div class="actions">
-                <button type="submit" class="submit-btn">
-                    Save SubCategory
-                </button>
-            </div>
-
-        </form>
-    </div>
-
-    <!-- IMAGE -->
-    <div class="image-panel">
-        <img src="{% static 'images/categeory1.jpeg' %}" class="illustration-img">
-    </div>
-
-</div>
-</div>
 </div>
 
 <script>
-$(document).ready(function () {
+$(document).ready(function() {
+    // Initialize Select2 with clean styling
     $('.select2').select2({
-        placeholder: "Select Category",
-        width: '100%'
+        placeholder: "Select parent category",
+        allowClear: true,
+        width: '100%',
+        minimumResultsForSearch: 5,
+        dropdownParent: $('#subcategoryForm'),
+        templateResult: formatCategory,
+        templateSelection: formatCategory
+    });
+
+    function formatCategory(category) {
+        if (!category.id) {
+            return category.text;
+        }
+        
+        const $category = $('<span class="select2-category-item"></span>');
+        $category.text(category.text);
+        
+        if (category.element && category.element.dataset.level) {
+            const level = parseInt(category.element.dataset.level);
+            $category.css('padding-left', (level * 20) + 'px');
+        }
+        
+        return $category;
+    }
+
+    // Image upload functionality
+    const imageUpload = document.getElementById('imageUpload');
+    const uploadTrigger = document.getElementById('uploadTrigger');
+    const uploadText = document.getElementById('uploadText');
+    const imagePreviewWrapper = document.getElementById('imagePreviewWrapper');
+    const previewImage = document.getElementById('previewImage');
+    const removeImage = document.getElementById('removeImage');
+
+    // Click button triggers file input
+    uploadTrigger.addEventListener('click', function() {
+        imageUpload.click();
+    });
+
+    // Handle file selection
+    imageUpload.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            // Update button text
+            const fileName = file.name;
+            uploadText.textContent = fileName.length > 25 ? 
+                fileName.substring(0, 22) + '...' : fileName;
+            
+            // Show preview
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                previewImage.src = e.target.result;
+                imagePreviewWrapper.style.display = 'flex';
+                
+                // Show success notification
+                showNotification('Image uploaded successfully!', 'success');
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Remove image functionality
+    removeImage.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        imageUpload.value = '';
+        previewImage.src = '';
+        imagePreviewWrapper.style.display = 'none';
+        uploadText.textContent = 'Upload Image';
+        
+        showNotification('Image removed', 'info');
+    });
+
+    // Form validation and submission
+    $('#subcategoryForm').on('submit', function(e) {
+        let isValid = true;
+        const requiredFields = $(this).find('[required]');
+        
+        // Check required fields
+        requiredFields.each(function() {
+            const $field = $(this);
+            const value = $field.val();
+            
+            if (!value || value.trim() === '') {
+                isValid = false;
+                const $container = $field.closest('.input-container') || $field.closest('.form-group');
+                $container.addClass('input-error');
+                
+                // Add shake animation
+                $container.css('animation', 'shake 0.5s ease');
+                setTimeout(() => {
+                    $container.css('animation', '');
+                }, 500);
+            }
+        });
+
+        if (!isValid) {
+            e.preventDefault();
+            showNotification('Please fill in all required fields marked with *', 'error');
+            return false;
+        }
+
+        // Show loading state
+        const submitBtn = $(this).find('.submit-button');
+        const originalText = submitBtn.html();
+        submitBtn.addClass('loading').html('Creating...').prop('disabled', true);
+        
+        // Simulate API call for demo
+        setTimeout(() => {
+            submitBtn.removeClass('loading').html(originalText).prop('disabled', false);
+        }, 2000);
+    });
+
+    // Remove error class on input
+    $('input, select').on('input change', function() {
+        const $container = $(this).closest('.input-container') || $(this).closest('.form-group');
+        $container.removeClass('input-error');
+    });
+
+    // Character counter for name field
+    const nameInput = $('input[name="name"]');
+    const charCounter = $('<div class="char-counter"><span class="current">0</span> characters</div>');
+    nameInput.after(charCounter);
+
+    nameInput.on('input', function() {
+        const length = $(this).val().length;
+        charCounter.find('.current').text(length);
+    });
+
+    // Trigger initial count
+    nameInput.trigger('input');
+    
+    // Responsive dropdown positioning
+    $(window).on('resize', function() {
+        if ($('.select2-dropdown').is(':visible')) {
+            $('.select2').select2('close');
+        }
     });
 });
+
+// Notification system
+function showNotification(message, type = 'info') {
+    // Remove existing notifications
+    $('.notification').remove();
+    
+    const icons = {
+        success: 'fas fa-check-circle',
+        error: 'fas fa-exclamation-circle',
+        warning: 'fas fa-exclamation-triangle',
+        info: 'fas fa-info-circle'
+    };
+    
+    const colors = {
+        success: '#10b981',
+        error: '#ef4444',
+        warning: '#f59e0b',
+        info: '#0e7490'
+    };
+    
+    const notification = $(`
+        <div class="notification notification-${type}">
+            <i class="${icons[type]}"></i>
+            <span>${message}</span>
+        </div>
+    `);
+    
+    // Add notification styles
+    notification.css({
+        'position': 'fixed',
+        'top': '20px',
+        'right': '20px',
+        'background': colors[type],
+        'color': 'white',
+        'padding': '1rem 1.5rem',
+        'border-radius': 'var(--radius-lg)',
+        'box-shadow': 'var(--shadow-lg)',
+        'display': 'flex',
+        'align-items': 'center',
+        'gap': '0.75rem',
+        'z-index': '10000',
+        'transform': 'translateX(150%)',
+        'transition': 'transform 0.3s ease',
+        'max-width': '400px',
+        'font-size': '0.95rem'
+    });
+    
+    $('body').append(notification);
+    
+    // Animate in
+    setTimeout(() => {
+        notification.css('transform', 'translateX(0)');
+    }, 10);
+    
+    // Auto remove after 4 seconds
+    setTimeout(() => {
+        notification.css('transform', 'translateX(150%)');
+        setTimeout(() => notification.remove(), 300);
+    }, 4000);
+}
+
+// Add shake animation
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+        20%, 40%, 60%, 80% { transform: translateX(5px); }
+    }
+    
+    .char-counter {
+        font-size: 0.875rem;
+        color: var(--text-tertiary);
+        margin-top: 0.5rem;
+        text-align: right;
+    }
+    
+    .select2-category-item {
+        display: block;
+        padding: 0.5rem 1rem;
+        transition: padding-left 0.2s ease;
+    }
+`;
+document.head.appendChild(style);
 </script>
 
 {% endblock %}
