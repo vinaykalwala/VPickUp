@@ -3,6 +3,7 @@ from django.urls import path , include
 from django.conf import settings
 from django.conf.urls.static import static
 import Pickup.views as views
+from Pickup.views import SliderListView, SliderCreateView, SliderUpdateView, SliderDeleteView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -15,6 +16,11 @@ urlpatterns = [
     path("terms/", views.terms, name="terms"),
     path("privacy/", views.privacy, name="privacy"),
     path("faq/", views.faq, name="faq"),
+
+    path('sliders/', SliderListView.as_view(), name='slider_list'),
+    path('sliders/add/', SliderCreateView.as_view(), name='slider_create'),
+    path('sliders/<int:pk>/edit/', SliderUpdateView.as_view(), name='slider_update'),
+    path('sliders/<int:pk>/delete/', SliderDeleteView.as_view(), name='slider_delete'),
 ]
 
 if settings.DEBUG:

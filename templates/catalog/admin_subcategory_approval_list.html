@@ -220,10 +220,10 @@
         margin-bottom: 2rem;
     }
 
-   
+
     .table-scroll-fix {
         overflow-x: hidden;
-   
+
         width: 100%;
     }
 
@@ -932,216 +932,297 @@
         max-width: 650px;
     }
 
-/* =====================================================
+    /* =====================================================
    RESPONSIVE MEDIA QUERIES – ALL SCREEN TYPES
    ===================================================== */
 
-/* ---------- LARGE LAPTOPS (≤ 1400px) ---------- */
-@media (max-width: 1400px) {
-    .subcategory-page {
-        max-width: 100%;
-        padding: 1.75rem;
+    /* ---------- LARGE LAPTOPS (≤ 1400px) ---------- */
+    @media (max-width: 1400px) {
+        .subcategory-page {
+            max-width: 100%;
+            padding: 1.75rem;
+        }
+
+        .search-box {
+            max-width: 700px;
+        }
     }
 
-    .search-box {
-        max-width: 700px;
+    /* ---------- LAPTOPS / SMALL DESKTOP (≤ 1200px) ---------- */
+    @media (max-width: 1200px) {
+        .header-title h1 {
+            font-size: 2rem;
+        }
+
+        .header-title p {
+            font-size: 1rem;
+        }
+
+        .search-box {
+            max-width: 100%;
+        }
+
+        .premium-table {
+            min-width: unset;
+            /* prevent horizontal scroll */
+        }
     }
+
+    /* ---------- TABLETS LANDSCAPE (≤ 992px) ---------- */
+    @media (max-width: 992px) {
+        .header-content {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1.75rem;
+        }
+
+        .header-stats {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .filter-section {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 1.25rem;
+        }
+
+        .filter-title {
+            justify-content: center;
+        }
+
+        .table-header {
+            flex-direction: column;
+            gap: 0.75rem;
+            text-align: center;
+        }
+    }
+
+    /* ---------- TABLETS PORTRAIT (≤ 768px) ---------- */
+    @media (max-width: 768px) {
+        .premium-header {
+            padding: 2rem;
+        }
+
+        .header-title h1 {
+            font-size: 1.6rem;
+        }
+
+        .header-heading svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        .header-stats {
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .search-box input {
+            font-size: 1rem;
+            padding: 1rem 1.25rem 1rem 3.2rem;
+        }
+
+        .premium-table th,
+        .premium-table td {
+            padding: 0.85rem;
+            font-size: 0.9rem;
+        }
+
+        .action-form {
+            flex-direction: column;
+        }
+
+        .action-btn {
+            width: 100%;
+            min-width: unset;
+        }
+    }
+
+    /* ---------- MOBILE LARGE (≤ 576px) ---------- */
+    @media (max-width: 576px) {
+        .subcategory-page {
+            padding: 1rem;
+        }
+
+        .premium-header {
+            padding: 1.5rem;
+        }
+
+        .header-title p {
+            font-size: 0.95rem;
+        }
+
+        .search-box input {
+            padding: 0.9rem 1rem 0.9rem 3rem;
+        }
+
+        .table-count {
+            font-size: 0.8rem;
+        }
+
+        .modal {
+            padding: 1.75rem;
+        }
+    }
+
+    /* ---------- MOBILE SMALL (≤ 420px) ---------- */
+    @media (max-width: 420px) {
+        .header-title h1 {
+            font-size: 1.4rem;
+        }
+
+        .header-heading {
+            gap: 0.5rem;
+        }
+
+        .header-heading svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .filter-title {
+            font-size: 0.85rem;
+        }
+
+        .search-box input {
+            font-size: 0.9rem;
+        }
+
+        .modal-actions {
+            flex-direction: column;
+        }
+
+        .modal-btn {
+            width: 100%;
+        }
+    }
+
+    /* ---------- VERY SMALL DEVICES (≤ 360px) ---------- */
+    @media (max-width: 360px) {
+        .header-title h1 {
+            font-size: 1.25rem;
+        }
+
+        .stat-count {
+            font-size: 1.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+        }
+    }
+
+
+    /* Tablets & below */
+    @media (max-width: 992px) {
+        .table-scroll-fix {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .premium-table {
+            min-width: 900px;
+        }
+    }
+
+    /* Mobile screens */
+    @media (max-width: 576px) {
+        .table-scroll-fix {
+            overflow-x: auto;
+        }
+
+        .premium-table {
+            min-width: 800px;
+        }
+    }
+    /* === SUBCATEGORY NAME + IMAGE INLINE === */
+.sc-name-wrap {
+    display: flex;
+    align-items: center;
+    gap: 14px;
 }
 
-/* ---------- LAPTOPS / SMALL DESKTOP (≤ 1200px) ---------- */
-@media (max-width: 1200px) {
-    .header-title h1 {
-        font-size: 2rem;
-    }
-
-    .header-title p {
-        font-size: 1rem;
-    }
-
-    .search-box {
-        max-width: 100%;
-    }
-
-    .premium-table {
-        min-width: unset; /* prevent horizontal scroll */
-    }
+.sc-thumb {
+    width: 55px;
+    height: 55px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #f1f5f9;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    flex-shrink: 0;
 }
 
-/* ---------- TABLETS LANDSCAPE (≤ 992px) ---------- */
-@media (max-width: 992px) {
-    .header-content {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1.75rem;
-    }
-
-    .header-stats {
-        width: 100%;
-        justify-content: center;
-    }
-
-    .filter-section {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 1.25rem;
-    }
-
-    .filter-title {
-        justify-content: center;
-    }
-
-    .table-header {
-        flex-direction: column;
-        gap: 0.75rem;
-        text-align: center;
-    }
+.sc-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
-/* ---------- TABLETS PORTRAIT (≤ 768px) ---------- */
+.sc-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.sc-name {
+    font-weight: 600;
+    color: var(--text-dark);
+    line-height: 1.2;
+}
+
+.sc-meta {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
 @media (max-width: 768px) {
-    .premium-header {
-        padding: 2rem;
+    .sc-thumb {
+        width: 45px;
+        height: 45px;
     }
-
-    .header-title h1 {
-        font-size: 1.6rem;
-    }
-
-    .header-heading svg {
-        width: 22px;
-        height: 22px;
-    }
-
-    .header-stats {
-        flex-direction: column;
-        gap: 0.75rem;
-    }
-
-    .search-box input {
-        font-size: 1rem;
-        padding: 1rem 1.25rem 1rem 3.2rem;
-    }
-
-    .premium-table th,
-    .premium-table td {
-        padding: 0.85rem;
-        font-size: 0.9rem;
-    }
-
-    .action-form {
-        flex-direction: column;
-    }
-
-    .action-btn {
+}/* ===== FIX TOTAL REQUESTS CARD ON MOBILE ===== */
+@media (max-width: 768px) {
+    .header-stats.total-badge {
         width: 100%;
-        min-width: unset;
-    }
-}
-
-/* ---------- MOBILE LARGE (≤ 576px) ---------- */
-@media (max-width: 576px) {
-    .subcategory-page {
-        padding: 1rem;
-    }
-
-    .premium-header {
+        justify-content: center;
+        align-items: center;
+        text-align: center;
         padding: 1.5rem;
     }
 
-    .header-title p {
-        font-size: 0.95rem;
-    }
-
-    .search-box input {
-        padding: 0.9rem 1rem 0.9rem 3rem;
-    }
-
-    .table-count {
-        font-size: 0.8rem;
-    }
-
-    .modal {
-        padding: 1.75rem;
+    .header-stats.total-badge > div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 }
-
-/* ---------- MOBILE SMALL (≤ 420px) ---------- */
-@media (max-width: 420px) {
-    .header-title h1 {
-        font-size: 1.4rem;
+@media (max-width: 768px) {
+    .total-icon {
+        margin-bottom: 0.75rem;
     }
 
-    .header-heading {
-        gap: 0.5rem;
+    .stat-count {
+        font-size: 1.8rem;
+    }
+}
+@media (max-width: 768px) {
+    .header-content {
+        width: 100%;
     }
 
-    .header-heading svg {
-        width: 20px;
-        height: 20px;
-    }
-
-    .filter-title {
-        font-size: 0.85rem;
-    }
-
-    .search-box input {
-        font-size: 0.9rem;
-    }
-
-    .modal-actions {
-        flex-direction: column;
-    }
-
-    .modal-btn {
+    .header-title,
+    .header-stats {
         width: 100%;
     }
 }
 
-/* ---------- VERY SMALL DEVICES (≤ 360px) ---------- */
-@media (max-width: 360px) {
-    .header-title h1 {
-        font-size: 1.25rem;
-    }
-
-    .stat-count {
-        font-size: 1.5rem;
-    }
-
-    .stat-label {
-        font-size: 0.75rem;
-    }
-}
-
-
-/* Tablets & below */
-@media (max-width: 992px) {
-    .table-scroll-fix {
-        overflow-x: auto;     
-        -webkit-overflow-scrolling: touch;
-    }
-
-    .premium-table {
-        min-width: 900px;     
-    }
-}
-
-/* Mobile screens */
-@media (max-width: 576px) {
-    .table-scroll-fix {
-        overflow-x: auto;  
-    }
-
-    .premium-table {
-        min-width: 800px;     
-    }
-}
 
 </style>
 
 <div class="subcategory-page fade-in">
     <!-- Premium Header -->
     <div class="premium-header premium-glass">
-    
+
         <span class="bg-orb orb-1"></span>
         <span class="bg-orb orb-2"></span>
 
@@ -1218,6 +1299,7 @@
             <table class="premium-table">
                 <thead>
                     <tr>
+
                         <th>SubCategory Name</th>
                         <th>Category</th>
                         <th>Store</th>
@@ -1227,10 +1309,24 @@
                 <tbody>
                     {% for s in subcategories %}
                     <tr>
+                        
                         <td>
-                            <div class="sc-name">{{ s.name }}</div>
-                            <div class="sc-meta">Slug: {{ s.slug }}</div>
-                        </td>
+    <div class="sc-name-wrap">
+        <div class="sc-thumb">
+            {% if s.image %}
+                <img src="{{ s.image.url }}" alt="{{ s.name }}">
+            {% else %}
+                <img src="{% static 'images/no-image.png' %}" alt="No Image">
+            {% endif %}
+        </div>
+
+        <div class="sc-text">
+            <div class="sc-name">{{ s.name }}</div>
+
+        </div>
+    </div>
+</td>
+
                         <td>
                             <div style="font-weight: 500;">{{ s.category.name }}</div>
                         </td>

@@ -323,24 +323,67 @@ body {
     </div>
   </div>
 
-  <!-- ================= CATEGORY BAR ================= -->
-  <div class="vp-header-bottom">
-    <div class="vp-header-bottom-wrap">
-      <a href="#">Groceries</a>
-      <a href="#">Fruits & Vegetables</a>
-      <a href="#">Dairy & Bakery</a>
-      <a href="#">Snacks</a>
-      <a href="#">Beverages</a>
-      <a href="#">Instant Food</a>
-      <a href="#">Breakfast & Cereals</a>
-      <a href="#">Staples</a>
-      <a href="#">Frozen Foods</a>
-      <a href="#">Household</a>
-      <a href="#">Personal Care</a>
-      <a href="#">Cleaning Essentials</a>
-      <a href="#">Deals</a>
-      <a href="#">New Arrivals</a>
-    </div>
+ <div class="vp-header-bottom">
+  <div class="vp-header-bottom-wrap">
+    
+    {% for cat in header_categories %}
+      <div class="category-item">
+        {% if request.user.is_authenticated and header_store %}
+          <a href="{% url 'category_products' header_store.id cat.slug %}" class="category-link">
+            {% if cat.image %}
+              <img src="{{ cat.image.url }}" 
+                   alt="{{ cat.name }}"
+                   class="category-image"
+                   width="50"
+                   height="50">
+            {% else %}
+              <div class="category-placeholder">
+                {{ cat.name|slice:":1"|upper }}
+              </div>
+            {% endif %}
+            <span class="category-name">{{ cat.name }}</span>
+          </a>
+        {% else %}
+          {% if request.user.is_authenticated %}
+            <div class="category-link">
+              {% if cat.image %}
+                <img src="{{ cat.image.url }}" 
+                     alt="{{ cat.name }}"
+                     class="category-image"
+                     width="50"
+                     height="50">
+              {% else %}
+                <div class="category-placeholder">
+                  {{ cat.name|slice:":1"|upper }}
+                </div>
+              {% endif %}
+              <span>{{ cat.name }}</span>
+            </div>
+          {% else %}
+            <a href="{% url 'login' %}?next={{ request.path }}" class="category-link">
+              {% if cat.image %}
+                <img src="{{ cat.image.url }}" 
+                     alt="{{ cat.name }}"
+                     class="category-image"
+                     width="50"
+                     height="50">
+              {% else %}
+                <div class="category-placeholder">
+                  {{ cat.name|slice:":1"|upper }}
+                </div>
+              {% endif %}
+              <span>{{ cat.name }}</span>
+            </a>
+          {% endif %}
+        {% endif %}
+      </div>
+    {% empty %}
+      <span style="opacity:0.6;">No categories available</span>
+    {% endfor %}
+
+  </div>
+</div>
+
   </div>
 
 </header>

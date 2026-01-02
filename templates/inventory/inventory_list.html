@@ -2,63 +2,83 @@
 {% load static %}
 
 {% block content %}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-    integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
-    crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
 
 <style>
-    /* ===============================
-   PREMIUM ADMIN COLOR SYSTEM
-================================ */
     :root {
         --primary: #0e7490;
-        --primary-dark: #155e75;
-        --primary-light: rgba(14, 116, 144, 0.1);
+        --primary-dark: #0d5c73;
+        --primary-light: rgba(14, 116, 144, 0.15);
+        --primary-ultra-light: rgba(14, 116, 144, 0.05);
         --accent: #06b6d4;
-        --accent-light: rgba(6, 182, 212, 0.1);
+        --accent-light: rgba(6, 182, 212, 0.15);
 
         --success: #10b981;
-        --success-light: rgba(16, 185, 129, 0.1);
+        --success-light: rgba(16, 185, 129, 0.15);
         --warning: #f59e0b;
-        --warning-light: rgba(245, 158, 11, 0.1);
+        --warning-light: rgba(245, 158, 11, 0.15);
         --danger: #ef4444;
-        --danger-light: rgba(239, 68, 68, 0.1);
+        --danger-light: rgba(239, 68, 68, 0.15);
         --info: #8b5cf6;
-        --info-light: rgba(139, 92, 246, 0.1);
+        --info-light: rgba(139, 92, 246, 0.15);
+        --gold: #d4af37;
+        --gold-light: rgba(212, 175, 55, 0.1);
 
         --gradient-primary: linear-gradient(135deg, var(--primary), var(--accent));
+        --gradient-gold: linear-gradient(135deg, #d4af37, #f7ef8a);
         --gradient-success: linear-gradient(135deg, var(--success), #34d399);
         --gradient-warning: linear-gradient(135deg, var(--warning), #fbbf24);
         --gradient-danger: linear-gradient(135deg, var(--danger), #f87171);
+        --gradient-card: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.98));
+        --gradient-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.95));
 
         --bg-main: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-        --card-bg: #ffffff;
-        --surface: #f1f5f9;
+        --bg-card: rgba(255, 255, 255, 0.95);
+        --bg-surface: rgba(255, 255, 255, 0.7);
+        --bg-hover: rgba(14, 116, 144, 0.03);
 
-        --text: #1f2937;
-        --text-secondary: #6b7280;
-        --text-muted: #9ca3af;
+        --text-primary: #1e293b;
+        --text-secondary: #475569;
+        --text-muted: #64748b;
+        --text-light: #94a3b8;
 
-        --border: #e5e7eb;
-        --border-light: #f1f5f9;
+        --border: rgba(226, 232, 240, 0.6);
+        --border-light: rgba(241, 245, 249, 0.6);
+        --border-dark: rgba(148, 163, 184, 0.3);
 
-        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
-        --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.08);
-        --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.1);
-        --shadow-xl: 0 20px 60px rgba(14, 116, 144, 0.15);
+        --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.02);
+        --shadow-sm: 0 2px 4px rgba(15, 23, 42, 0.03);
+        --shadow-md: 0 4px 20px rgba(15, 23, 42, 0.05);
+        --shadow-lg: 0 8px 40px rgba(15, 23, 42, 0.08);
+        --shadow-xl: 0 20px 60px rgba(15, 23, 42, 0.12);
+        --shadow-primary: 0 10px 40px rgba(14, 116, 144, 0.15);
+        --shadow-gold: 0 10px 40px rgba(212, 175, 55, 0.15);
+        --shadow-glass: 0 8px 32px rgba(31, 38, 135, 0.07);
 
-        --radius-lg: 20px;
+        --radius-sm: 10px;
         --radius-md: 16px;
-        --radius-sm: 12px;
-        --radius-full: 999px;
+        --radius-lg: 24px;
+        --radius-xl: 32px;
+        --radius-2xl: 48px;
+        --radius-full: 9999px;
 
+        --transition-fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         --transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+
+        --glass-bg: rgba(255, 255, 255, 0.85);
+        --glass-border: rgba(255, 255, 255, 0.2);
+        --glass-shadow: 0 8px 32px rgba(31, 38, 135, 0.07);
+
+        --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        --font-display: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }
 
-    /* ===============================
-   RESET & BASE STYLES
-================================ */
     * {
         margin: 0;
         padding: 0;
@@ -66,929 +86,1569 @@
     }
 
     body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        font-family: var(--font-sans);
         background: var(--bg-main);
-        color: var(--text);
+        color: var(--text-primary);
         line-height: 1.6;
-    }
-
-    /* ===============================
-   DASHBOARD LAYOUT
-================================ */
-    .inventory-dashboard {
-        max-width: 1600px;
-        margin: 0 auto;
-        padding: 24px;
+        font-weight: 400;
+        min-height: 100vh;
         position: relative;
+        overflow-x: hidden;
     }
 
-    /* ===============================
-   HEADER SECTION
-================================ */
-    .dashboard-header {
-        background: var(--card-bg);
-        border-radius: var(--radius-lg);
-        padding: 32px 40px;
-        box-shadow: var(--shadow-lg);
-        border: 1px solid rgba(255, 255, 255, 0.8);
-        margin-bottom: 30px;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .dashboard-header::before {
+    /* Background pattern */
+    body::before {
         content: '';
-        position: absolute;
+        position: fixed;
         top: 0;
         left: 0;
-        right: 0;
-        height: 4px;
-        background: linear-gradient(90deg, var(--primary), var(--accent));
-        border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-    }
-
-    .header-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        gap: 20px;
-    }
-
-    .header-text h1 {
-        font-size: 2rem;
-        font-weight: 700;
-        color: var(--primary);
-        margin-bottom: 8px;
-    }
-
-    .header-text p {
-        color: var(--text-secondary);
-        font-size: 0.95rem;
-        max-width: 600px;
-    }
-
-    .add-inventory-btn {
-        background: linear-gradient(135deg, var(--primary), var(--accent));
-        color: white;
-        padding: 12px 24px;
-        border-radius: var(--radius-md);
-        text-decoration: none;
-        font-weight: 600;
-        font-size: 0.95rem;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        transition: var(--transition);
-        white-space: nowrap;
-    }
-
-    .add-inventory-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(14, 116, 144, 0.3);
-    }
-
-    /* ===============================
-   SEARCH SECTION
-================================ */
-    .search-section {
-        background: var(--card-bg);
-        border-radius: var(--radius-lg);
-        padding: 24px 32px;
-        box-shadow: var(--shadow-md);
-        border: 1px solid var(--border);
-        margin-bottom: 30px;
-        display: flex;
-        align-items: center;
-        gap: 30px;
-    }
-
-    .search-section h2 {
-        font-size: 1.3rem;
-        font-weight: 600;
-        color: var(--text);
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        white-space: nowrap;
-    }
-
-    .search-section h2 i {
-        color: var(--primary);
-    }
-
-    /* ===============================
-   PREMIUM SEARCH BAR (UPDATED)
-================================ */
-    .search-container {
-        flex: 1;
-        max-width: 720px;
-        position: relative;
-    }
-
-    .search-box {
         width: 100%;
-        padding: 14px 54px 14px 56px;
-        border-radius: var(--radius-full);
-        border: 1.5px solid rgba(14, 116, 144, 0.3);
-        background: linear-gradient(180deg, #ffffff, #f9fafb);
-        font-size: 0.95rem;
-        font-weight: 500;
-        color: var(--text);
+        height: 100%;
+        background-image:
+            radial-gradient(circle at 10% 20%, rgba(14, 116, 144, 0.03) 0%, transparent 20%),
+            radial-gradient(circle at 90% 80%, rgba(6, 182, 212, 0.03) 0%, transparent 20%),
+            radial-gradient(circle at 50% 50%, rgba(212, 175, 55, 0.02) 0%, transparent 30%);
+        pointer-events: none;
+        z-index: -1;
+    }
+
+    /* ===============================
+   MAIN LAYOUT
+================================ */
+    .luxury-dashboard {
+        min-height: 100vh;
+        padding: 32px;
         position: relative;
-        z-index: 2;
-        box-shadow: var(--shadow-sm);
-        transition: var(--transition);
     }
 
-    .search-box::placeholder {
-        color: var(--text-muted);
+    .dashboard-wrapper {
+        max-width: 1800px;
+        margin: 0 auto;
+        position: relative;
+    }
+
+    /* ===============================
+   PREMIUM HEADER
+================================ */
+    /* ===============================
+   HEADER BACKGROUND IMAGE (BLUR)
+================================ */
+    .premium-header {
+        position: relative;
+        overflow: hidden;
+        background: transparent;
+        border-radius: 20px;
+        margin-bottom: 48px;
 
     }
 
-    .search-box:hover {
-        border-color: var(--primary);
-    }
-
-    .search-box:focus {
-        outline: none;
-        border-color: var(--primary);
-        background: #ffffff;
-        box-shadow:
-            0 0 0 4px rgba(14, 116, 144, 0.15),
-            0 8px 25px rgba(14, 116, 144, 0.15);
-    }
-
-    /* Search icon bubble */
-    .search-icon {
+    .premium-header::before {
+        content: "";
         position: absolute;
-        left: 12px;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 36px;
-        height: 36px;
-        border-radius: 50%;
-        background: rgba(14, 116, 144, 0.1);
-        color: var(--primary);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.9rem;
-        z-index: 3;
-        transition: var(--transition);
+        inset: 0;
+
+        background-image: url("https://media.istockphoto.com/id/1293135028/vector/delivery-of-goods-products-cardboxes-with-things-man-with-clipboard-checking-parcels-in-list.jpg?s=612x612&w=0&k=20&c=lm4r-hZ_aIsWRnxjG39QWrXaj8uERW2ezJ5K1JXb7yE=");
+
+        background-size: cover;
+        background-repeat: no-repeat;
+
+        /* 🔥 KEY LINE – image down */
+        background-position: center 20%;
+        /* 👈 try 60%–70% */
+
+        opacity: 0.45;
+        z-index: 0;
     }
 
-    .search-container:focus-within .search-icon {
-        background: var(--gradient-primary);
-        color: #ffffff;
-    }
-
-    .search-glow {
+    .premium-header::after {
+        content: "";
         position: absolute;
-        right: 6px;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 80px;
-        height: 80%;
-        border-radius: 50%;
+        inset: 0;
+
         background: linear-gradient(135deg,
-                rgba(6, 182, 212, 0.35),
-                rgba(14, 116, 144, 0.15),
-                transparent);
-        filter: blur(18px);
-        opacity: 0.6;
-        animation: glowMove 4s ease-in-out infinite;
+                rgba(14, 116, 144, 0.35),
+                /* primary teal tint */
+                rgba(255, 255, 255, 0.55),
+                rgba(255, 255, 255, 0.75));
+
+        backdrop-filter: blur(2px);
+        /* 👈 premium softness */
+        z-index: 0;
+    }
+
+
+    .premium-header>* {
+        position: relative;
         z-index: 1;
     }
 
-    @keyframes glowMove {
-        0% {
-            opacity: 0.3;
-            transform: translateY(-50%) scale(0.9);
+    .header-glow {
+        position: absolute;
+        top: -100px;
+        right: -100px;
+        width: 400px;
+        height: 400px;
+        background: radial-gradient(circle, rgba(14, 116, 144, 0.1) 0%, transparent 70%);
+        filter: blur(40px);
+        opacity: 0.6;
+        z-index: 0;
+        animation: pulse 8s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+
+        0%,
+        100% {
+            opacity: 0.4;
+            transform: scale(1);
         }
 
         50% {
             opacity: 0.7;
-            transform: translateY(-50%) scale(1.05);
+            transform: scale(1.05);
+        }
+    }
+
+    .header-content {
+        position: relative;
+        z-index: 1;
+    }
+
+    .header-main {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 32px;
+    }
+
+    .title-section {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        margin-left: 54px;
+        /* ✅ right side move */
+    }
+
+    .title-icon-container {
+        position: relative;
+    }
+
+    .title-icon-bg {
+        width: 72px;
+        height: 72px;
+        border-radius: var(--radius-xl);
+        background: var(--gradient-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.8rem;
+        box-shadow: var(--shadow-primary);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .title-icon-bg::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        transform: translateX(-100%);
+        animation: shine 3s ease-in-out infinite;
+    }
+
+    @keyframes shine {
+        0% {
+            transform: translateX(-100%);
         }
 
         100% {
-            opacity: 0.3;
-            transform: translateY(-50%) scale(0.9);
+            transform: translateX(100%);
+        }
+    }
+
+    .title-text h1 {
+        color: #0e7490;
+        /* solid primary */
+        font-family: var(--font-display);
+        font-size: 2.5rem;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 8px;
+        position: relative;
+        margin-left: 30px;
+        margin-top: 10px;
+    }
+
+    .title-text h1::after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        left: 0;
+        width: 60px;
+        height: 3px;
+        background: var(--gradient-gold);
+        border-radius: var(--radius-full);
+    }
+
+    .title-text p {
+        color: var(--text-secondary);
+        font-size: 1.1rem;
+        font-weight: 400;
+        max-width: 600px;
+        line-height: 1.5;
+        margin-left: 30px;
+    }
+
+    .header-stats {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        /* ⭐ IMPORTANT */
+        width: 100%;
+    }
+
+    .stat-chip {
+        padding: 8px 20px;
+        background: var(--glass-bg);
+        backdrop-filter: blur(10px);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-full);
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: var(--text-secondary);
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: var(--shadow-sm);
+        transition: var(--transition);
+    }
+
+    .stat-chip:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+    }
+
+    .stat-chip i {
+        color: var(--primary);
+    }
+
+    .premium-add-btn {
+        padding: 16px 32px;
+        border-radius: var(--radius-lg);
+        background: var(--gradient-primary);
+        color: white;
+        font-family: var(--font-display);
+        font-weight: 600;
+        font-size: 1rem;
+        border: none;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        cursor: pointer;
+        transition: var(--transition);
+        box-shadow: var(--shadow-primary);
+        text-decoration: none;
+        position: relative;
+        overflow: hidden;
+        margin-right: 64px;
+        /* ✅ pull left */
+    }
+
+    .premium-add-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: 0.5s;
+    }
+
+    .premium-add-btn:hover::before {
+        left: 100%;
+    }
+
+    .premium-add-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 45px rgba(14, 116, 144, 0.25);
+    }
+
+    /* ===============================
+   SEARCH SECTION - PREMIUM
+================================ */
+    .premium-search-section {
+        position: relative;
+        margin-bottom: 48px;
+    }
+
+    .search-container-premium {
+        position: relative;
+        max-width: 800px;
+        margin-left: 44px;
+        /* ✅ move right */
+    }
+
+
+    .search-glass {
+        width: 100%;
+        padding: 20px 24px 20px 68px;
+        border-radius: var(--radius-xl);
+        background: var(--glass-bg);
+        backdrop-filter: blur(10px);
+        border: 1px solid var(--border);
+        font-size: 1rem;
+        color: var(--text-primary);
+        transition: var(--transition);
+        box-shadow: var(--shadow-glass);
+        font-family: var(--font-sans);
+    }
+
+    .search-glass:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow:
+            var(--shadow-glass),
+            0 0 0 4px rgba(14, 116, 144, 0.1);
+    }
+
+    .search-glass::placeholder {
+        color: var(--text-muted);
+        font-weight: 400;
+    }
+
+    .search-icon-premium {
+        position: absolute;
+        left: 24px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--primary);
+        font-size: 1.2rem;
+        z-index: 2;
+    }
+
+    .search-glow-premium {
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: linear-gradient(135deg,
+                rgba(14, 116, 144, 0.2),
+                rgba(6, 182, 212, 0.1),
+                transparent);
+        filter: blur(15px);
+        animation: glow 3s ease-in-out infinite;
+    }
+
+    @keyframes glow {
+
+        0%,
+        100% {
+            opacity: 0.4;
+        }
+
+        50% {
+            opacity: 0.8;
         }
     }
 
     /* ===============================
-   TABLE DESIGN (EXACTLY LIKE IMAGE)
+   INVENTORY CARDS - PREMIUM
 ================================ */
-    .inventory-table-container {
-        background: var(--card-bg);
-        border-radius: var(--radius-lg);
-        box-shadow: var(--shadow-lg);
+    .premium-inventory-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+        gap: 32px;
+        margin-bottom: 48px;
+        margin-top: 24px;
+        /* ✅ clear separation */
+    }
+
+    @media (max-width: 1400px) {
+        .premium-inventory-grid {
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+        }
+    }
+
+    .luxury-card {
+        background: var(--gradient-glass);
+        backdrop-filter: blur(10px);
+        border-radius: var(--radius-xl);
         border: 1px solid var(--border);
         overflow: hidden;
-    }
-
-    .table-wrapper {
-        overflow-x: auto;
-    }
-
-    .inventory-table {
-        width: 100%;
-        border-collapse: collapse;
-        min-width: 1000px;
-    }
-
-    .inventory-table thead {
-        background: linear-gradient(90deg, rgba(14, 116, 144, 0.05), rgba(6, 182, 212, 0.05));
-    }
-
-    .inventory-table th {
-        padding: 18px 24px;
-        text-align: left;
-        font-weight: 600;
-        color: var(--text-secondary);
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        font-size: 0.8rem;
-        border-bottom: 2px solid var(--border-light);
-        white-space: nowrap;
-    }
-
-    .inventory-table th:first-child {
-        padding-left: 32px;
-    }
-
-    .inventory-table th:last-child {
-        padding-right: 32px;
-    }
-
-    .inventory-table tbody tr {
-        border-bottom: 1px solid var(--border-light);
         transition: var(--transition);
+        position: relative;
+        box-shadow: var(--shadow-md);
     }
 
-    .inventory-table tbody tr:hover {
-        background: rgba(14, 116, 144, 0.02);
+    .luxury-card:hover {
+        transform: translateY(-8px);
+        box-shadow: var(--shadow-xl);
+        border-color: rgba(14, 116, 144, 0.3);
     }
 
-    .inventory-table tbody tr:last-child {
-        border-bottom: none;
+    .luxury-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: var(--gradient-primary);
+        z-index: 1;
     }
 
-    .inventory-table td {
-        padding: 20px 24px;
-        vertical-align: middle;
-    }
-
-    .inventory-table td:first-child {
-        padding-left: 32px;
-    }
-
-    .inventory-table td:last-child {
-        padding-right: 32px;
-    }
-
-    /* Product Details Column */
-    .product-cell {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-    }
-
-    .product-icon {
-        width: 40px;
-        height: 40px;
-        border-radius: 10px;
-        background: linear-gradient(135deg, var(--primary), var(--accent));
-        color: white;
+    .card-gold-badge {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--gradient-gold);
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1rem;
-    }
-
-    .product-info h4 {
-        font-weight: 600;
-        color: var(--text);
-        margin-bottom: 2px;
-        font-size: 0.95rem;
-    }
-
-    .product-info p {
-        font-size: 0.8rem;
-        color: var(--text-muted);
-    }
-
-    /* Variant Column */
-    .variant-cell .variant-badge {
-        background: rgba(139, 92, 246, 0.1);
-        color: #8b5cf6;
-        padding: 6px 12px;
-        border-radius: var(--radius-full);
-        font-size: 0.8rem;
-        font-weight: 600;
-        display: inline-block;
-        min-width: 60px;
-        text-align: center;
-    }
-
-    /* Price Column */
-    .price-cell {
-        font-weight: 700;
-        color: var(--primary);
-        font-size: 1rem;
-    }
-
-    .price-cell::before {
-        content: '$';
+        color: #7c6a2a;
         font-size: 0.9rem;
-        color: var(--text-muted);
-        margin-right: 2px;
+        box-shadow: var(--shadow-gold);
+        z-index: 2;
     }
 
-    /* Stock Level Column */
-    .stock-cell {
-        min-width: 180px;
-    }
-
-    .stock-progress-container {
+    .card-header-premium {
+        padding: 32px;
         display: flex;
-        flex-direction: column;
-        gap: 6px;
+        align-items: center;
+        gap: 20px;
+        position: relative;
+        background: rgba(255, 255, 255, 0.5);
     }
 
-    .stock-bar {
-        height: 6px;
-        background: #e5e7eb;
-        border-radius: var(--radius-full);
+    .product-image-premium {
+        width: 80px;
+        height: 80px;
+        border-radius: var(--radius-lg);
         overflow: hidden;
+        flex-shrink: 0;
+        position: relative;
+        box-shadow: var(--shadow-md);
+        border: 2px solid white;
+    }
+
+    .product-image-premium img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: var(--transition-slow);
+    }
+
+    .luxury-card:hover .product-image-premium img {
+        transform: scale(1.1);
+    }
+
+    .product-image-premium .image-placeholder-premium {
+        width: 100%;
+        height: 100%;
+        background: var(--gradient-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5rem;
+    }
+
+    .product-info-premium {
+        flex: 1;
+    }
+
+    .product-info-premium h3 {
+        font-family: var(--font-display);
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 6px;
+        line-height: 1.3;
+    }
+
+    .product-info-premium .product-sku {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        font-family: 'Monaco', 'Menlo', monospace;
+        letter-spacing: 0.5px;
+    }
+
+    .product-meta {
+        display: flex;
+        gap: 12px;
+        margin-top: 8px;
+    }
+
+    .meta-tag {
+        font-size: 0.8rem;
+        padding: 4px 12px;
+        background: var(--primary-ultra-light);
+        color: var(--primary);
+        border-radius: var(--radius-full);
+        font-weight: 500;
+    }
+
+    .card-content-premium {
+        padding: 0 32px 32px;
+    }
+
+    .info-grid-premium {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+        margin-bottom: 32px;
+    }
+
+    .info-item-premium {
         position: relative;
     }
 
-    .stock-fill {
+    .info-item-premium::before {
+        content: '';
+        position: absolute;
+        left: -12px;
+        top: 0;
+        width: 3px;
+        height: 100%;
+        background: var(--gradient-primary);
+        border-radius: var(--radius-full);
+        opacity: 0.5;
+    }
+
+    .info-item-premium label {
+        display: block;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .info-value-premium {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .variant-badge-premium {
+        padding: 8px 20px;
+        background: var(--info-light);
+        color: var(--info);
+        border-radius: var(--radius-full);
+        font-size: 0.9rem;
+        font-weight: 600;
+        display: inline-block;
+        border: 1px solid rgba(139, 92, 246, 0.2);
+    }
+
+    .price-tag-premium {
+        color: var(--primary);
+        font-weight: 800;
+        font-size: 1.4rem;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .price-tag-premium::before {
+
+        font-size: 1rem;
+        color: var(--text-muted);
+        font-weight: 400;
+    }
+
+    /* Stock Indicator Premium */
+    .stock-indicator-premium {
+        position: relative;
+    }
+
+    .stock-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+    }
+
+    .stock-count-premium {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--text-primary);
+    }
+
+    .stock-status-premium {
+        font-size: 0.85rem;
+        font-weight: 600;
+        padding: 4px 12px;
+        border-radius: var(--radius-full);
+    }
+
+    .stock-status-premium.high {
+        background: var(--success-light);
+        color: var(--success);
+    }
+
+    .stock-status-premium.medium {
+        background: var(--warning-light);
+        color: var(--warning);
+    }
+
+    .stock-status-premium.low {
+        background: var(--danger-light);
+        color: var(--danger);
+    }
+
+    .stock-bar-premium {
+        height: 8px;
+        background: var(--border-light);
+        border-radius: var(--radius-full);
+        overflow: hidden;
+        position: relative;
+        margin-bottom: 8px;
+    }
+
+    .stock-fill-premium {
         height: 100%;
         position: absolute;
         left: 0;
         top: 0;
         border-radius: var(--radius-full);
+        transition: width 1s ease-out;
     }
 
-    .stock-high .stock-fill {
+    .stock-fill-premium.high {
         background: var(--gradient-success);
-        width: 100%;
+        width: 80%;
     }
 
-    .stock-medium .stock-fill {
+    .stock-fill-premium.medium {
         background: var(--gradient-warning);
-        width: 60%;
+        width: 50%;
     }
 
-    .stock-low .stock-fill {
+    .stock-fill-premium.low {
         background: var(--gradient-danger);
-        width: 30%;
+        width: 20%;
     }
 
-    .stock-text {
+    .stock-footer {
         display: flex;
         justify-content: space-between;
-        align-items: center;
         font-size: 0.85rem;
-    }
-
-    .stock-count {
-        font-weight: 500;
-        color: var(--text);
-    }
-
-    .stock-label {
         color: var(--text-muted);
-        font-size: 0.8rem;
     }
 
-    /* Status Column */
-    .status-cell {
-        min-width: 120px;
-    }
-
-    .status-badge {
+    /* Status Premium */
+    .status-badge-premium {
         display: inline-flex;
         align-items: center;
-        gap: 6px;
-        padding: 8px 16px;
-        border-radius: var(--radius-full);
+        gap: 10px;
+        padding: 10px 20px;
+        border-radius: var(--radius-lg);
+        font-size: 0.9rem;
         font-weight: 600;
-        font-size: 0.8rem;
-        white-space: nowrap;
+        border: 1px solid;
     }
 
-    .status-badge i {
-        font-size: 0.7rem;
-    }
-
-    .status-in-stock {
-        background: rgba(16, 185, 129, 0.1);
+    .status-badge-premium.in-stock {
+        background: var(--success-light);
         color: var(--success);
-        border: 1px solid rgba(16, 185, 129, 0.2);
+        border-color: rgba(16, 185, 129, 0.3);
     }
 
-    .status-low-stock {
-        background: rgba(239, 68, 68, 0.1);
+    .status-badge-premium.limited {
+        background: var(--warning-light);
+        color: var(--warning);
+        border-color: rgba(245, 158, 11, 0.3);
+    }
+
+    .status-badge-premium.low-stock {
+        background: var(--danger-light);
         color: var(--danger);
-        border: 1px solid rgba(239, 68, 68, 0.2);
+        border-color: rgba(239, 68, 68, 0.3);
     }
 
-    /* Actions Column */
-    .actions-cell {
+    /* Actions Premium */
+    .card-actions-premium {
         display: flex;
-        gap: 8px;
+        gap: 16px;
+        padding-top: 32px;
+        border-top: 1px solid var(--border-light);
+        margin-top: 32px;
     }
 
-    .action-btn {
-        width: 36px;
-        height: 36px;
-        border-radius: var(--radius-sm);
+    .action-btn-premium {
+        flex: 1;
+        padding: 14px;
+        border-radius: var(--radius-lg);
         border: 1px solid var(--border);
-        background: var(--surface);
+        background: var(--bg-surface);
         color: var(--text-secondary);
+        font-weight: 600;
+        font-size: 0.95rem;
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: var(--transition);
+        gap: 10px;
         cursor: pointer;
-        font-size: 0.9rem;
+        transition: var(--transition);
         text-decoration: none;
+        position: relative;
+        overflow: hidden;
     }
 
-    .action-btn:hover {
+    .action-btn-premium::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
+    }
+
+    .action-btn-premium:hover::before {
+        width: 300px;
+        height: 300px;
+    }
+
+    .action-btn-premium:hover {
         transform: translateY(-2px);
-        box-shadow: var(--shadow-sm);
     }
 
-    .action-btn.edit:hover {
+    .action-btn-premium.edit {
+        border-color: var(--primary);
+        color: var(--primary);
+        background: var(--primary-ultra-light);
+    }
+
+    .action-btn-premium.edit:hover {
         background: var(--primary);
         color: white;
-        border-color: var(--primary);
+        box-shadow: var(--shadow-primary);
     }
 
-    .action-btn.view:hover {
-        background: var(--info);
-        color: white;
-        border-color: var(--info);
+    .action-btn-premium.delete {
+        border-color: var(--danger);
+        color: var(--danger);
+        background: var(--danger-light);
     }
 
-    .action-btn.delete:hover {
+    .action-btn-premium.delete:hover {
         background: var(--danger);
         color: white;
-        border-color: var(--danger);
-    }
-
-    .action-btn.delete {
-        background: none;
-        border: none;
-        padding: 0;
-        width: auto;
-        height: auto;
+        box-shadow: 0 8px 25px rgba(239, 68, 68, 0.25);
     }
 
     /* ===============================
-   EMPTY STATE
+   EMPTY STATE - PREMIUM
 ================================ */
-    .empty-state-container {
-        padding: 80px 40px;
+    .empty-state-premium {
+        grid-column: 1 / -1;
         text-align: center;
-        background: linear-gradient(to bottom, var(--card-bg), rgba(241, 245, 249, 0.5));
+        padding: 100px 40px;
+        background: var(--gradient-glass);
+        backdrop-filter: blur(10px);
+        border-radius: var(--radius-xl);
+        border: 2px dashed var(--border);
+        position: relative;
+        overflow: hidden;
     }
 
-    .empty-icon-container {
-        width: 80px;
-        height: 80px;
-        border-radius: 50%;
+    .empty-state-premium::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background:
+            radial-gradient(circle at 20% 30%, rgba(14, 116, 144, 0.05) 0%, transparent 50%),
+            radial-gradient(circle at 80% 70%, rgba(6, 182, 212, 0.05) 0%, transparent 50%);
+    }
+
+    .empty-icon-premium {
+        width: 100px;
+        height: 100px;
+        margin: 0 auto 32px;
+        border-radius: var(--radius-2xl);
         background: var(--gradient-primary);
-        color: white;
         display: flex;
         align-items: center;
         justify-content: center;
+        color: white;
+        font-size: 2.5rem;
+        box-shadow: var(--shadow-primary);
+        position: relative;
+        z-index: 1;
+    }
+
+    .empty-icon-premium::before {
+        content: '';
+        position: absolute;
+        top: -10px;
+        left: -10px;
+        right: -10px;
+        bottom: -10px;
+        border-radius: var(--radius-2xl);
+        background: var(--gradient-primary);
+        opacity: 0.3;
+        filter: blur(10px);
+        z-index: -1;
+    }
+
+    .empty-state-premium h3 {
+        font-family: var(--font-display);
         font-size: 2rem;
-        margin: 0 auto 20px;
-        box-shadow: var(--shadow-md);
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 16px;
+        position: relative;
+        z-index: 1;
     }
 
-    .empty-state-container h2 {
-        font-size: 1.5rem;
-        font-weight: 600;
-        color: var(--text);
-        margin-bottom: 8px;
-    }
-
-    .empty-state-container p {
-        color: var(--text-muted);
-        font-size: 0.95rem;
-        max-width: 400px;
-        margin: 0 auto 20px;
-        line-height: 1.5;
+    .empty-state-premium p {
+        color: var(--text-secondary);
+        max-width: 500px;
+        margin: 0 auto 32px;
+        line-height: 1.6;
+        font-size: 1.1rem;
+        position: relative;
+        z-index: 1;
     }
 
     /* ===============================
    RESPONSIVE DESIGN
 ================================ */
-    @media (max-width: 1024px) {
-        .inventory-dashboard {
-            padding: 20px;
-        }
-
-        .dashboard-header {
+    @media (max-width: 1200px) {
+        .luxury-dashboard {
             padding: 24px;
         }
 
-        .header-content {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
-        .search-section {
-            flex-direction: column;
-            align-items: flex-start;
-            padding: 20px;
-        }
-
-        .search-container {
-            max-width: 100%;
+        .premium-inventory-grid {
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 24px;
         }
     }
 
     @media (max-width: 768px) {
-        .dashboard-header {
-            padding: 20px;
+        .luxury-dashboard {
+            padding: 16px;
         }
 
-        .header-text h1 {
+        .header-main {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 24px;
+        }
+
+        .title-section {
+            width: 100%;
+        }
+
+        .header-stats {
+            flex-wrap: wrap;
+        }
+
+        .premium-add-btn {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .premium-inventory-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .info-grid-premium {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .card-header-premium {
+            padding: 24px;
+        }
+
+        .card-content-premium {
+            padding: 0 24px 24px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .title-text h1 {
+            font-size: 2rem;
+        }
+
+        .title-icon-bg {
+            width: 60px;
+            height: 60px;
             font-size: 1.5rem;
         }
 
-        .search-section h2 {
-            font-size: 1.1rem;
+        .card-actions-premium {
+            flex-direction: column;
         }
 
-        .inventory-table {
-            min-width: 900px;
-        }
-
-        .actions-cell {
-            gap: 6px;
-        }
-
-        .action-btn {
-            width: 32px;
-            height: 32px;
-            font-size: 0.8rem;
+        .action-btn-premium {
+            width: 100%;
         }
     }
-
-
-
-
 
     /* ===============================
-   PREMIUM ACTION BUTTONS
+   ANIMATIONS & EFFECTS
 ================================ */
+    @keyframes cardAppear {
+        from {
+            opacity: 0;
+            transform: translateY(30px) scale(0.95);
+        }
 
-    .premium-actions {
-        display: flex;
-        gap: 10px;
-        align-items: center;
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
     }
 
-    /* Base button */
-    .p-action {
-        width: 38px;
-        height: 38px;
-        border-radius: 12px;
-        border: none;
-        background: rgba(14, 116, 144, 0.08);
-        color: var(--primary);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        position: relative;
-        transition: all 0.25s ease;
-        box-shadow: inset 0 0 0 1px rgba(14, 116, 144, 0.15);
+    .luxury-card {
+        animation: cardAppear 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
     }
 
-    /* Icon */
-    .p-action i {
-        font-size: 0.9rem;
+    .luxury-card:nth-child(1) {
+        animation-delay: 0.1s;
     }
 
-    /* Hover animation */
-    .p-action:hover {
-        transform: translateY(-3px) scale(1.05);
+    .luxury-card:nth-child(2) {
+        animation-delay: 0.2s;
     }
 
-    /* Edit button */
-    .p-action.edit:hover {
-        background: linear-gradient(135deg, var(--primary), var(--accent));
-        color: #fff;
-        box-shadow: 0 8px 20px rgba(14, 116, 144, 0.35);
+    .luxury-card:nth-child(3) {
+        animation-delay: 0.3s;
     }
 
-    /* Delete button */
-    .p-action.delete {
-        background: rgba(239, 68, 68, 0.08);
-        color: var(--danger);
+    .luxury-card:nth-child(4) {
+        animation-delay: 0.4s;
     }
 
-    .p-action.delete:hover {
+    .luxury-card:nth-child(5) {
+        animation-delay: 0.5s;
+    }
+
+    .luxury-card:nth-child(6) {
+        animation-delay: 0.6s;
+    }
+
+    .luxury-card:nth-child(7) {
+        animation-delay: 0.7s;
+    }
+
+    .luxury-card:nth-child(8) {
+        animation-delay: 0.8s;
+    }
+
+    /* ===============================
+   SCROLLBAR STYLING
+================================ */
+    ::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: rgba(241, 245, 249, 0.5);
+        border-radius: var(--radius-full);
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: var(--primary);
+        border-radius: var(--radius-full);
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--primary-dark);
+    }
+
+    /* ===============================
+   LOADING STATES
+================================ */
+    .loading-shimmer-premium {
+        background: linear-gradient(90deg,
+                rgba(14, 116, 144, 0.05) 25%,
+                rgba(14, 116, 144, 0.1) 50%,
+                rgba(14, 116, 144, 0.05) 75%);
+        background-size: 200% 100%;
+        animation: shimmer 2s infinite;
+        border-radius: var(--radius-lg);
+    }
+
+    @keyframes shimmer {
+        0% {
+            background-position: -200% 0;
+        }
+
+        100% {
+            background-position: 200% 0;
+        }
+    }
+
+
+    .stock-indicator-icon.high {
+        background: linear-gradient(135deg, #22c55e, #4ade80);
+        color: white;
+    }
+
+    .stock-indicator-icon.medium {
+        background: linear-gradient(135deg, #f59e0b, #fbbf24);
+        color: white;
+    }
+
+    .stock-indicator-icon.low {
         background: linear-gradient(135deg, #ef4444, #f87171);
-        color: #fff;
-        box-shadow: 0 8px 20px rgba(239, 68, 68, 0.35);
+        color: white;
     }
 
-    /* Tooltip */
-    .p-action::after {
-        content: attr(data-tooltip);
-        position: absolute;
-        bottom: 120%;
-        left: 50%;
-        transform: translateX(-50%);
-        background: #111827;
-        color: #fff;
-        font-size: 0.7rem;
-        padding: 6px 10px;
-        border-radius: 6px;
-        white-space: nowrap;
-        opacity: 0;
-        pointer-events: none;
-        transition: 0.2s ease;
+    /* =========================================
+   RESPONSIVE FIXES – ALL SCREENS
+========================================= */
+
+    /* ---------- LARGE SCREENS (TV / 4K) ---------- */
+    @media (min-width: 1600px) {
+        .dashboard-wrapper {
+            max-width: 2000px;
+        }
+
+        .premium-inventory-grid {
+            grid-template-columns: repeat(auto-fill, minmax(460px, 1fr));
+        }
+
+        .title-text h1 {
+            font-size: 3rem;
+        }
     }
 
-    .p-action:hover::after {
-        opacity: 1;
+    /* ---------- LAPTOPS & SMALL DESKTOPS ---------- */
+    @media (max-width: 1200px) {
+        .title-section {
+            margin-left: 20px;
+        }
+
+        .premium-add-btn {
+            margin-right: 20px;
+        }
+
+        .search-container-premium {
+            margin-left: 20px;
+            max-width: 700px;
+        }
     }
 
-    /* ===============================
-   PREMIUM INVENTORY HEADER
-================================ */
+    /* ---------- TABLETS (iPad, etc) ---------- */
+    @media (max-width: 1024px) {
+        .header-main {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 28px;
+        }
 
-    .premium-header {
-        position: relative;
-        background: linear-gradient(135deg, #ffffff, #f8fafc);
-        border-radius: 20px;
-        padding: 34px 40px;
-        border: 1px solid #e5e7eb;
-        overflow: hidden;
+        .premium-add-btn {
+            align-self: flex-start;
+            margin-right: 0;
+        }
+
+        .header-stats {
+            flex-wrap: wrap;
+        }
+
+        .search-container-premium {
+            max-width: 100%;
+            margin-left: 0;
+        }
+
+        .premium-inventory-grid {
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+        }
     }
 
-    /* decorative shape */
-    .header-bg-shape {
-        position: absolute;
-        top: -40px;
-        right: -60px;
-        width: 220px;
-        height: 220px;
-        background: radial-gradient(circle, rgba(14, 116, 144, 0.18), transparent 70%);
-        filter: blur(10px);
+    /* ---------- SMALL TABLETS / LARGE MOBILES ---------- */
+    @media (max-width: 768px) {
+        .luxury-dashboard {
+            padding: 16px;
+        }
+
+        .premium-header {
+            border-radius: 16px;
+        }
+
+        .title-section {
+            flex-direction: column;
+            align-items: flex-start;
+            margin-left: 0;
+        }
+
+        .title-text h1 {
+            font-size: 2.1rem;
+            margin-left: 0;
+        }
+
+        .title-text p {
+            margin-left: 0;
+            font-size: 1rem;
+        }
+
+        .header-stats {
+            margin-left: 0;
+        }
+
+        .premium-add-btn {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .search-container-premium {
+            width: 100%;
+        }
+
+        .premium-inventory-grid {
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
     }
 
-    /* layout */
-    .premium-content {
+    /* ---------- MOBILE PHONES ---------- */
+    @media (max-width: 480px) {
+        .title-icon-bg {
+            width: 56px;
+            height: 56px;
+            font-size: 1.4rem;
+        }
+
+        .title-text h1 {
+            font-size: 1.8rem;
+        }
+
+        .header-stats {
+            gap: 10px;
+        }
+
+        .stat-chip {
+            font-size: 0.75rem;
+            padding: 6px 14px;
+        }
+
+        .search-glass {
+            padding: 16px 18px 16px 54px;
+            font-size: 0.95rem;
+        }
+
+        .card-header-premium {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        .product-image-premium {
+            width: 70px;
+            height: 70px;
+        }
+
+        .info-grid-premium {
+            grid-template-columns: 1fr;
+            gap: 18px;
+        }
+
+        .card-actions-premium {
+            flex-direction: column;
+        }
+
+        .action-btn-premium {
+            width: 100%;
+        }
+
+        .card-gold-badge {
+            top: 14px;
+            right: 14px;
+            width: 30px;
+            height: 30px;
+            font-size: 0.75rem;
+        }
+    }
+
+    /* =========================================
+   MOBILE EDGE SPACING FIX (CRITICAL)
+========================================= */
+    @media (max-width: 480px) {
+
+        /* Overall container safe padding */
+        .luxury-dashboard {
+            padding: 12px;
+        }
+
+        .dashboard-wrapper {
+            padding: 0;
+        }
+
+        /* Header card padding */
+        .premium-header {
+            padding: 16px;
+        }
+
+        /* Remove forced left margins */
+        .title-section,
+        .header-stats,
+        .search-container-premium {
+            margin-left: 0 !important;
+        }
+
+        .title-text h1,
+        .title-text p {
+            margin-left: 0 !important;
+        }
+
+        /* Title alignment */
+        .title-text {
+            padding: 0 4px;
+        }
+
+        /* Header stats spacing */
+        .header-stats {
+            gap: 8px;
+            padding: 0 4px;
+        }
+
+        /* Add Inventory button spacing */
+        .premium-add-btn {
+            margin: 12px 0 0 0;
+            width: 100%;
+            border-radius: 16px;
+        }
+
+        /* Search bar spacing */
+        .premium-search-section {
+            padding: 0;
+        }
+
+        .search-container-premium {
+            padding: 0;
+        }
+
+        .search-glass {
+            border-radius: 16px;
+        }
+
+        /* Inventory cards spacing */
+        .premium-inventory-grid {
+            padding: 0;
+            margin-top: 16px;
+        }
+
+        .luxury-card {
+            margin: 0;
+        }
+    }
+
+    /* 🔍 Pro responsive search width */
+    .header-search-inline {
+        width: 860px;
+        /* default desktop */
+        max-width: 720px;
+        /* large screens */
+    }
+
+    @media (max-width: 1200px) {
+        .header-search-inline {
+            width: 300px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .header-search-inline {
+            width: 100%;
+            /* mobile full width */
+        }
+    }
+
+    .header-search-inline {
         display: flex;
-        justify-content: space-between;
         align-items: center;
-        position: relative;
-        z-index: 2;
+        gap: 10px;
+        padding: 12px 18px;
+        background: var(--glass-bg);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-full);
+        box-shadow: var(--shadow-sm);
+        transition: var(--transition);
     }
 
-    /* left area */
-    .header-left {
-        display: flex;
-        flex-direction: column;
-        gap: 14px;
-    }
-
-    /* title row */
-    .title-row {
+    .header-search-inline {
         display: flex;
         align-items: center;
-        gap: 14px;
+        gap: 10px;
+
+        padding: 12px 18px;
+        background: var(--glass-bg);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-full);
+        box-shadow: var(--shadow-sm);
+
+        flex: 1 1 280px;
+        /* ⭐ MAGIC LINE */
+        min-width: 260px;
+        max-width: 100%;
     }
 
-    /* icon box */
-    .title-icon {
-        width: 48px;
-        height: 48px;
-        border-radius: 14px;
-        background: linear-gradient(135deg, #0e7490, #06b6d4);
-        color: #fff;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.1rem;
-        box-shadow: 0 8px 24px rgba(14, 116, 144, 0.35);
+    .header-search-inline i {
+        color: var(--primary);
+        font-size: 1rem;
     }
 
-    /* text */
-    .header-text h1 {
-        margin: 0;
-        font-size: 1.6rem;
-        font-weight: 700;
-        color: #0f172a;
+    .header-search-inline input {
+        flex: 1;
+        /* ⭐ MOST IMPORTANT */
+        min-width: 0;
+        border: none;
+        outline: none;
+        background: transparent;
+        font-size: 1rem;
+
+        line-height: 1.4;
+
+        color: var(--text-primary);
     }
 
-    .header-text p {
-        margin-top: 4px;
-        font-size: 0.9rem;
-        color: #64748b;
+    .header-search-inline input::placeholder {
+        color: var(--text-muted);
+        font-size: 0.95rem;
     }
 
-    /* stat chips */
-    .header-stats {
-        display: flex;
-        gap: 14px;
-        margin-left: 62px;
+    @media (max-width: 768px) {
+        .header-search-inline {
+            width: 100%;
+            flex: 1 1 100%;
+            order: 10;
+            /* search goes last */
+            margin-top: 10px;
+        }
     }
 
-    .header-stats span {
-        font-size: 0.75rem;
-        padding: 6px 12px;
-        border-radius: 999px;
-        background: #f1f5f9;
-        color: #475569;
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
+    /* Mobile */
+    @media (max-width: 768px) {
+
+        .header-search-inline input {
+            width: 100%;
+        }
     }
 
-    /* button */
-    .premium-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 12px 22px;
-        border-radius: 14px;
-        background: linear-gradient(135deg, #0e7490, #06b6d4);
-        color: #fff;
-        font-weight: 600;
-        font-size: 0.9rem;
-        text-decoration: none;
-        box-shadow: 0 10px 28px rgba(14, 116, 144, 0.35);
-        transition: all 0.25s ease;
-    }
-
-    .premium-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 14px 36px rgba(14, 116, 144, 0.45);
+    @media (max-width: 768px) {
+        .header-search-inline input {
+            font-size: 1rem;
+        }
     }
 </style>
 
-<div class="inventory-dashboard">
-    <!-- Header -->
-    <div class="dashboard-header premium-header">
-        <div class="header-bg-shape"></div>
+<div class="luxury-dashboard">
+    <div class="dashboard-wrapper">
+        <!-- Premium Header -->
+        <div class="premium-header">
+            <div class="header-glow"></div>
 
-        <div class="header-content premium-content">
-            <div class="header-left">
-                <div class="title-row">
-                    <div class="title-icon">
-                        <i class="fas fa-boxes-stacked"></i>
+            <div class="header-content">
+                <div class="header-main">
+                    <div class="title-section">
+                        <div class="title-icon-container">
+                            <div class="title-icon-bg">
+                                <i class="fas fa-boxes-stacked"></i>
+                            </div>
+                        </div>
+                        <div class="title-text">
+                            <h1>Inventory Management</h1>
+                            <p>Premium control panel for managing your product catalog, stock levels, and pricing
+                                strategies</p>
+
+                            <div class="header-stats">
+                                <span class="stat-chip">
+                                    <i class="fas fa-cube"></i>
+                                    {{ product_count }} Products
+                                </span>
+                                <span class="stat-chip">
+                                    <i class="fas fa-layer-group"></i>
+                                    {{ variant_count }} Variants
+                                </span>
+                                <span class="stat-chip">
+                                    <i class="fas fa-chart-line"></i>
+                                    Real-time Updates
+                                </span>
+
+                                <!-- 🔍 SEARCH BAR -->
+                                <div class="header-search-inline">
+                                    <i class="fas fa-search"></i>
+                                    <input type="text" id="searchInput"
+                                        placeholder="Search inventory or variants, products..." />
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="header-text">
-                        <h1>Inventory Dashboard</h1>
-                        <p>Track stock, manage products & stay in control</p>
+
+                    <a href="{% url 'inventory_create' %}" class="premium-add-btn">
+                        <i class="fas fa-plus-circle"></i>
+                        <span> Add Inventory</span>
+                    </a>
+                </div>
+
+                <!-- Premium Search -->
+
+            </div>
+        </div>
+
+        <!-- Premium Inventory Grid -->
+        {% if items %}
+        <div class="premium-inventory-grid" id="inventoryGrid">
+
+
+            {% for i in items %}
+            <div class="luxury-card"
+                data-search="{{ i.product_variant.product.name }} {{ i.product_variant.variant_name }}">
+                <div class="card-gold-badge stock-indicator-icon
+        {% if i.quantity_available > 20 %}high
+        {% elif i.quantity_available > 10 %}medium
+        {% else %}low{% endif %}">
+                    {% if i.quantity_available > 20 %}
+                    <i class="fa-solid fa-arrow-trend-up"></i>
+                    {% elif i.quantity_available > 10 %}
+                    <i class="fa-solid fa-minus"></i>
+                    {% else %}
+                    <i class="fa-solid fa-arrow-trend-down"></i>
+                    {% endif %}
+                </div>
+                <div class="card-header-premium">
+                    <div class="product-image-premium">
+                        {% if i.product_variant.image %}
+                        <img src="{{ i.product_variant.image.url }}" alt="{{ i.product_variant.product.name }}">
+                        {% elif i.product_variant.product.image %}
+                        <img src="{{ i.product_variant.product.image.url }}" alt="{{ i.product_variant.product.name }}">
+                        {% else %}
+                        <div class="image-placeholder-premium">
+                            <i class="fas fa-box"></i>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="product-info-premium">
+                        <h3>{{ i.product_variant.product.name }}</h3>
+                        <div class="product-sku">SKU: {{ i.product_variant.sku|default:"N/A" }}</div>
+
                     </div>
                 </div>
 
-                <!-- quick stats -->
-                <div class="header-stats">
-                    <span><i class="fas fa-cubes"></i> Products</span>
-                    <span><i class="fas fa-chart-line"></i> Stock Levels</span>
-                    <span><i class="fas fa-shield-check"></i> Real-time</span>
+                <div class="card-content-premium">
+                    <div class="info-grid-premium">
+                        <div class="info-item-premium">
+                            <label>Variant</label>
+                            <div class="variant-badge-premium">{{ i.product_variant.variant_name }}</div>
+                        </div>
+
+                        <div class="info-item-premium">
+                            <label>Price</label>
+                            <div class="price-tag-premium">₹{{ i.price }}</div>
+                        </div>
+
+                        <div class="info-item-premium">
+                            <label>Stock Level</label>
+                            <div class="stock-indicator-premium">
+                                <div class="stock-header">
+                                    <span class="stock-count-premium">{{ i.quantity_available }} units</span>
+                                    <span class="stock-status-premium 
+                                        {% if i.quantity_available > 20 %}high
+                                        {% elif i.quantity_available > 10 %}medium
+                                        {% else %}low{% endif %}">
+                                        {% if i.quantity_available > 20 %}High
+                                        {% elif i.quantity_available > 10 %}Medium
+                                        {% else %}Low{% endif %}
+                                    </span>
+                                </div>
+                                <div class="stock-bar-premium">
+                                    <div class="stock-fill-premium 
+                                        {% if i.quantity_available > 20 %}high
+                                        {% elif i.quantity_available > 10 %}medium
+                                        {% else %}low{% endif %}"></div>
+                                </div>
+                                <div class="stock-footer">
+                                    <span>0</span>
+                                    <span>Max</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="info-item-premium">
+                            <label>Status</label>
+                            {% if i.quantity_available > 20 %}
+                            <span class="status-badge-premium in-stock">
+                                <i class="fas fa-check-circle"></i> In Stock
+                            </span>
+                            {% elif i.quantity_available > 10 %}
+                            <span class="status-badge-premium limited">
+                                <i class="fas fa-exclamation-triangle"></i> Limited Stock
+                            </span>
+                            {% else %}
+                            <span class="status-badge-premium low-stock">
+                                <i class="fas fa-times-circle"></i> Low Stock
+                            </span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="card-actions-premium">
+                        <a href="{% url 'inventory_update' i.id %}" class="action-btn-premium edit">
+                            <i class="fas fa-edit"></i>
+                            Edit Product
+                        </a>
+                        <form method="post" action="{% url 'inventory_delete' i.id %}" class="delete-form"
+                            style="flex: 1;">
+                            {% csrf_token %}
+                            <button type="submit" class="action-btn-premium delete"
+                                onclick="return confirm('Are you sure you want to delete this item?')">
+                                <i class="fas fa-trash"></i>
+                                Delete
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
-
-            <a href="{% url 'inventory_create' %}" class="add-inventory-btn premium-btn">
-                <i class="fas fa-plus"></i>
-                <span>Add Product</span>
-            </a>
-        </div>
-    </div>
-
-
-    <!-- Search Section -->
-    <div class="search-section">
-        <h2><i class="fas fa-boxes"></i> Product Inventory</h2>
-        <div class="search-container">
-            <i class="fas fa-search search-icon"></i>
-            <input type="text" id="searchInput" class="search-box" placeholder="Search products, variants, or SKUs...">
-            <span class="search-glow"></span>
-        </div>
-    </div>
-
-    <!-- Table Container -->
-    <div class="inventory-table-container">
-        {% if items %}
-        <div class="table-wrapper">
-            <table class="inventory-table">
-                <thead>
-                    <tr>
-                        <th>PRODUCT DETAILS</th>
-                        <th>VARIANT</th>
-                        <th>PRICE</th>
-                        <th>STOCK LEVEL</th>
-                        <th>STATUS</th>
-                        <th>ACTIONS</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for i in items %}
-                    <tr>
-                        <td>
-                            <div class="product-cell">
-                                <div class="product-icon">
-                                    <i class="fas fa-box"></i>
-                                </div>
-                                <div class="product-info">
-                                    <h4>{{ i.product_variant.product.name }}</h4>
-
-                                </div>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="variant-cell">
-                                <span class="variant-badge">{{ i.product_variant.variant_name }}</span>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="price-cell">{{ i.price }}</div>
-                        </td>
-                        <td>
-                            <div class="stock-cell">
-                                <div class="stock-progress-container
-                                    {% if i.quantity_available > 20 %}stock-high
-                                    {% elif i.quantity_available > 10 %}stock-medium
-                                    {% else %}stock-low{% endif %}">
-                                    <div class="stock-bar">
-                                        <div class="stock-fill"></div>
-                                    </div>
-                                    <div class="stock-text">
-                                        <span class="stock-count">{{ i.quantity_available }} units available</span>
-                                        <span class="stock-label">
-                                            {% if i.quantity_available > 20 %}High
-                                            {% elif i.quantity_available > 10 %}Medium
-                                            {% else %}Low{% endif %}
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="status-cell">
-                                {% if i.quantity_available > 20 %}
-                                <span class="status-badge status-in-stock">
-                                    <i class="fas fa-check-circle"></i> In Stock
-                                </span>
-                                {% elif i.quantity_available > 10 %}
-                                <span class="status-badge status-low-stock">
-                                    <i class="fas fa-exclamation-triangle"></i> Limited
-                                </span>
-                                {% else %}
-                                <span class="status-badge status-low-stock">
-                                    <i class="fas fa-times-circle"></i> Low Stock
-                                </span>
-                                {% endif %}
-                            </div>
-                        </td>
-                        <td>
-                            <div class="actions-cell premium-actions">
-                                <a href="{% url 'inventory_update' i.id %}" class="p-action edit"
-                                    data-tooltip="Edit Item">
-                                    <i class="fas fa-pen"></i>
-                                </a>
-
-                                <form method="post" action="{% url 'inventory_delete' i.id %}">
-                                    {% csrf_token %}
-                                    <button type="submit" class="p-action delete" data-tooltip="Delete Item"
-                                        onclick="return confirm('Are you sure you want to delete this item?')">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
-                            </div>
-
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+            {% endfor %}
         </div>
         {% else %}
-        <div class="empty-state-container">
-            <div class="empty-icon-container">
+        <!-- Premium Empty State -->
+        <div class="empty-state-premium">
+            <div class="empty-icon-premium">
                 <i class="fas fa-box-open"></i>
             </div>
-            <h2>No Inventory Items</h2>
-            <p>Your inventory is currently empty. Start by adding your first product.</p>
-            <a href="{% url 'inventory_create' %}" class="add-inventory-btn" style="margin-top: 20px;">
-                <i class="fas fa-plus"></i> Add Your First Product
+            <h3>Inventory Dashboard</h3>
+            <p>Your inventory catalog is currently empty. Begin by adding products to manage stock levels, pricing, and
+                product variants in your premium dashboard.</p>
+            <a href="{% url 'inventory_create' %}" class="premium-add-btn" style="margin-top: 20px;">
+                <i class="fas fa-plus-circle"></i>
+                <span>Create Your First Product</span>
             </a>
         </div>
         {% endif %}
@@ -997,31 +1657,163 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // Search functionality
+        // Premium search functionality
         const searchInput = document.getElementById('searchInput');
+        const luxuryCards = document.querySelectorAll('.luxury-card');
+
         if (searchInput) {
             searchInput.addEventListener('input', function () {
-                const searchTerm = this.value.toLowerCase();
-                const rows = document.querySelectorAll('.inventory-table tbody tr');
+                const searchTerm = this.value.toLowerCase().trim();
 
-                rows.forEach(row => {
-                    const text = row.textContent.toLowerCase();
-                    if (text.includes(searchTerm)) {
-                        row.style.display = '';
+                luxuryCards.forEach(card => {
+                    const searchData = card.getAttribute('data-search').toLowerCase();
+
+                    if (searchTerm === '' || searchData.includes(searchTerm)) {
+                        card.style.display = 'block';
+                        setTimeout(() => {
+                            card.style.opacity = '1';
+                            card.style.transform = 'translateY(0)';
+                        }, 10);
                     } else {
-                        row.style.display = 'none';
+                        card.style.opacity = '0';
+                        card.style.transform = 'translateY(20px)';
+                        setTimeout(() => {
+                            card.style.display = 'none';
+                        }, 300);
                     }
                 });
             });
         }
 
-        // Add animation to table rows on hover
-        const tableRows = document.querySelectorAll('.inventory-table tbody tr');
-        tableRows.forEach(row => {
-            row.addEventListener('mouseenter', function () {
-                this.style.transition = 'all 0.2s ease';
+        // Enhanced card hover effects
+        luxuryCards.forEach(card => {
+            card.addEventListener('mouseenter', function () {
+                this.style.zIndex = '10';
+                const image = this.querySelector('.product-image-premium img');
+                if (image) {
+                    image.style.transform = 'scale(1.1)';
+                }
+            });
+
+            card.addEventListener('mouseleave', function () {
+                this.style.zIndex = '1';
+                const image = this.querySelector('.product-image-premium img');
+                if (image) {
+                    image.style.transform = 'scale(1)';
+                }
+            });
+
+            // Click effect
+            const editBtn = card.querySelector('.action-btn-premium.edit');
+            const deleteBtn = card.querySelector('.action-btn-premium.delete');
+
+            [editBtn, deleteBtn].forEach(btn => {
+                if (btn) {
+                    btn.addEventListener('click', function (e) {
+                        if (this.classList.contains('delete') && !confirm('Are you sure you want to delete this item?')) {
+                            e.preventDefault();
+                            return false;
+                        }
+
+                        // Ripple effect
+                        const ripple = document.createElement('span');
+                        const rect = this.getBoundingClientRect();
+                        const size = Math.max(rect.width, rect.height);
+                        const x = e.clientX - rect.left - size / 2;
+                        const y = e.clientY - rect.top - size / 2;
+
+                        ripple.style.cssText = `
+                            position: absolute;
+                            border-radius: 50%;
+                            background: rgba(255, 255, 255, 0.3);
+                            transform: scale(0);
+                            animation: ripple 0.6s linear;
+                            width: ${size}px;
+                            height: ${size}px;
+                            left: ${x}px;
+                            top: ${y}px;
+                        `;
+
+                        this.appendChild(ripple);
+
+                        setTimeout(() => {
+                            ripple.remove();
+                        }, 600);
+                    });
+                }
             });
         });
+
+        // Add CSS for ripple effect
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                to {
+                    transform: scale(4);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initialize animations with staggered delay
+        luxuryCards.forEach((card, index) => {
+            card.style.animationDelay = `${index * 0.1}s`;
+        });
+
+        // Add keyboard shortcut for search
+        document.addEventListener('keydown', function (e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                if (searchInput) {
+                    searchInput.focus();
+                }
+            }
+
+            // Escape to clear search
+            if (e.key === 'Escape' && searchInput && document.activeElement === searchInput) {
+                searchInput.value = '';
+                searchInput.dispatchEvent(new Event('input'));
+            }
+        });
+
+        // Add hint for keyboard shortcut
+        if (searchInput) {
+            searchInput.addEventListener('focus', function () {
+                const existingHint = document.querySelector('.keyboard-hint');
+                if (!existingHint) {
+                    const hint = document.createElement('div');
+                    hint.className = 'keyboard-hint';
+                    hint.innerHTML = '<span>Press ⌘K to search</span>';
+                    hint.style.cssText = `
+                        position: absolute;
+                        right: 20px;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        font-size: 0.8rem;
+                        color: var(--text-muted);
+                        background: var(--glass-bg);
+                        padding: 4px 8px;
+                        border-radius: var(--radius-sm);
+                        display: none;
+                    `;
+                    this.parentNode.appendChild(hint);
+
+                    // Show hint on focus
+                    hint.style.display = 'block';
+
+                    // Hide hint when typing
+                    this.addEventListener('input', () => {
+                        hint.style.display = 'none';
+                    });
+
+                    // Hide hint on blur
+                    this.addEventListener('blur', () => {
+                        hint.style.display = 'none';
+                    });
+                }
+            });
+        }
     });
 </script>
 {% endblock %}
