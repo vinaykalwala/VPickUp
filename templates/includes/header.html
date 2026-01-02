@@ -269,6 +269,67 @@ body {
     padding-top: 105px;
   }
 }
+/* ================= CATEGORY ITEM (NO BACKGROUND) ================= */
+
+.category-item {
+  flex: 0 0 auto;
+}
+
+/* Link layout */
+.category-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0;              /* no padding box */
+  background: transparent; /* ❌ no background */
+  border: none;            /* ❌ no border */
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+/* Hover – subtle only (no background) */
+.category-link:hover .category-name {
+  color: #0891b2;
+}
+
+/* Round Image */
+.category-image {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #0e7490;  /* optional soft outline */
+  flex-shrink: 0;
+}
+
+/* Placeholder (no image) */
+.category-placeholder {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #e2e8f0;   /* neutral only for placeholder */
+  color: #0e7490;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+/* Text */
+.category-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #0e7490;
+}
+
+/* Header bottom spacing */
+.vp-header-bottom-wrap {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+}
 
 
 </style>
