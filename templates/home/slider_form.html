@@ -1,19 +1,796 @@
-<h2>{% if edit %}Edit Slider{% else %}Add Slider{% endif %}</h2>
+{% extends 'admin_base.html' %}
+{% block content %}
+{% load static %}
 
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
+<style>
+/* ================= DESIGN SYSTEM ================= */
+:root {
+    --primary: #0e7490;
+    --primary-dark: #155e75;
+    --primary-light: #0891b2;
+    --primary-soft: rgba(14, 116, 144, 0.1);
+    --white: #ffffff;
+    --light-bg: #f8fafc;
+    --light-gray: #f1f5f9;
+    --border: #e2e8f0;
+    --border-soft: rgba(14, 116, 144, 0.15);
+    --text-dark: #0f172a;
+    --text-medium: #475569;
+    --text-light: #64748b;
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+    --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.12);
+    --shadow-primary: 0 8px 24px rgba(14, 116, 144, 0.15);
+    --radius-sm: 8px;
+    --radius: 12px;
+    --radius-lg: 20px;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
-    {% if edit and slider.image %}
-        <p>Current Image</p>
-        <img src="{{ slider.image.url }}" width="200">
+/* ================= BASE ================= */
+.vs-ui {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    min-height: 100vh;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    padding-bottom: 60px;
+}
+
+/* ================= HERO ================= */
+.vs-hero {
+    background: linear-gradient(135deg, 
+        rgba(14, 116, 144, 0.98) 0%,
+        rgba(14, 116, 144, 0.92) 100%),
+        radial-gradient(circle at 50% 0%, rgba(255,255,255,0.1) 0%, transparent 50%);
+    color: var(--white);
+    padding: 70px 24px 140px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.vs-hero::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100px;
+    background: linear-gradient(to bottom, transparent, var(--light-bg));
+}
+
+.vs-hero-inner {
+    max-width: 800px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+}
+
+.vs-hero h1 {
+    margin: 0 0 16px 0;
+    font-size: 2.5rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    background: linear-gradient(to right, #ffffff, #e0f2fe);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.vs-hero p {
+    margin: 0;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    opacity: 0.95;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* ================= PANEL ================= */
+.vs-panel-wrap {
+    max-width: 1200px;
+    margin: -80px auto 0;
+    padding: 0 24px;
+    position: relative;
+}
+
+.vs-panel {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    overflow: hidden;
+    position: relative;
+}
+
+.vs-panel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, 
+        var(--primary) 0%,
+        var(--primary-light) 50%,
+        var(--primary) 100%);
+}
+
+/* ================= GRID ================= */
+.vs-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 40px;
+    padding: 40px;
+}
+
+/* ================= FORM ================= */
+.vs-form {
+    padding-right: 40px;
+    border-right: 1px solid var(--border-soft);
+}
+
+.vs-form p {
+    margin-bottom: 24px;
+    position: relative;
+}
+
+.vs-form label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--primary-dark);
+    margin-bottom: 8px;
+    padding-left: 2px;
+}
+
+.vs-form input,
+.vs-form textarea,
+.vs-form select {
+    width: 100%;
+    padding: 14px 16px;
+    background: var(--white);
+    border: 2px solid var(--border-soft);
+    border-radius: var(--radius);
+    font-size: 0.95rem;
+    color: var(--text-dark);
+    transition: var(--transition);
+    font-family: inherit;
+}
+
+.vs-form input:focus,
+.vs-form textarea:focus,
+.vs-form select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(14, 116, 144, 0.1);
+    background: rgba(14, 116, 144, 0.02);
+}
+
+/* Textarea reduced height */
+.vs-form textarea {
+    min-height: 80px;
+    max-height: 120px;
+    resize: vertical;
+    line-height: 1.5;
+}
+
+/* File input styling */
+.vs-form input[type="file"] {
+    padding: 12px;
+    background: var(--light-bg);
+    border: 2px dashed var(--border-soft);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.vs-form input[type="file"]:hover {
+    border-color: var(--primary);
+    background: rgba(14, 116, 144, 0.05);
+}
+
+/* ================= PREVIEW ================= */
+.vs-preview {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.vs-preview-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.vs-preview-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--primary-dark);
+    margin: 0;
+}
+
+.vs-preview-badge {
+    background: var(--primary-soft);
+    color: var(--primary-dark);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+/* Preview Canvas */
+.vs-preview-canvas {
+    aspect-ratio: 16 / 5;
+    background: linear-gradient(135deg, var(--light-bg), var(--white));
+    border: 2px dashed var(--border-soft);
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    transition: var(--transition);
+}
+
+.vs-preview-canvas:hover {
+    border-color: var(--primary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-primary);
+}
+
+.vs-preview-canvas img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: var(--radius-sm);
+    transition: transform 0.5s ease;
+}
+
+.vs-preview-canvas:hover img {
+    transform: scale(1.02);
+}
+
+.vs-preview-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    color: var(--text-light);
+    text-align: center;
+}
+
+.vs-preview-icon {
+    width: 48px;
+    height: 48px;
+    background: var(--primary-soft);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+    font-size: 20px;
+}
+
+/* Current Image Status */
+.vs-current-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: rgba(14, 116, 144, 0.08);
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+    color: var(--primary-dark);
+    margin-top: 15px;
+}
+
+.vs-current-indicator::before {
+    content: '📌';
+    font-size: 0.9rem;
+}
+
+/* ================= GUIDELINES ================= */
+.vs-guidelines {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-top: 30px;
+}
+
+.vs-guide-card {
+    background: var(--light-bg);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius);
+    padding: 20px;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.vs-guide-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--primary);
+}
+
+.vs-guide-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+    border-color: var(--primary);
+}
+
+.vs-guide-card span {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--text-medium);
+    line-height: 1.5;
+}
+
+.vs-guide-card strong {
+    color: var(--primary-dark);
+    font-weight: 600;
+}
+
+/* ================= ACTIONS ================= */
+.vs-actions {
+    background: var(--light-bg);
+    border-top: 1px solid var(--border-soft);
+    padding: 28px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+}
+
+.vs-btn {
+    padding: 14px 32px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    letter-spacing: 0.5px;
+}
+
+.vs-btn-primary {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: var(--white);
+    box-shadow: var(--shadow-primary);
+}
+
+.vs-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(14, 116, 144, 0.2);
+}
+
+.vs-btn-secondary {
+    background: var(--white);
+    color: var(--primary-dark);
+    border: 2px solid var(--border-soft);
+}
+
+.vs-btn-secondary:hover {
+    background: var(--light-bg);
+    border-color: var(--primary);
+    transform: translateY(-2px);
+}
+
+/* ================= ERROR MESSAGE ================= */
+.vs-error-message {
+    background: linear-gradient(135deg, #fef2f2, #fee2e2);
+    border: 1px solid #fecaca;
+    border-radius: var(--radius);
+    padding: 20px;
+    margin: 20px 40px 0;
+    color: #991b1b;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-left: 4px solid #ef4444;
+    animation: slideIn 0.3s ease;
+}
+
+.vs-error-message::before {
+    content: '⚠️';
+    font-size: 1.2rem;
+}
+
+/* ================= ANIMATIONS ================= */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.vs-panel {
+    animation: fadeIn 0.6s ease-out;
+}
+
+.vs-preview {
+    animation: slideIn 0.6s ease-out 0.2s both;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 1024px) {
+    .vs-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        padding: 32px;
+    }
+    
+    .vs-form {
+        padding-right: 0;
+        border-right: none;
+        border-bottom: 1px solid var(--border-soft);
+        padding-bottom: 40px;
+    }
+    
+    .vs-hero {
+        padding: 60px 24px 120px;
+    }
+    
+    .vs-hero h1 {
+        font-size: 2.2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .vs-hero {
+        padding: 50px 20px 100px;
+    }
+    
+    .vs-hero h1 {
+        font-size: 2rem;
+    }
+    
+    .vs-hero p {
+        font-size: 1rem;
+    }
+    
+    .vs-panel-wrap {
+        margin: -70px auto 0;
+        padding: 0 20px;
+    }
+    
+    .vs-grid {
+        padding: 24px;
+        gap: 32px;
+    }
+    
+    .vs-actions {
+        padding: 24px;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+    
+    .vs-btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .vs-guidelines {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .vs-hero {
+        padding: 40px 16px 90px;
+    }
+    
+    .vs-hero h1 {
+        font-size: 1.8rem;
+    }
+    
+    .vs-panel-wrap {
+        padding: 0 16px;
+    }
+    
+    .vs-grid {
+        padding: 20px;
+        gap: 28px;
+    }
+    
+    .vs-form input,
+    .vs-form textarea,
+    .vs-form select {
+        padding: 12px 14px;
+    }
+    
+    .vs-error-message {
+        margin: 16px 20px 0;
+        padding: 16px;
+    }
+}
+
+/* Loading State */
+.vs-loading {
+    position: relative;
+    pointer-events: none;
+}
+
+.vs-loading::after {
+    content: '';
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: translateY(-50%) rotate(360deg);
+    }
+}
+</style>
+
+<div class="vs-ui">
+
+    <!-- HERO SECTION -->
+    <section class="vs-hero">
+        <div class="vs-hero-inner">
+            <h1>{% if edit %}Edit Slider{% else %}Create Slider{% endif %}</h1>
+            <p>
+                {% if edit %}
+                Update your slider content and image to maintain a fresh, engaging website presence.
+                {% else %}
+                Create a compelling slider with high-quality visuals that captivate your audience.
+                {% endif %}
+            </p>
+        </div>
+    </section>
+
+    <!-- MAIN PANEL -->
+    <div class="vs-panel-wrap">
+        <div class="vs-panel">
+
+            <form method="post" enctype="multipart/form-data" id="sliderForm">
+                {% csrf_token %}
+
+                <div class="vs-grid">
+
+                    <!-- FORM SECTION -->
+                    <div class="vs-form">
+                        {{ form.as_p }}
+                    </div>
+
+                    <!-- PREVIEW SECTION -->
+                    <aside class="vs-preview">
+                        <div class="vs-preview-header">
+                            <h3 class="vs-preview-title">Live Preview</h3>
+                            <span class="vs-preview-badge">
+                                {% if edit and slider.image %}Current Image{% else %}Preview Area{% endif %}
+                            </span>
+                        </div>
+
+                        <!-- Preview Canvas - Shows Current Image or Placeholder -->
+                        <div class="vs-preview-canvas">
+                            {% if edit and slider.image %}
+                                <!-- Show Current Image in Preview Area -->
+                                <img src="{{ slider.image.url }}" 
+                                     alt="Current slider image"
+                                     id="vsPreviewImg"
+                                     style="display: block;">
+                            {% else %}
+                                <!-- Show Placeholder for New Slider -->
+                                <div class="vs-preview-placeholder" id="previewPlaceholder">
+                                    <div class="vs-preview-icon">
+                                        📷
+                                    </div>
+                                    <div>
+                                        <div style="font-weight: 600; margin-bottom: 4px;">Image Preview</div>
+                                        <div style="font-size: 0.9rem;">Upload image to see preview</div>
+                                    </div>
+                                </div>
+                                <img id="vsPreviewImg" style="display: none;">
+                            {% endif %}
+                        </div>
+
+                        <!-- Indicator for Current Image -->
+                        {% if edit and slider.image %}
+                        <div class="vs-current-indicator">
+                            Currently showing your existing slider image
+                        </div>
+                        {% endif %}
+
+                        <!-- Guidelines -->
+                        <div style="margin-top: 10px;">
+                            <div class="vs-preview-header">
+                                <h3 class="vs-preview-title">Guidelines</h3>
+                                <span class="vs-preview-badge">Best Practices</span>
+                            </div>
+                            <div class="vs-guidelines">
+  <div class="vs-guide-card">
+    <span><strong>Resolution:</strong> Use high-quality images</span>
+  </div>
+  <div class="vs-guide-card">
+    <span><strong>Sharpness:</strong> Avoid blurry or pixelated images</span>
+  </div>
+  <div class="vs-guide-card">
+    <span><strong>Format:</strong> JPG or PNG recommended</span>
+  </div>
+  
+  <div class="vs-guide-card">
+    <span><strong>Composition:</strong> Avoid busy or cluttered backgrounds</span>
+  </div>
+</div>
+
+                        </div>
+                    </aside>
+
+                </div>
+
+                <!-- ACTION BUTTONS -->
+                <div class="vs-actions">
+                    <a href="{% url 'slider_list' %}" class="vs-btn vs-btn-secondary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Cancel
+                    </a>
+                    <button type="submit" class="vs-btn vs-btn-primary" id="submitBtn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" stroke-linecap="round" stroke-linejoin="round"/>
+                            <polyline points="17 21 17 13 7 13 7 21" stroke-linecap="round" stroke-linejoin="round"/>
+                            <polyline points="7 3 7 8 15 8" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        {% if edit %}Update Slider{% else %}Create Slider{% endif %}
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+    <!-- ERROR MESSAGE -->
+    {% if error %}
+    <div class="vs-error-message">
+        {{ error }}
+    </div>
     {% endif %}
 
-    <button type="submit">
-        {% if edit %}Update{% else %}Create{% endif %}
-    </button>
-</form>
+</div>
 
-{% if error %}
-<pre style="color:red">{{ error }}</pre>
-{% endif %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    // Get elements
+    const fileInput = document.querySelector('input[type="file"]');
+    const previewImg = document.getElementById("vsPreviewImg");
+    const previewPlaceholder = document.getElementById("previewPlaceholder");
+    const submitBtn = document.getElementById("submitBtn");
+    
+    // Only add preview functionality if we're not in edit mode with existing image
+    {% if not edit or not slider.image %}
+    if (fileInput && previewImg && previewPlaceholder) {
+        fileInput.addEventListener("change", function () {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    // If editing with existing image, replace it
+                    // If new slider, show the uploaded image
+                    previewImg.src = e.target.result;
+                    previewImg.style.display = "block";
+                    if (previewPlaceholder) {
+                        previewPlaceholder.style.display = "none";
+                    }
+                    
+                    // Add fade-in effect
+                    previewImg.style.opacity = "0";
+                    previewImg.style.transition = "opacity 0.3s ease";
+                    setTimeout(() => {
+                        previewImg.style.opacity = "1";
+                    }, 10);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+    {% endif %}
+    
+    // If editing and has existing image, still allow new image preview
+    {% if edit and slider.image %}
+    if (fileInput && previewImg) {
+        fileInput.addEventListener("change", function () {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    previewImg.src = e.target.result;
+                    
+                    // Add fade-in effect for image change
+                    previewImg.style.opacity = "0";
+                    previewImg.style.transition = "opacity 0.3s ease";
+                    setTimeout(() => {
+                        previewImg.style.opacity = "1";
+                    }, 10);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+    {% endif %}
+    
+    // Form submission loading state
+    const form = document.getElementById('sliderForm');
+    if (form && submitBtn) {
+        form.addEventListener('submit', function() {
+            submitBtn.classList.add('vs-loading');
+            submitBtn.innerHTML = 'Processing...';
+            submitBtn.disabled = true;
+        });
+    }
+    
+    // Auto-resize textarea with reduced height
+    const textarea = document.querySelector('textarea');
+    if (textarea) {
+        textarea.addEventListener('input', function() {
+            this.style.height = 'auto';
+            const newHeight = Math.min(this.scrollHeight, 120);
+            this.style.height = newHeight + 'px';
+        });
+        
+        // Trigger initial resize
+        setTimeout(() => {
+            textarea.style.height = 'auto';
+            textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
+        }, 100);
+    }
+    
+    // Add focus effects to form inputs
+    const inputs = document.querySelectorAll('input, textarea, select');
+    inputs.forEach(input => {
+        input.addEventListener('focus', function() {
+            this.parentElement.style.transform = 'translateY(-2px)';
+        });
+        
+        input.addEventListener('blur', function() {
+            this.parentElement.style.transform = 'translateY(0)';
+        });
+    });
+});
+</script>
+
+{% endblock %}
