@@ -330,6 +330,64 @@ body {
   align-items: center;
   gap: 1.1rem;
 }
+/* ================= USER AVATAR ================= */
+.vp-user-menu {
+  position: relative;
+}
+
+.vp-user-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff2c84,rgb(255, 111, 135));
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* ================= DROPDOWN ================= */
+.vp-user-dropdown {
+  position: absolute;
+  top: 46px;
+  right: 0;
+  background: #ffffff;
+  border-radius: 12px;
+  min-width: 150px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-5px);
+  transition: all 0.25s ease;
+  z-index: 9999;
+}
+
+.vp-user-dropdown a {
+  display: block;
+  padding: 10px 14px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #0e7490;
+  text-decoration: none;
+  border-bottom: 1px solid #daf9ff;
+}
+
+.vp-user-dropdown a:hover {
+  background: #ecfeff;
+}
+
+/* ================= HOVER ACTION ================= */
+.vp-user-menu:hover .vp-user-dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
 
 
 </style>
@@ -347,38 +405,67 @@ body {
       </div>
 
       <!-- LOGIN / SIGNUP -->
-      <div class="vp-auth">
-{% if request.user.is_authenticated %}
-  <a href="{% url 'logout' %}" class="vp-login">
-    <i class="fa-solid fa-right-from-bracket"></i> Logout
-  </a>
-{% else %}
+     <div class="vp-auth">
+{% if not request.user.is_authenticated %}
   <a href="{% url 'login' %}" class="vp-login">
     <i class="fa-solid fa-right-to-bracket"></i> Login/Signup
   </a>
 {% endif %}
-      </div>
+
+{% if request.user.is_authenticated %}
+  <a href="{% url 'dashboard' %}" class="vp-login">Dashboard</a>
+{% endif %}
+</div>
+
 
       <!-- ICONS -->
-      <div class="vp-header-icons">
-        <div class="vp-icon-btn" title="Cart">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
-            <circle cx="9" cy="21" r="1"/>
-            <circle cx="20" cy="21" r="1"/>
-            <path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/>
-          </svg>
-        </div>
+    <!-- ICONS (ONLY WHEN LOGGED IN) -->
+{% if request.user.is_authenticated %}
+  <div class="vp-header-icons">
 
-        <div class="vp-icon-btn" title="Profile">
-        <a href="{% url 'profile' %}" class="vp-icon-btn" title="Profile">
-  <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
-    <circle cx="12" cy="8" r="4"/>
-    <path d="M4 20c2-4 14-4 16 0"/>
-  </svg>
-</a>
+    <!-- Cart -->
+    <a href="#" class="vp-icon-btn" title="Cart">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+        <circle cx="9" cy="21" r="1"/>
+        <circle cx="20" cy="21" r="1"/>
+        <path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/>
+      </svg>
+    </a>
 
-        </div>
-      </div>
+    <!-- Wishlist -->
+    <a href="#" class="vp-icon-btn" title="Wishlist">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+        <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.8z"/>
+      </svg>
+    </a>
+
+    <!-- Dashboard -->
+ 
+    <!-- Profile -->
+   <!-- USER AVATAR DROPDOWN -->
+<div class="vp-user-menu">
+  <div class="vp-user-avatar">
+    {{ request.user.email|slice:":1"|upper }}
+  </div>
+
+  <div class="vp-user-dropdown">
+  <a href="{% url 'profile' %}">
+    <i class="fa-solid fa-user"></i>
+    <span>Profile</span>
+  </a>
+
+  <a href="{% url 'logout' %}">
+    <i class="fa-solid fa-right-from-bracket"></i>
+    <span>Logout</span>
+  </a>
+</div>
+
+</div>
+
+
+  </div>
+{% endif %}
+
 
     </div>
   </div>
@@ -445,5 +532,12 @@ body {
 </div>
 
   </div>
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+  integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+/>
 
 </header>
