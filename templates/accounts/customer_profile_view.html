@@ -895,67 +895,42 @@
 </style>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Get all navigation items
-        const navItems = document.querySelectorAll('.nav-item[data-section]');
-        const contentSections = document.querySelectorAll('.content-section');
-        
-        // Function to switch sections
-        function switchSection(sectionId) {
-            // Hide all sections
-            contentSections.forEach(section => {
-                section.classList.remove('active');
-            });
-            
-            // Show selected section
-            const activeSection = document.getElementById(sectionId + '-section');
-            if (activeSection) {
-                activeSection.classList.add('active');
-            }
-            
-            // Update active nav item
-            navItems.forEach(item => {
-                item.classList.remove('active');
-            });
-            
-            // Set clicked nav as active
-            const activeNav = document.querySelector(`.nav-item[data-section="${sectionId}"]`);
-            if (activeNav) {
-                activeNav.classList.add('active');
-            }
-            
-            // Store active section in localStorage
-            localStorage.setItem('activeProfileSection', sectionId);
-        }
-        
-        // Add click event to all nav items
-        navItems.forEach(item => {
-            item.addEventListener('click', function(e) {
-                e.preventDefault();
-                const sectionId = this.getAttribute('data-section');
-                switchSection(sectionId);
-            });
+document.addEventListener('DOMContentLoaded', function() {
+    const navItems = document.querySelectorAll('.nav-item[data-section]');
+    const contentSections = document.querySelectorAll('.content-section');
+
+    function switchSection(sectionId) {
+        contentSections.forEach(section => {
+            section.classList.remove('active');
         });
-        
-        // Check for saved active section
-        const savedSection = localStorage.getItem('activeProfileSection');
-        if (savedSection && savedSection !== 'profile') {
-            switchSection(savedSection);
+
+        const activeSection = document.getElementById(sectionId + '-section');
+        if (activeSection) {
+            activeSection.classList.add('active');
         }
-        
-        // Handle edit profile link (no section switching)
-        const editProfileLink = document.querySelector('.edit-profile-link');
-        if (editProfileLink) {
-            editProfileLink.addEventListener('click', function(e) {
-                // Remove active class from all nav items
-                navItems.forEach(item => {
-                    item.classList.remove('active');
-                });
-                // Add active class to profile section
-                document.querySelector('.nav-item[data-section="profile"]').classList.add('active');
-            });
+
+        navItems.forEach(item => {
+            item.classList.remove('active');
+        });
+
+        const activeNav = document.querySelector(`.nav-item[data-section="${sectionId}"]`);
+        if (activeNav) {
+            activeNav.classList.add('active');
         }
+    }
+
+    // Always start with Profile
+    switchSection('profile');
+
+    navItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.preventDefault();
+            const sectionId = this.getAttribute('data-section');
+            switchSection(sectionId);
+        });
     });
+});
 </script>
+
 
 {% endblock %}

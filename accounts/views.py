@@ -187,7 +187,7 @@ class VerifyOTPView(APIView):
         refresh = RefreshToken.for_user(user)
         request.session['jwt'] = str(refresh.access_token)
 
-        return redirect('dashboard')
+        return redirect('home')
 
 class LoginView(APIView):
     def get(self, request):
@@ -224,7 +224,7 @@ class LoginView(APIView):
             )
 
         login(request, user)
-        return redirect('dashboard')
+        return redirect('home')
 
 class UpdateLocationAPIView(APIView):
     permission_classes = [IsAuthenticated]

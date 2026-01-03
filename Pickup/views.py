@@ -18,18 +18,27 @@ def faq(request):
 
 from .models import HomeSlider
 
+from .models import PromotionalBanner
+from .forms import PromotionalBannerForm
+from .serializers import PromotionalBannerSerializer
+
 def home(request):
-    if request.user.is_authenticated:
-        return redirect('dashboard')
+    # if request.user.is_authenticated:
+    #     return redirect('dashboard')
 
     sliders = (
         HomeSlider.objects
         .filter(is_active=True)
         .order_by('-created_at')[:5]  
     )
+    banners = (
+        PromotionalBanner.objects
+        .filter(is_active=True)
+        .order_by('-created_at')[:5] 
+    )
 
     return render(request, 'home.html', {
-        'sliders': sliders
+        'sliders': sliders, 'banners': banners
     })
 
 # home/views.py
@@ -161,3 +170,121 @@ class SliderDeleteView(APIView):
         slider.delete()
         messages.success(request, 'Slider deleted')
         return redirect('slider_list')
+
+
+class BannerListView(APIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        if not is_admin(request.user):
+            return redirect('dashboard')
+
+        banners = PromotionalBanner.objects.order_by('-created_at')
+        return render(request, 'home/banner_list.html', {'banners': banners})
+
+class BannerCreateView(APIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        if not (request.user.is_superuser or request.user.role == 'admin'):
+            return redirect('dashboard')
+
+        return render(
+            request,
+            'home/banner_form.html',
+            {'form': PromotionalBannerForm()}
+        )
+
+    def post(self, request):
+        if not (request.user.is_superuser or request.user.role == 'admin'):
+            return redirect('dashboard')
+
+        form = PromotionalBannerForm(request.POST, request.FILES)
+        serializer = PromotionalBannerSerializer(data=request.data)
+
+        if not serializer.is_valid():
+            return render(
+                request,
+                'home/banner_form.html',
+                {
+                    'form': form,
+                    'error': serializer.errors
+                }
+            )
+
+        serializer.save()
+        messages.success(request, 'Promotional banner created successfully')
+        return redirect('banner_list')
+
+class BannerUpdateView(APIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, pk):
+        if not (request.user.is_superuser or request.user.role == 'admin'):
+            return redirect('dashboard')
+
+        banner = get_object_or_404(PromotionalBanner, pk=pk)
+
+        return render(
+            request,
+            'home/banner_form.html',
+            {
+                'form': PromotionalBannerForm(instance=banner),
+                'banner': banner,
+                'edit': True
+            }
+        )
+
+    def post(self, request, pk):
+        if not (request.user.is_superuser or request.user.role == 'admin'):
+            return redirect('dashboard')
+
+        banner = get_object_or_404(PromotionalBanner, pk=pk)
+        
+        # Preserve old image
+        current_image = banner.image
+        
+        form = PromotionalBannerForm(request.POST, request.FILES, instance=banner)
+        serializer = PromotionalBannerSerializer(
+            banner,
+            data=request.data,
+            partial=True
+        )
+
+        if not serializer.is_valid():
+            return render(
+                request,
+                'home/banner_form.html',
+                {
+                    'form': form,
+                    'banner': banner,
+                    'edit': True,
+                    'error': serializer.errors
+                }
+            )
+
+        updated_banner = serializer.save()
+        
+        # Preserve image if not uploaded again
+        if 'image' not in request.FILES:
+            updated_banner.image = current_image
+            
+        updated_banner.save()
+        messages.success(request, 'Promotional banner updated successfully')
+        return redirect('banner_list')
+
+class BannerDeleteView(APIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, pk):
+        if not is_admin(request.user):
+            return redirect('dashboard')
+
+        banner = get_object_or_404(PromotionalBanner, pk=pk)
+        banner.delete()
+        messages.success(request, 'Promotional banner deleted')
+        return redirect('banner_list')

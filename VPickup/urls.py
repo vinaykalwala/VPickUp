@@ -3,8 +3,7 @@ from django.urls import path , include
 from django.conf import settings
 from django.conf.urls.static import static
 import Pickup.views as views
-from Pickup.views import SliderListView, SliderCreateView, SliderUpdateView, SliderDeleteView
-
+from Pickup.views import *
 urlpatterns = [
     path("admin/", admin.site.urls),
     path('', views.home, name='home'),
@@ -21,6 +20,11 @@ urlpatterns = [
     path('sliders/add/', SliderCreateView.as_view(), name='slider_create'),
     path('sliders/<int:pk>/edit/', SliderUpdateView.as_view(), name='slider_update'),
     path('sliders/<int:pk>/delete/', SliderDeleteView.as_view(), name='slider_delete'),
+
+    path('banners/', BannerListView.as_view(), name='banner_list'),
+    path('banners/add/', BannerCreateView.as_view(), name='banner_create'),
+    path('banners/<int:pk>/edit/', BannerUpdateView.as_view(), name='banner_update'),
+    path('banners/<int:pk>/delete/', BannerDeleteView.as_view(), name='banner_delete'),
 ]
 
 if settings.DEBUG:
