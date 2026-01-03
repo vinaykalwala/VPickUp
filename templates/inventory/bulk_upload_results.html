@@ -1,0 +1,448 @@
+<!-- templates/inventory/bulk_upload_results.html -->
+{% extends 'admin_base.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-10 offset-lg-1">
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="mb-0">
+                    <i class="fas fa-clipboard-check text-success"></i>
+                    Bulk Upload Results
+                </h2>
+                <div>
+                    <a href="{% url 'bulk_inventory_upload_complete' %}" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> New Upload
+                    </a>
+                    <a href="{% url 'inventory_list' %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-list"></i> View Inventory
+                    </a>
+                </div>
+            </div>
+
+            <!-- Summary Card -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-chart-bar"></i>
+                        Upload Summary
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-md-2">
+                            <div class="stat-card">
+                                <h3 class="text-primary">{{ results.total_rows|default:0 }}</h3>
+                                <p class="text-muted mb-0">Total Rows</p>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="stat-card">
+                                <h3 class="text-success">{{ results.stats.products_created|default:0 }}</h3>
+                                <p class="text-muted mb-0">Products Created</p>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="stat-card">
+                                <h3 class="text-info">{{ results.stats.variants_created|default:0 }}</h3>
+                                <p class="text-muted mb-0">Variants Created</p>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="stat-card">
+                                <h3 class="text-warning">{{ results.stats.images_uploaded|default:0 }}</h3>
+                                <p class="text-muted mb-0">Images Uploaded</p>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="stat-card">
+                                <h3 class="text-danger">{{ results.stats.categories_created|default:0 }}</h3>
+                                <p class="text-muted mb-0">Categories Created</p>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="stat-card">
+                                <h3 class="text-primary">{{ results.stats.subcategories_created|default:0 }}</h3>
+                                <p class="text-muted mb-0">Subcategories Created</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Created Items -->
+            {% if results.created_items.categories or results.created_items.products or results.created_items.variants %}
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-check-circle"></i>
+                        Successfully Created
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if results.created_items.categories %}
+                    <h6><i class="fas fa-folder text-primary"></i> Categories Created:</h6>
+                    <ul class="list-group mb-3">
+                        {% for category in results.created_items.categories %}
+                        <li class="list-group-item">
+                            <i class="fas fa-folder-open text-primary mr-2"></i>
+                            {{ category }}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                    
+                    {% if results.created_items.subcategories %}
+                    <h6><i class="fas fa-folder text-success"></i> Subcategories Created:</h6>
+                    <ul class="list-group mb-3">
+                        {% for subcategory in results.created_items.subcategories %}
+                        <li class="list-group-item">
+                            <i class="fas fa-folder-plus text-success mr-2"></i>
+                            {{ subcategory }}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                    
+                    {% if results.created_items.products %}
+                    <h6><i class="fas fa-box text-warning"></i> Products Created:</h6>
+                    <ul class="list-group mb-3">
+                        {% for product in results.created_items.products %}
+                        <li class="list-group-item list-group-item-success">
+                            <i class="fas fa-check text-success mr-2"></i>
+                            {{ product }}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                    
+                    {% if results.created_items.variants %}
+                    <h6><i class="fas fa-cube text-info"></i> Variants Created (first 10 shown):</h6>
+                    <ul class="list-group">
+                        {% for variant in results.created_items.variants|slice:":10" %}
+                        <li class="list-group-item">
+                            <i class="fas fa-cube text-info mr-2"></i>
+                            {{ variant }}
+                        </li>
+                        {% endfor %}
+                        {% if results.created_items.variants|length > 10 %}
+                        <li class="list-group-item text-center text-muted">
+                            <i class="fas fa-ellipsis-h"></i>
+                            ... and {{ results.created_items.variants|length|add:"-10" }} more variants
+                        </li>
+                        {% endif %}
+                    </ul>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Updated Items -->
+            {% if results.stats.products_updated or results.stats.variants_updated or results.stats.inventory_updated %}
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-warning text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-sync-alt"></i>
+                        Updated Items
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        {% if results.stats.products_updated %}
+                        <div class="col-md-4">
+                            <div class="stat-card bg-light">
+                                <h3 class="text-warning">{{ results.stats.products_updated|default:0 }}</h3>
+                                <p class="text-muted mb-0">Products Updated</p>
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% if results.stats.variants_updated %}
+                        <div class="col-md-4">
+                            <div class="stat-card bg-light">
+                                <h3 class="text-warning">{{ results.stats.variants_updated|default:0 }}</h3>
+                                <p class="text-muted mb-0">Variants Updated</p>
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% if results.stats.inventory_updated %}
+                        <div class="col-md-4">
+                            <div class="stat-card bg-light">
+                                <h3 class="text-warning">{{ results.stats.inventory_updated|default:0 }}</h3>
+                                <p class="text-muted mb-0">Inventory Updated</p>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Errors -->
+            {% if results.errors %}
+            <div class="card shadow-sm mb-4 border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Errors ({{ results.errors|length }})
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm table-bordered">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th width="80">Row</th>
+                                    <th>Error</th>
+                                    <th>Details</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for error in results.errors %}
+                                <tr class="table-danger">
+                                    <td class="font-weight-bold">
+                                        {% if error.row %}
+                                            #{{ error.row }}
+                                        {% else %}
+                                            N/A
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <i class="fas fa-times-circle text-danger mr-2"></i>
+                                        {{ error.error|truncatechars:100 }}
+                                    </td>
+                                    <td>
+                                        <small class="text-muted">
+                                            {% if error.product %}
+                                                Product: {{ error.product }}
+                                            {% elif error.data %}
+                                                Data: {{ error.data|truncatechars:50 }}
+                                            {% endif %}
+                                        </small>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Warnings -->
+            {% if results.warnings %}
+            <div class="card shadow-sm mb-4 border-warning">
+                <div class="card-header bg-warning text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-exclamation-circle"></i>
+                        Warnings ({{ results.warnings|length }})
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm table-bordered">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th width="80">Row</th>
+                                    <th>Warning</th>
+                                    <th>Type</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for warning in results.warnings %}
+                                <tr class="table-warning">
+                                    <td class="font-weight-bold">
+                                        {% if warning.row %}
+                                            #{{ warning.row }}
+                                        {% else %}
+                                            N/A
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <i class="fas fa-exclamation-triangle text-warning mr-2"></i>
+                                        {{ warning.warning|truncatechars:150 }}
+                                    </td>
+                                    <td>
+                                        {% if warning.type %}
+                                            {{ warning.type|title }}
+                                        {% elif warning.variant %}
+                                            Variant: {{ warning.variant }}
+                                        {% else %}
+                                            General
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Missing Images -->
+            {% if results.missing_images %}
+            <div class="card shadow-sm mb-4 border-info">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-image"></i>
+                        Missing Images ({{ results.missing_images|length }})
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm table-bordered">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th width="80">Row</th>
+                                    <th>Image Path</th>
+                                    <th>Type</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for image in results.missing_images %}
+                                <tr>
+                                    <td class="font-weight-bold">#{{ image.row|default:"N/A" }}</td>
+                                    <td>
+                                        <i class="fas fa-file-image text-info mr-2"></i>
+                                        {{ image.path|truncatechars:80 }}
+                                    </td>
+                                    <td>{{ image.type|title|default:"Unknown" }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Detailed Statistics -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-chart-pie"></i>
+                        Detailed Statistics
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Creation Statistics:</h6>
+                            <ul class="list-group">
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Categories Created
+                                    <span class="badge badge-primary badge-pill">{{ results.stats.categories_created|default:0 }}</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Subcategories Created
+                                    <span class="badge badge-success badge-pill">{{ results.stats.subcategories_created|default:0 }}</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Products Created
+                                    <span class="badge badge-warning badge-pill">{{ results.stats.products_created|default:0 }}</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Variants Created
+                                    <span class="badge badge-info badge-pill">{{ results.stats.variants_created|default:0 }}</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Inventory Created
+                                    <span class="badge badge-secondary badge-pill">{{ results.stats.inventory_created|default:0 }}</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Update Statistics:</h6>
+                            <ul class="list-group">
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Products Updated
+                                    <span class="badge badge-warning badge-pill">{{ results.stats.products_updated|default:0 }}</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Variants Updated
+                                    <span class="badge badge-warning badge-pill">{{ results.stats.variants_updated|default:0 }}</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Inventory Updated
+                                    <span class="badge badge-warning badge-pill">{{ results.stats.inventory_updated|default:0 }}</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Images Uploaded
+                                    <span class="badge badge-success badge-pill">{{ results.stats.images_uploaded|default:0 }}</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Total Process Time
+                                    <span class="badge badge-dark badge-pill">{{ results.total_rows|default:0 }} rows</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="text-center mt-4">
+                <a href="{% url 'bulk_inventory_upload_complete' %}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-upload"></i>
+                    Upload Another File
+                </a>
+                <a href="{% url 'inventory_list' %}" class="btn btn-success btn-lg ml-2">
+                    <i class="fas fa-eye"></i>
+                    View All Products
+                </a>
+                <a href="{% url 'download_complete_template' %}" class="btn btn-outline-primary btn-lg ml-2">
+                    <i class="fas fa-download"></i>
+                    Download Template Again
+                </a>
+                {% if results.errors %}
+                <button class="btn btn-danger btn-lg ml-2" onclick="exportErrors()">
+                    <i class="fas fa-file-export"></i>
+                    Export Errors
+                </button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function exportErrors() {
+    // This function would export errors to CSV
+    alert('Error export feature would be implemented here');
+}
+</script>
+
+<style>
+.stat-card {
+    padding: 15px;
+    border-radius: 8px;
+    background: #f8f9fa;
+    transition: transform 0.3s;
+    border: 1px solid #dee2e6;
+}
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+.stat-card h3 {
+    font-weight: bold;
+    margin-bottom: 5px;
+    font-size: 1.8rem;
+}
+.list-group-item-success {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+.table-danger td {
+    background-color: #f8d7da;
+}
+.table-warning td {
+    background-color: #fff3cd;
+}
+.badge-pill {
+    font-size: 0.9rem;
+    padding: 0.5em 0.8em;
+}
+</style>
+{% endblock %}

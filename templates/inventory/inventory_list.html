@@ -361,8 +361,6 @@
         text-decoration: none;
         position: relative;
         overflow: hidden;
-        margin-right: 64px;
-        /* ✅ pull left */
     }
 
     .premium-add-btn::before {
@@ -1445,7 +1443,7 @@
     @media (max-width: 768px) {
         .header-search-inline {
             width: 100%;
-            flex: 1 1 100%;
+            flex: 1 1 auto;
             order: 10;
             /* search goes last */
             margin-top: 10px;
@@ -1463,6 +1461,264 @@
     @media (max-width: 768px) {
         .header-search-inline input {
             font-size: 1rem;
+        }
+    }
+
+    /* ==================================================
+   🔧 FINAL RESPONSIVE SAFETY PATCH
+   (ADD AT END – DO NOT REMOVE EXISTING CSS)
+================================================== */
+
+    /* ---------- FIX HEADER OVERFLOW (TABLETS) ---------- */
+    @media (max-width: 1024px) {
+        .header-stats {
+            width: 100%;
+            gap: 10px;
+        }
+
+        .header-search-inline {
+            flex: 1 1 100%;
+            max-width: 100%;
+        }
+    }
+
+    /* ---------- SMALL TABLETS & LARGE PHONES ---------- */
+    @media (max-width: 768px) {
+        .title-section {
+            width: 100%;
+            gap: 16px;
+        }
+
+        .title-icon-container {
+            align-self: flex-start;
+        }
+
+        .title-text h1 {
+            line-height: 1.2;
+        }
+
+        .premium-header {
+            padding: 16px;
+        }
+    }
+
+    /* ---------- MOBILE OPTIMIZATION ---------- */
+    @media (max-width: 480px) {
+
+        /* Safer card width */
+        .premium-inventory-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .luxury-card {
+            border-radius: 18px;
+        }
+
+        /* Header icon shrink */
+        .title-icon-bg {
+            width: 52px;
+            height: 52px;
+            font-size: 1.3rem;
+        }
+
+        /* Stats chips wrap properly */
+        .header-stats {
+            flex-wrap: wrap;
+        }
+
+        /* Search input font */
+        .header-search-inline input {
+            font-size: 0.95rem;
+        }
+    }
+
+    /* ---------- VERY SMALL PHONES (320px) ---------- */
+    @media (max-width: 360px) {
+
+        .luxury-dashboard {
+            padding: 10px;
+        }
+
+        .title-text h1 {
+            font-size: 1.6rem;
+        }
+
+        .title-text p {
+            font-size: 0.95rem;
+        }
+
+        .stat-chip {
+            font-size: 0.7rem;
+            padding: 5px 12px;
+        }
+
+        .action-btn-premium {
+            font-size: 0.85rem;
+            padding: 12px;
+        }
+    }
+
+    /* ---------- ULTRA LARGE SCREENS SAFETY ---------- */
+    @media (min-width: 1800px) {
+        .premium-inventory-grid {
+            grid-template-columns: repeat(auto-fill, minmax(480px, 1fr));
+        }
+    }
+
+    /* =====================================================
+   🔥 FIX ADD INVENTORY BUTTON (MID SCREEN BUG)
+   Works for 900px – 1200px (your screenshots)
+===================================================== */
+
+    /* ---------- MID SCREENS (900px – 1200px) ---------- */
+    @media (max-width: 1200px) {
+
+        .header-main {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 24px;
+        }
+
+        /* Prevent title block from stealing width */
+        .title-section {
+            max-width: 100%;
+        }
+
+        /* 🔑 BUTTON FIX */
+        .premium-add-btn {
+
+            justify-content: center;
+            width: calc(100% - 48px);
+            /* 🔑 side gaps */
+            margin: 0 auto;
+            /* center */
+            border-radius: 20px;
+            align-self: center;
+        }
+    }
+
+    /* ---------- TABLETS (≤1024px) ---------- */
+    @media (max-width: 1024px) {
+
+        .premium-add-btn {
+            width: 100%;
+            text-align: center;
+            border-radius: 18px;
+        }
+    }
+
+    /* ---------- MOBILE (already good, just reinforce) ---------- */
+    @media (max-width: 768px) {
+
+        .premium-add-btn {
+            width: calc(100% - 32px);
+            /* smaller gap */
+            margin: 0 auto;
+            justify-content: center;
+            margin-top: 8px;
+        }
+    }
+
+    /* =====================================================
+   ✅ DECREASE ADD INVENTORY BUTTON SIZE (MID DESKTOP)
+===================================================== */
+
+    /* ---------- MID DESKTOP (1000px – 1300px) ---------- */
+    @media (min-width: 1000px) and (max-width: 1300px) {
+
+        .premium-add-btn {
+            width: auto;
+            /* ❌ not full width */
+            padding: 12px 26px;
+            /* 🔑 smaller size */
+            font-size: 0.95rem;
+            border-radius: 16px;
+
+            margin: 0 auto;
+            /* center align */
+            display: inline-flex;
+            justify-content: center;
+            white-space: nowrap;
+            align-items: center;
+        }
+    }
+
+    /* ---------- TABLET ---------- */
+    @media (max-width: 999px) {
+
+        .premium-add-btn {
+            width: fit-content;
+            padding: 14px 28px;
+            margin: 0 auto;
+        }
+    }
+
+    /* ---------- MOBILE ---------- */
+    @media (max-width: 480px) {
+
+        .premium-add-btn {
+            width: 100%;
+            padding: 16px;
+            border-radius: 16px;
+        }
+    }
+
+    /* =====================================================
+   ✅ DESKTOP-STYLE BUTTON (NO WRAP TILL 1000px)
+===================================================== */
+
+    /* ---------- KEEP DESKTOP VIEW (>=1000px) ---------- */
+    @media (min-width: 1000px) {
+
+        .header-main {
+            flex-wrap: nowrap;
+            /* 🔑 never wrap */
+            align-items: center;
+        }
+
+        .title-section {
+            flex: 1 1 auto;
+            /* 🔑 shrink allowed */
+            min-width: 0;
+            /* 🔑 important for flex */
+        }
+
+        .premium-add-btn {
+            flex-shrink: 0;
+            /* 🔑 never shrink */
+            margin-left: 24px;
+            white-space: nowrap;
+        }
+    }
+
+    /* ---------- STACK ONLY ON SMALL SCREENS ---------- */
+    @media (max-width: 999px) {
+
+        .header-main {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 20px;
+        }
+
+        .premium-add-btn {
+            width: 100%;
+            justify-content: center;
+            margin-left: 0;
+        }
+    }
+
+
+    @media (min-width: 900px) and (max-width: 1300px) {
+
+        .premium-add-btn {
+            margin-left: auto !important;
+            margin-right: auto !important;
+            /* 🔑 kill margin-right */
+            width: auto;
+            padding: 12px 26px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
         }
     }
 </style>

@@ -1,216 +1,204 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Pickup Grocery & Food App</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% extends 'base.html' %}
 
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, Helvetica, sans-serif;
-            background: #f8f9fa;
-            color: #333;
-        }
+{% block content %}
 
-        header {
-            background: #0d6efd;
-            color: white;
-            padding: 20px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+<style>
+/* ===== Overall spacing ===== */
+.dashboard-wrapper {
+    padding: 30px 20px;
+    max-width: 1500px;
+    margin: auto;
+}
 
-        header a {
-            color: white;
-            margin-left: 15px;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .hero {
-            padding: 80px 20px;
-            text-align: center;
-            background: linear-gradient(135deg, #0d6efd, #4dabf7);
-            color: white;
-        }
-
-        .hero h1 {
-            font-size: 42px;
-            margin-bottom: 15px;
-        }
-
-        .hero p {
-            font-size: 18px;
-            margin-bottom: 30px;
-        }
-
-        .hero button {
-            padding: 12px 24px;
-            font-size: 16px;
-            margin: 8px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-
-        .primary-btn {
-            background: white;
-            color: #0d6efd;
-            font-weight: bold;
-        }
-
-        .secondary-btn {
-            background: transparent;
-            border: 2px solid white;
-            color: white;
-        }
-
-        .section {
-            padding: 60px 20px;
-            max-width: 1100px;
-            margin: auto;
-        }
-
-        .section h2 {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 25px;
-        }
-
-        .feature-card {
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            text-align: center;
-        }
-
-        .feature-card h3 {
-            margin-bottom: 10px;
-        }
-
-        .how-it-works {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 25px;
-            text-align: center;
-        }
-
-        .cta-section {
-            background: #fff;
-            padding: 60px 20px;
-            text-align: center;
-        }
-
-        footer {
-            background: #212529;
-            color: #adb5bd;
-            text-align: center;
-            padding: 20px;
-            font-size: 14px;
-        }
-
-        .slider-container {
+/* ===== Slider Card ===== */
+.slider-container {
     position: relative;
     width: 100%;
     height: 420px;
+    border-radius: 18px;
     overflow: hidden;
+    background: #000;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.25);
 }
 
+/* ===== Slides ===== */
 .slide {
-    display: none;
     position: absolute;
     inset: 0;
+    opacity: 0;
+    transform: scale(1.03);
+    transition: opacity 1s ease, transform 1s ease;
 }
 
 .slide.active {
-    display: block;
+    opacity: 1;
+    transform: scale(1);
+    z-index: 1;
 }
 
 .slide img {
     width: 100%;
-    height: 420px;
+    height: 100%;
     object-fit: cover;
 }
 
+/* ===== Dark Gradient Overlay ===== */
+.slide::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to top,
+        rgba(0,0,0,0.65),
+        rgba(0,0,0,0.2),
+        rgba(0,0,0,0)
+    );
+}
+
+/* ===== Text Content ===== */
 .slide-content {
     position: absolute;
     bottom: 40px;
-    left: 60px;
-    color: white;
-    max-width: 500px;
+    left: 40px;
+    right: 40px;
+    color: #fff;
+    max-width: 520px;
+    z-index: 2;
 }
 
 .slide-content h2 {
-    font-size: 32px;
+    font-size: 34px;
+    font-weight: 700;
     margin-bottom: 10px;
+    line-height: 1.2;
 }
 
 .slide-content p {
     font-size: 16px;
+    opacity: 0.95;
 }
 
+/* ===== Navigation Buttons ===== */
 .nav {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background: rgba(0,0,0,0.4);
-    color: white;
+    background: rgba(255,255,255,0.25);
+    backdrop-filter: blur(6px);
+    color: #fff;
     border: none;
-    font-size: 30px;
-    padding: 8px 14px;
+    font-size: 26px;
+    padding: 10px 16px;
+    border-radius: 50%;
     cursor: pointer;
-    z-index: 10;
+    z-index: 5;
+    transition: background 0.3s;
 }
 
-.nav.prev { left: 15px; }
-.nav.next { right: 15px; }
+.nav:hover {
+    background: rgba(255,255,255,0.4);
+}
 
-@media(max-width:768px){
-    .slide-content{
-        left:20px;
-        bottom:20px;
+.nav.prev { left: 18px; }
+.nav.next { right: 18px; }
+
+/* ===== Promotional Banners ===== */
+.banner-card {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+    height: 100%;
+}
+
+.banner-card:hover {
+    transform: translateY(-5px);
+}
+
+.banner-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.banner-content {
+    padding: 15px;
+    background: #fff;
+}
+
+.banner-content h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.banner-content p {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 0;
+}
+
+/* ===== Cards ===== */
+.card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+.card-img-top {
+    border-bottom: 1px solid #eee;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 992px) {
+    .slider-container {
+        height: 360px;
     }
-    .slide-content h2{
-        font-size:22px;
+    .slide-content h2 {
+        font-size: 26px;
+    }
+    .banner-card img {
+        height: 150px;
     }
 }
 
-    </style>
-</head>
-<body>
+@media (max-width: 576px) {
+    .dashboard-wrapper {
+        padding: 20px 12px;
+    }
+    .slider-container {
+        height: 280px;
+        border-radius: 14px;
+    }
+    .slide-content {
+        left: 20px;
+        right: 20px;
+        bottom: 20px;
+    }
+    .slide-content h2 {
+        font-size: 20px;
+    }
+    .slide-content p {
+        font-size: 14px;
+    }
+    .banner-card img {
+        height: 120px;
+    }
+}
+</style>
 
-<!-- HEADER -->
-<header>
-    <h2>Pickup</h2>
-    <div>
-        <a href="{% url 'login' %}">Login</a>
-        <a href="{% url 'customer_register' %}">Register</a>
-    </div>
-</header>
+<div class="dashboard-wrapper">
 
-<!-- HERO SECTION -->
-<section class="hero">
-    <h1>Order Online. Pick Up in Minutes.</h1>
-    <p>Groceries & food from nearby verified stores — no delivery, no waiting.</p>
-   
-
-
-    <button class="primary-btn">Use My Location</button>
-    <a href="{% url 'login' %}">
-        <button class="secondary-btn">Explore Stores</button>
-    </a>
-</section>
- {% if sliders %}
-<div class="slider-container">
-    <div class="slider">
+    <!-- Slider Section -->
+    {% if sliders %}
+    <div class="slider-container">
         {% for s in sliders %}
         <div class="slide {% if forloop.first %}active{% endif %}">
             <img src="{{ s.image.url }}" alt="{{ s.title }}">
@@ -224,79 +212,378 @@
             </div>
         </div>
         {% endfor %}
-    </div>
 
-    <button class="nav prev" onclick="moveSlide(-1)">‹</button>
-    <button class="nav next" onclick="moveSlide(1)">›</button>
+        <button class="nav prev" onclick="moveSlide(-1)">‹</button>
+        <button class="nav next" onclick="moveSlide(1)">›</button>
+    </div>
+    {% endif %}
+
+    <!-- Promotional Banners -->
+    {% if banners %}
+    <div class="promotional-banners mt-5">
+        <div class="row">
+            {% for banner in banners %}
+            <div class="col-md-4 mb-4">
+                <div class="banner-card">
+                    <img src="{{ banner.image.url }}" alt="{{ banner.title }}" class="img-fluid">
+                    {% if banner.title %}
+                    <div class="banner-content">
+                        <h3>{{ banner.title }}</h3>
+                        {% if banner.description %}
+                        <p>{{ banner.description }}</p>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- SECTION 1: Featured Products (Available in only ONE store) -->
+    {% if featured_products %}
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3>Featured Products <span class="badge bg-warning">Exclusive</span></h3>
+                <a href="#" class="btn btn-outline-primary btn-sm">View All</a>
+            </div>
+            <div class="row">
+                {% for product in featured_products %}
+                <div class="col-md-2 col-4 mb-3">
+                    <div class="card h-100">
+                        {% if product.image %}
+                        <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" 
+                             style="height: 120px; object-fit: cover;">
+                        {% else %}
+                        <div class="card-img-top bg-light d-flex align-items-center justify-content-center" 
+                             style="height: 120px;">
+                            <i class="fas fa-box text-muted fa-2x"></i>
+                        </div>
+                        {% endif %}
+                        <div class="card-body p-2">
+                            <h6 class="card-title mb-1 small">{{ product.name|truncatechars:30 }}</h6>
+                            <p class="card-text small text-muted mb-1">Available at: {{ product.store.name }}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <a href="{% url 'home' %}" class="btn btn-primary btn-sm">View</a>
+                                <span class="badge bg-info">Exclusive</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- SECTION 2: Best Price Products -->
+    {% if best_price_products %}
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3>Best Prices <span class="badge bg-success">Great Deals</span></h3>
+                <a href="#" class="btn btn-outline-primary btn-sm">View All</a>
+            </div>
+            <div class="row">
+                {% for product in best_price_products %}
+                <div class="col-md-2 col-4 mb-3">
+                    <div class="card h-100">
+                        {% if product.image %}
+                        <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" 
+                             style="height: 120px; object-fit: cover;">
+                        {% else %}
+                        <div class="card-img-top bg-light d-flex align-items-center justify-content-center" 
+                             style="height: 120px;">
+                            <i class="fas fa-box text-muted fa-2x"></i>
+                        </div>
+                        {% endif %}
+                        <div class="card-body p-2">
+                            <h6 class="card-title mb-1 small">{{ product.name|truncatechars:30 }}</h6>
+                            <p class="card-text small text-success fw-bold mb-1">
+                                From ₹{{ product.min_price|floatformat:2 }}
+                            </p>
+                            <a href="{% url 'home' %}" class="btn btn-success btn-sm w-100">Buy Now</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- SECTION 3: New Arrivals -->
+    {% if new_arrivals %}
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3>New Arrivals <span class="badge bg-danger">New</span></h3>
+                <a href="#" class="btn btn-outline-primary btn-sm">View All</a>
+            </div>
+            <div class="row">
+                {% for product in new_arrivals %}
+                <div class="col-md-2 col-4 mb-3">
+                    <div class="card h-100">
+                        {% if product.image %}
+                        <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" 
+                             style="height: 120px; object-fit: cover;">
+                        {% else %}
+                        <div class="card-img-top bg-light d-flex align-items-center justify-content-center" 
+                             style="height: 120px;">
+                            <i class="fas fa-box text-muted fa-2x"></i>
+                        </div>
+                        {% endif %}
+                        <div class="card-body p-2">
+                            <h6 class="card-title mb-1 small">{{ product.name|truncatechars:30 }}</h6>
+                            <span class="badge bg-danger mb-2">NEW</span>
+                            <a href="{% url 'home'%}" class="btn btn-outline-primary btn-sm w-100">View</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Categories Section -->
+    {% if categories %}
+    <div class="row mb-5">
+        <div class="col-12">
+            <h3 class="mb-3">Shop By Category</h3>
+            <div class="row">
+                {% for category in categories %}
+                <div class="col-md-2 col-4 mb-3">
+                    <a href="{% url 'home' %}" class="text-decoration-none">
+                        <div class="text-center">
+                            {% if category.image %}
+                            <img src="{{ category.image.url }}" class="rounded-circle mb-2" alt="{{ category.name }}" 
+                                 style="width: 80px; height: 80px; object-fit: cover;">
+                            {% else %}
+                            <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mb-2 mx-auto" 
+                                 style="width: 80px; height: 80px;">
+                                <i class="fas fa-folder text-muted fa-2x"></i>
+                            </div>
+                            {% endif %}
+                            <p class="mb-0 text-dark fw-bold">{{ category.name }}</p>
+                            <small class="text-muted">{{ category.product_count }} products</small>
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- SECTION 4: Products from Stores -->
+    {% if store_products %}
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3>Available Products <span class="badge bg-info">In Stock</span></h3>
+                <a href="#" class="btn btn-outline-primary btn-sm">View All</a>
+            </div>
+            <div class="row">
+                {% for product in store_products %}
+                <div class="col-md-2 col-4 mb-3">
+                    <div class="card h-100">
+                        {% if product.image %}
+                        <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" 
+                             style="height: 120px; object-fit: cover;">
+                        {% else %}
+                        <div class="card-img-top bg-light d-flex align-items-center justify-content-center" 
+                             style="height: 120px;">
+                            <i class="fas fa-box text-muted fa-2x"></i>
+                        </div>
+                        {% endif %}
+                        <div class="card-body p-2">
+                            <h6 class="card-title mb-1 small">{{ product.name|truncatechars:30 }}</h6>
+                            <p class="card-text small text-muted mb-1">{{ product.store.name }}</p>
+                            <a href="{% url 'home' %}" class="btn btn-info btn-sm w-100">Available</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Stores Section -->
+    {% if stores %}
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3>Verified Stores <span class="badge bg-primary">{{ stores|length }} stores</span></h3>
+                <a href="#" class="btn btn-outline-primary btn-sm">View All Stores</a>
+            </div>
+            <div class="row">
+                {% for store in stores %}
+                <div class="col-md-2 col-4 mb-3">
+                    <a href="#" class="text-decoration-none">
+                        <div class="card text-center h-100">
+                            {% if store.store_image %}
+                            <img src="{{ store.store_image.url }}" class="card-img-top rounded-circle mt-3 mx-auto" 
+                                 alt="{{ store.name }}" style="width: 70px; height: 70px; object-fit: cover;">
+                            {% else %}
+                            <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mt-3 mx-auto" 
+                                 style="width: 70px; height: 70px;">
+                                <i class="fas fa-store text-muted fa-2x"></i>
+                            </div>
+                            {% endif %}
+                            <div class="card-body p-2">
+                                <h6 class="card-title mb-1">{{ store.name|truncatechars:20 }}</h6>
+                                <p class="card-text small text-muted mb-1">
+                                    <i class="fas fa-map-marker-alt"></i> {{ store.city }}
+                                </p>
+                                <span class="badge bg-success">Verified</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- SECTION 5: Top Products -->
+    {% if top_products %}
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3>Most Popular <span class="badge bg-warning">Top Selling</span></h3>
+                <a href="#" class="btn btn-outline-primary btn-sm">View All</a>
+            </div>
+            <div class="row">
+                {% for product in top_products %}
+                <div class="col-md-2 col-4 mb-3">
+                    <div class="card h-100">
+                        {% if product.image %}
+                        <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" 
+                             style="height: 120px; object-fit: cover;">
+                        {% else %}
+                        <div class="card-img-top bg-light d-flex align-items-center justify-content-center" 
+                             style="height: 120px;">
+                            <i class="fas fa-box text-muted fa-2x"></i>
+                        </div>
+                        {% endif %}
+                        <div class="card-body p-2">
+                            <h6 class="card-title mb-1 small">{{ product.name|truncatechars:30 }}</h6>
+                            <span class="badge bg-warning mb-2">Bestseller</span>
+                            <a href="{% url 'home' %}" class="btn btn-warning btn-sm w-100">View</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- SECTION 6: Store Exclusive Products -->
+    {% if store_exclusive %}
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3>Store Highlights</h3>
+                <a href="#" class="btn btn-outline-primary btn-sm">All Stores</a>
+            </div>
+            <div class="row">
+                {% for item in store_exclusive %}
+                <div class="col-md-2 col-4 mb-3">
+                    <div class="card h-100">
+                        {% if item.product.image %}
+                        <img src="{{ item.product.image.url }}" class="card-img-top" alt="{{ item.product.name }}" 
+                             style="height: 100px; object-fit: cover;">
+                        {% else %}
+                        <div class="card-img-top bg-light d-flex align-items-center justify-content-center" 
+                             style="height: 100px;">
+                            <i class="fas fa-box text-muted fa-2x"></i>
+                        </div>
+                        {% endif %}
+                        <div class="card-body p-2">
+                            <h6 class="card-title mb-1 small">{{ item.product.name|truncatechars:25 }}</h6>
+                            <p class="card-text small text-muted mb-1">
+                                <i class="fas fa-store"></i> {{ item.store.name|truncatechars:15 }}
+                            </p>
+                            <a href="{% url 'home' %}" class="btn btn-outline-info btn-sm w-100">View Product</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- SECTION 7: Products by Category -->
+    {% if products_by_category %}
+    <div class="row mb-5">
+        <div class="col-12">
+            <h3 class="mb-3">Featured by Category</h3>
+            <div class="row">
+                {% for item in products_by_category %}
+                <div class="col-md-2 col-4 mb-3">
+                    <div class="card h-100">
+                        {% if item.product.image %}
+                        <img src="{{ item.product.image.url }}" class="card-img-top" alt="{{ item.product.name }}" 
+                             style="height: 100px; object-fit: cover;">
+                        {% else %}
+                        <div class="card-img-top bg-light d-flex align-items-center justify-content-center" 
+                             style="height: 100px;">
+                            <i class="fas fa-box text-muted fa-2x"></i>
+                        </div>
+                        {% endif %}
+                        <div class="card-body p-2">
+                            <h6 class="card-title mb-1 small">{{ item.product.name|truncatechars:25 }}</h6>
+                            <span class="badge bg-secondary mb-2">{{ item.category.name }}</span>
+                            <a href="{% url 'home' %}" class="btn btn-outline-secondary btn-sm w-100">View</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Subcategories Section -->
+    {% if subcategories %}
+    <div class="row mb-5">
+        <div class="col-12">
+            <h3 class="mb-3">Popular Subcategories</h3>
+            <div class="row">
+                {% for subcategory in subcategories %}
+                <div class="col-md-2 col-4 mb-3">
+                    <a href="{% url 'home' %}" class="text-decoration-none">
+                        <div class="text-center">
+                            {% if subcategory.image %}
+                            <img src="{{ subcategory.image.url }}" class="rounded mb-2" alt="{{ subcategory.name }}" 
+                                 style="width: 80px; height: 80px; object-fit: cover;">
+                            {% else %}
+                            <div class="rounded bg-light d-flex align-items-center justify-content-center mb-2 mx-auto" 
+                                 style="width: 80px; height: 80px;">
+                                <i class="fas fa-tags text-muted fa-2x"></i>
+                            </div>
+                            {% endif %}
+                            <p class="mb-0 text-dark">{{ subcategory.name|truncatechars:15 }}</p>
+                            <small class="text-muted">{{ subcategory.product_count }} products</small>
+                            <small class="text-muted d-block">{{ subcategory.category_name }}</small>
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
 </div>
-{% endif %}
-<!-- FEATURES -->
-<section class="section">
-    <h2>Why Choose Pickup?</h2>
 
-    <div class="features">
-        <div class="feature-card">
-            <h3>⚡ Instant Pickup</h3>
-            <p>Get your order ready in 10–15 minutes.</p>
-        </div>
-
-        <div class="feature-card">
-            <h3>🏪 Verified Stores</h3>
-            <p>Only trusted local stores onboarded.</p>
-        </div>
-
-        <div class="feature-card">
-            <h3>📦 Real-time Inventory</h3>
-            <p>Order only what’s available near you.</p>
-        </div>
-
-        <div class="feature-card">
-            <h3>📍 Location Based</h3>
-            <p>Discover stores around your location.</p>
-        </div>
-    </div>
-</section>
-
-<!-- HOW IT WORKS -->
-<section class="section">
-    <h2>How It Works</h2>
-
-    <div class="how-it-works">
-        <div>
-            <h3>1️⃣ Find Nearby Stores</h3>
-            <p>Enable location and discover stores near you.</p>
-        </div>
-
-        <div>
-            <h3>2️⃣ Place Order</h3>
-            <p>Select items with real-time availability.</p>
-        </div>
-
-        <div>
-            <h3>3️⃣ Pick Up</h3>
-            <p>Collect your order instantly from the store.</p>
-        </div>
-    </div>
-</section>
-
-<!-- CTA -->
-<section class="cta-section">
-    <h2>Get Started Today</h2>
-    <p>Are you a customer or a store owner?</p>
-
-    <a href="{% url 'customer_register' %}">
-        <button class="primary-btn">I’m a Customer</button>
-    </a>
-
-    <a href="{% url 'seller_register' %}">
-        <button class="secondary-btn">I’m a Store Owner</button>
-    </a>
-</section>
-
-<!-- FOOTER -->
-<footer>
-    © {{ year|default:2025 }} Pickup Grocery & Food App. All rights reserved.
-</footer>
 <script>
 let slides = document.querySelectorAll('.slide');
 let index = 0;
@@ -316,6 +603,4 @@ setInterval(() => {
 }, 5000);
 </script>
 
-
-</body>
-</html>
+{% endblock %}

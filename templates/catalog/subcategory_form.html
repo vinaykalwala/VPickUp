@@ -122,13 +122,32 @@ body {
         radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
 }
 
-.header-content {
+.header-content{
     position: relative;
     z-index: 2;
     display: flex;
     align-items: center;
+    justify-content: space-between; /* 🔥 THIS IS KEY */
     gap: 1.5rem;
 }
+
+@media (max-width: 768px) {
+    .header-content{
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .header-actions{
+        width: 100%;
+        margin-top: 1rem;
+    }
+
+    .back-button{
+        width: 100%;
+        justify-content: center;
+    }
+}
+
 
 .header-icon {
     width: 3.5rem;
@@ -185,6 +204,39 @@ body {
     }
 }
 
+.header-left{
+    display:flex;
+    align-items:center;
+    gap:18px;
+}
+
+/* Back button */
+.back-button{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    padding:12px 18px;
+    background:rgba(255,255,255,0.18);
+    border:1px solid rgba(255,255,255,0.35);
+    border-radius:14px;
+    color:#ffffff;
+    text-decoration:none;
+    font-size:14px;
+    font-weight:600;
+    backdrop-filter: blur(6px);
+    transition:all 0.3s ease;
+}
+
+.back-button i{
+    font-size:14px;
+}
+
+.back-button:hover{
+    background:#ffffff;
+    color:#0f172a;
+    transform:translateY(-2px);
+    box-shadow:0 10px 25px rgba(0,0,0,0.2);
+}
 /* ================= FORM LAYOUT ================= */
 .form-container {
     padding: 3rem;
@@ -866,13 +918,25 @@ body {
         <!-- Card Header -->
         <div class="card-header">
             <div class="header-backdrop"></div>
+
             <div class="header-content">
-                <div class="header-icon">
-                    <i class="fas fa-layer-group"></i>
+                <!-- LEFT -->
+                <div class="header-left">
+                    <div class="header-icon">
+                        <i class="fas fa-layer-group"></i>
+                    </div>
+                    <div class="header-text">
+                        <h1>Create New Subcategory</h1>
+                        <p>Add a new subcategory to organize your products efficiently</p>
+                    </div>
                 </div>
-                <div class="header-text">
-                    <h1>Create New Subcategory</h1>
-                    <p>Add a new subcategory to organize your products efficiently</p>
+
+                <!-- RIGHT : BACK BUTTON -->
+                <div class="header-actions">
+                    <a href="{% url 'subcategory_list' %}" class="back-button">
+                        <i class="fas fa-arrow-left"></i>
+                        Back to Categories
+                    </a>
                 </div>
             </div>
         </div>
@@ -1243,7 +1307,6 @@ style.textContent = `
     
     .select2-category-item {
         display: block;
-        padding: 0.5rem 1rem;
         transition: padding-left 0.2s ease;
     }
 `;

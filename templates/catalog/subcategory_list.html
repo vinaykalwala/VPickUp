@@ -692,7 +692,7 @@ body{
                     {% if s.image %}
                         <img src="{{ s.image.url }}" alt="{{ s.name }}">
                     {% else %}
-                        <i class="fa-solid fa-image" style="font-size: 56px; color: #94a3b8;"></i>
+        <img src="{% static 'images/noimagecat.png' %}" alt="Default image">
                     {% endif %}
                 </div>
 

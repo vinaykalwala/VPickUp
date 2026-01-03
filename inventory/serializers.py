@@ -79,21 +79,13 @@ class SmartInventorySerializer(serializers.Serializer):
         if data.get('description') == '':
             data['description'] = None
         
-        print(f"\n=== Serializer Validation ===")
-        print(f"category: {data.get('category')}")
-        print(f"new_category_name: {data.get('new_category_name')}")
-        print(f"subcategory: {data.get('subcategory')}")
-        print(f"new_subcategory_name: {data.get('new_subcategory_name')}")
-        print(f"product_name: {data.get('product_name')}")
-        print(f"brand: {data.get('brand')}")
-        print(f"description: {data.get('description')}")
+        
         
         # Check if either existing category or new category is provided
         has_existing_category = data.get('category') is not None
         has_new_category = bool(data.get('new_category_name'))
         
-        print(f"has_existing_category: {has_existing_category}")
-        print(f"has_new_category: {has_new_category}")
+        
         
         if not has_existing_category and not has_new_category:
             raise serializers.ValidationError({
@@ -170,3 +162,29 @@ class SmartInventorySerializer(serializers.Serializer):
             else:
                 result[key] = value
         return super().to_internal_value(result)
+    
+# serializers.py
+from rest_framework import serializers
+
+class BulkUploadSerializer(serializers.Serializer):
+    bulk_zip = serializers.FileField(
+        help_text="ZIP file containing Excel file and product images"
+    )
+    
+    # Options for handling existing items
+    update_existing = serializers.BooleanField(
+        default=True,
+        help_text="Update existing products/variants if found"
+    )
+    
+    def validate_bulk_zip(self, value):
+        if not value.name.endswith('.zip'):
+            raise serializers.ValidationError("File must be a ZIP archive")
+        
+        max_size = 50 * 1024 * 1024  # 50MB
+        if value.size > max_size:
+            raise serializers.ValidationError(
+                f"File size cannot exceed {max_size/1024/1024}MB"
+            )
+        
+        return value

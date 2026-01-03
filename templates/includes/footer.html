@@ -143,6 +143,41 @@ color: #dad8d8;
     grid-template-columns: 1fr;
   }
 }
+/* ================= FOOTER CTA ================= */
+.vp-footer-cta {
+  margin-top: 1.4rem;
+}
+
+.footer-btn {
+  display: inline-block;
+  padding: 0.6rem 1.4rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+/* Become a Seller */
+.footer-btn-primary {
+  background: #ffffff;
+  color:#0e7490  !important;
+}
+
+.footer-btn-primary:hover {
+  background: #ecfeff;
+}
+
+/* Dashboard */
+.footer-btn-secondary {
+  background: transparent;
+  color: #ffffff;
+  border: 1px solid rgba(255,255,255,0.6);
+}
+
+.footer-btn-secondary:hover {
+  background: rgba(255,255,255,0.15);
+}
 
 </style>
 
@@ -161,6 +196,37 @@ color: #dad8d8;
         Order online and collect from nearby verified stores
         within minutes.
       </p>
+    <div class="vp-footer-cta">
+
+  {% if not request.user.is_authenticated %}
+    <!-- Guest -->
+    <a href="{% url 'seller_register' %}" class="footer-btn footer-btn-primary">
+      Become a Seller
+    </a>
+
+  {% elif request.user.is_staff %}
+    <!-- Admin -->
+    <a href="{% url 'dashboard' %}" class="footer-btn footer-btn-secondary">
+      Go to Dashboard
+    </a>
+
+  {% elif request.user.role == 'store_owner' %}
+    <!-- Seller -->
+    <a href="{% url 'dashboard' %}" class="footer-btn footer-btn-secondary">
+      Go to Dashboard
+    </a>
+
+  {% else %}
+    <!-- Logged-in Customer -->
+    <a href="{% url 'seller_register' %}" class="footer-btn footer-btn-primary">
+      Become a Seller
+    </a>
+
+  {% endif %}
+
+</div>
+
+
     </div>
 
     <div>

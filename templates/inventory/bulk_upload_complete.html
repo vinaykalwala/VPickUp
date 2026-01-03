@@ -1,0 +1,318 @@
+<!-- templates/inventory/bulk_upload_complete.html -->
+{% extends 'admin_base.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-10 offset-lg-1">
+            <!-- Header -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-body text-center bg-primary text-white rounded">
+                    <h1 class="display-4 mb-3">
+                        <i class="fas fa-file-upload"></i>
+                        Complete Bulk Upload
+                    </h1>
+                    <p class="lead mb-0">
+                        Upload products with ALL fields from smart create form
+                    </p>
+                </div>
+            </div>
+
+            <!-- Upload Form -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        Step 1: Upload ZIP File
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data" id="uploadForm">
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <label class="font-weight-bold">
+                                        <i class="fas fa-file-archive"></i>
+                                        Select ZIP File
+                                    </label>
+                                    <div class="custom-file">
+                                        <input type="file" 
+                                               class="custom-file-input" 
+                                               id="bulk_zip" 
+                                               name="bulk_zip" 
+                                               accept=".zip" 
+                                               required
+                                               onchange="updateFileName()">
+                                        <label class="custom-file-label" for="bulk_zip">
+                                            Choose file...
+                                        </label>
+                                    </div>
+                                    <small class="form-text text-muted">
+                                        ZIP file containing Excel and images
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="font-weight-bold">
+                                        <i class="fas fa-cog"></i>
+                                        Options
+                                    </label>
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" 
+                                               class="custom-control-input" 
+                                               id="update_existing" 
+                                               name="update_existing" 
+                                               checked>
+                                        <label class="custom-control-label" for="update_existing">
+                                            Update existing items
+                                        </label>
+                                    </div>
+                                    <small class="form-text text-muted">
+                                        Update existing products/variants if found
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-success btn-lg px-5" id="uploadBtn">
+                                <i class="fas fa-play-circle"></i>
+                                Start Processing
+                            </button>
+                        </div>
+                        
+                        <!-- Loading -->
+                        <div id="loadingSpinner" class="text-center mt-4" style="display: none;">
+                            <div class="spinner-border text-success" style="width: 3rem; height: 3rem;" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                            <p class="mt-3 lead">Processing your upload... Please wait.</p>
+                            <div class="progress" style="height: 20px;">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                                     style="width: 100%"></div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Available Items -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-database"></i>
+                        Currently Available in Your Store
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-md-4">
+                            <div class="stat-card bg-light p-3 rounded">
+                                <h2 class="text-primary">{{ categories_count }}</h2>
+                                <p class="mb-0 font-weight-bold">Categories</p>
+                                <small>Available for selection</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="stat-card bg-light p-3 rounded">
+                                <h2 class="text-success">{{ subcategories_count }}</h2>
+                                <p class="mb-0 font-weight-bold">Subcategories</p>
+                                <small>Available for selection</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="stat-card bg-light p-3 rounded">
+                                <h2 class="text-warning">{{ products_count }}</h2>
+                                <p class="mb-0 font-weight-bold">Products</p>
+                                <small>Can add variants to these</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Template Sections -->
+            <div class="row">
+                <!-- Get Template -->
+                <div class="col-md-6 mb-4">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-header bg-warning text-white">
+                            <h5 class="mb-0">
+                                <i class="fas fa-download"></i>
+                                Step 2: Download Template
+                            </h5>
+                        </div>
+                        <div class="card-body text-center">
+                            <div class="mb-4">
+                                <i class="fas fa-file-excel fa-4x text-success mb-3"></i>
+                                <h4>Complete Excel Template</h4>
+                                <p>Includes ALL fields from smart create form</p>
+                            </div>
+                            <a href="{% url 'download_complete_template' %}" 
+                               class="btn btn-warning btn-lg btn-block">
+                                <i class="fas fa-file-download"></i>
+                                Download Complete Template
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Instructions -->
+                <div class="col-md-6 mb-4">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">
+                                <i class="fas fa-graduation-cap"></i>
+                                Step 3: Prepare Your Files
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <h6><i class="fas fa-list-ol text-primary"></i> Preparation Steps:</h6>
+                            <ol class="mb-0">
+                                <li class="mb-2">Download the template ZIP</li>
+                                <li class="mb-2">Extract to a folder on your computer</li>
+                                <li class="mb-2">Edit the Excel file with your products</li>
+                                <li class="mb-2">Add images to 'images/' and 'variants/' folders</li>
+                                <li class="mb-2">Reference images in Excel (e.g., 'images/product.jpg')</li>
+                                <li class="mb-2">Select all files and create a ZIP file</li>
+                                <li>Upload using the form above</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Excel Format Preview -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-table"></i>
+                        Excel Format Preview
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-sm">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>existing_category</th>
+                                    <th>new_category</th>
+                                    <th>existing_subcategory</th>
+                                    <th>new_subcategory</th>
+                                    <th>existing_product</th>
+                                    <th>product_name</th>
+                                    <th>variant_name</th>
+                                    <th>price</th>
+                                    <th>quantity</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Electronics</td>
+                                    <td></td>
+                                    <td>Smartphones</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>iPhone 14 Pro</td>
+                                    <td>128GB Blue</td>
+                                    <td>999.99</td>
+                                    <td>25</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>Gaming</td>
+                                    <td></td>
+                                    <td>Headsets</td>
+                                    <td></td>
+                                    <td>Razer Kraken</td>
+                                    <td>Black</td>
+                                    <td>79.99</td>
+                                    <td>15</td>
+                                </tr>
+                                <tr>
+                                    <td>Clothing</td>
+                                    <td></td>
+                                    <td>T-Shirts</td>
+                                    <td></td>
+                                    <td>Nike T-Shirt</td>
+                                    <td></td>
+                                    <td>Large Black</td>
+                                    <td>24.99</td>
+                                    <td>50</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="alert alert-info mt-3">
+                        <i class="fas fa-info-circle"></i>
+                        <strong>Note:</strong> The template includes ALL optional fields (brand, description, 
+                        sku, barcode, product_image, variant_image) not shown in this preview.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Messages -->
+            {% if messages %}
+            <div class="mt-4">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+function updateFileName() {
+    const fileInput = document.getElementById('bulk_zip');
+    const label = fileInput.nextElementSibling;
+    const fileName = fileInput.files[0] ? fileInput.files[0].name : 'Choose file...';
+    label.textContent = fileName;
+}
+
+document.getElementById('uploadForm').addEventListener('submit', function(e) {
+    const uploadBtn = document.getElementById('uploadBtn');
+    const loadingSpinner = document.getElementById('loadingSpinner');
+    
+    // Validate file selected
+    const fileInput = document.getElementById('bulk_zip');
+    if (!fileInput.files[0]) {
+        e.preventDefault();
+        alert('Please select a ZIP file to upload');
+        return;
+    }
+    
+    // Show loading
+    uploadBtn.disabled = true;
+    uploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+    loadingSpinner.style.display = 'block';
+});
+</script>
+
+<style>
+.stat-card {
+    transition: transform 0.3s;
+    border: 1px solid #dee2e6;
+}
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+.custom-file-label::after {
+    content: "Browse";
+}
+.table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+}
+</style>
+{% endblock %}

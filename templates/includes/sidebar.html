@@ -296,12 +296,12 @@ body {
     </button>
   </div>
   <div class="vp-header-right">
-    <a href="#" class="vp-btn vp-btn-ghost hide-mobile">
-      <i class="fa-solid fa-arrow-left"></i> Back
+    <a href="{% url 'home' %}" class="vp-btn vp-btn-ghost hide-mobile">
+      <i class="fa-solid fa-arrow-left"></i> Back To Home
     </a>
-    <a href="{% url 'profile' %}" class="vp-btn vp-btn-primary hide-mobile">
+    <!-- <a href="{% url 'profile' %}" class="vp-btn vp-btn-primary hide-mobile">
       <i class="fa-solid fa-user"></i> Profile
-    </a>
+    </a> -->
     <a href="{% url 'logout' %}" class="vp-btn vp-btn-danger">
       <i class="fa-solid fa-right-from-bracket"></i> Logout
     </a>
@@ -331,13 +331,13 @@ body {
       <div class="vp-menu-title">General</div>
 
     <div class="vp-section">
-      <a href="#"><i class="fa-solid fa-store"></i> Pickup</a>
+      <a href="{% url 'home' %}"><i class="fa-solid fa-store"></i> Pickup</a>
       <a href="{% url 'change_password' %}">
         <i class="fa-solid fa-key"></i> Change Password
       </a>
     </div>
 
-    {% if request.user.is_authenticated and not request.user.is_staff %}
+   {% if request.user.is_authenticated and request.user.role == 'store_owner' %}
           <div class="vp-menu-title"> Seller Features</div>
 
     <div class="vp-section">
@@ -361,6 +361,10 @@ body {
 <a href="{% url 'inventory_list' %}">
   <i class="fa-solid fa-warehouse"></i>Store Inventory
 </a>
+<a href="{% url 'bulk_inventory_upload_complete' %}">
+  <i class="fa-solid fa-file-zipper"></i> Bulk Zip Upload
+</a>
+
 
 <a href="{% url 'smart_inventory_create' %}">
  <i class="fa-solid fa-boxes-stacked"></i>
@@ -392,6 +396,11 @@ Smart Store Inventory
 
 <a href="{% url 'admin_subcategory_approval_list' %}">
   <i class="fa-solid fa-clipboard-check"></i> SubCategories Approvals
+</a>
+
+<a href="{% url 'slider_list' %}">
+ <i class="fa-solid fa-image"></i>
+ Sliders
 </a>
 
     </div>
