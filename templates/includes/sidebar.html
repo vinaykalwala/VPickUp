@@ -297,11 +297,11 @@ body {
   </div>
   <div class="vp-header-right">
     <a href="{% url 'home' %}" class="vp-btn vp-btn-ghost hide-mobile">
-      <i class="fa-solid fa-arrow-left"></i> Back
+      <i class="fa-solid fa-arrow-left"></i> Back To Home
     </a>
-    <a href="{% url 'profile' %}" class="vp-btn vp-btn-primary hide-mobile">
+    <!-- <a href="{% url 'profile' %}" class="vp-btn vp-btn-primary hide-mobile">
       <i class="fa-solid fa-user"></i> Profile
-    </a>
+    </a> -->
     <a href="{% url 'logout' %}" class="vp-btn vp-btn-danger">
       <i class="fa-solid fa-right-from-bracket"></i> Logout
     </a>
@@ -331,7 +331,7 @@ body {
       <div class="vp-menu-title">General</div>
 
     <div class="vp-section">
-      <a href="#"><i class="fa-solid fa-store"></i> Pickup</a>
+      <a href="{% url 'home' %}"><i class="fa-solid fa-store"></i> Pickup</a>
       <a href="{% url 'change_password' %}">
         <i class="fa-solid fa-key"></i> Change Password
       </a>
