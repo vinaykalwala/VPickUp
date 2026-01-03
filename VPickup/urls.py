@@ -25,6 +25,7 @@ urlpatterns = [
     path('banners/add/', BannerCreateView.as_view(), name='banner_create'),
     path('banners/<int:pk>/edit/', BannerUpdateView.as_view(), name='banner_update'),
     path('banners/<int:pk>/delete/', BannerDeleteView.as_view(), name='banner_delete'),
+    
 ]
 
 if settings.DEBUG:
