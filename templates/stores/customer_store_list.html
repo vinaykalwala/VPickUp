@@ -1,25 +1,180 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Available Stores</title>
+    <title>Stores Near You</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .filters {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .filters label {
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .filters input,
+        .filters select {
+            width: 100%;
+            padding: 6px;
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: 10px;
+            align-items: end;
+        }
+
+        .store-card {
+            display: flex;
+            gap: 16px;
+            border: 1px solid #ddd;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 16px;
+        }
+
+        .store-image img {
+            width: 140px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .verified {
+            color: green;
+            font-weight: bold;
+        }
+
+        .distance {
+            color: #0d6efd;
+            font-weight: bold;
+        }
+
+        .enter-btn {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 6px 12px;
+            background: #0d6efd;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+    </style>
 </head>
 <body>
-<h2>Available Stores Near You</h2>
 
-{% if stores %}
-    <ul>
-        {% for store in stores %}
-            <li>
-                <strong>{{ store.name }}</strong><br>
-                {{ store.address }}<br>
-                Opens: {{ store.opening_time }} - {{ store.closing_time }}
-            </li>
-            <hr>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>No stores available at the moment.</p>
-{% endif %}
+<h2>Stores Near You</h2>
+
+<form method="get">
+    <div class="filters">
+
+        <!-- SEARCH -->
+        <div>
+            <label>Search Store</label>
+            <input type="text" name="search"
+                   value="{{ request.GET.search }}"
+                   placeholder="Store name">
+        </div>
+
+        <!-- QUICK DISTANCE -->
+        <div>
+            <label>Quick Distance</label>
+            <select name="radius">
+                <option value="">All</option>
+                <option value="0.5">500 m</option>
+                <option value="1">1 km</option>
+                <option value="2">2 km</option>
+                <option value="3">3 km</option>
+                <option value="4">4 km</option>
+                <option value="5">5 km</option>
+                <option value="6">6 km</option>
+                <option value="7">7 km</option>
+                <option value="8">8 km</option>
+            </select>
+        </div>
+
+        <!-- CUSTOM DISTANCE -->
+        <div>
+            <label>Custom Distance (KM)</label>
+            <input type="number"
+                   step="0.1"
+                   min="0.1"
+                   name="custom_radius"
+                   value="{{ request.GET.custom_radius }}"
+                   placeholder="e.g. 12.5">
+        </div>
+
+        <!-- CITY -->
+        <div>
+            <label>City</label>
+            <input type="text" name="city"
+                   value="{{ request.GET.city }}"
+                   placeholder="City">
+        </div>
+
+        <!-- PINCODE -->
+        <div>
+            <label>Pincode</label>
+            <input type="text" name="pincode"
+                   value="{{ request.GET.pincode }}"
+                   placeholder="Pincode">
+        </div>
+
+        <!-- ACTIONS -->
+        <div class="filter-actions">
+            <button type="submit">Apply</button>
+            <a href="{% url 'customer_store_list' %}">
+                <button type="button">Reset</button>
+            </a>
+        </div>
+
+    </div>
+</form>
+
+<hr>
+
+{% for store in stores %}
+<div class="store-card">
+
+    <div class="store-image">
+        {% if store.image %}
+            <img src="{{ store.image.url }}">
+        {% else %}
+            <img src="https://via.placeholder.com/140x100?text=No+Image">
+        {% endif %}
+    </div>
+
+    <div>
+        <h3>{{ store.name }}</h3>
+        <p>{{ store.address }}</p>
+
+        <p class="verified">
+            ✔ {{ store.verification_status|title }}
+        </p>
+
+        {% if store.distance %}
+            <p class="distance">
+                {{ store.distance }} km away
+            </p>
+        {% endif %}
+
+        <a href="{% url 'customer_store_detail' store.id %}" class="enter-btn">
+            Enter Store
+        </a>
+    </div>
+
+</div>
+{% empty %}
+    <p>No stores available</p>
+{% endfor %}
 
 </body>
 </html>

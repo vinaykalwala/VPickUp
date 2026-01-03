@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ category.name }} | {{ store.name }}</title>
+    <style>
+        .subcategory-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 16px;
+        }
+        .subcategory-card {
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 12px;
+            text-align: center;
+        }
+        .subcategory-card img {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+        .subcategory-card a {
+            display: block;
+            margin-top: 10px;
+            font-weight: 600;
+            text-decoration: none;
+            color: #0d6efd;
+        }
+        .breadcrumb {
+            margin-bottom: 16px;
+            font-size: 14px;
+        }
+        .breadcrumb a {
+            text-decoration: none;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Breadcrumb -->
+<div class="breadcrumb">
+    <a href="{% url 'customer_store_detail' store.id %}">{{ store.name }}</a>
+    &nbsp;›&nbsp;
+    <strong>{{ category.name }}</strong>
+</div>
+
+<h2>{{ category.name }}</h2>
+<p>Select a subcategory</p>
+
+<hr>
+
+{% if subcategories %}
+<div class="subcategory-grid">
+    {% for subcategory in subcategories %}
+        <div class="subcategory-card">
+            {% if subcategory.image %}
+                <img src="{{ subcategory.image.url }}" alt="{{ subcategory.name }}">
+            {% else %}
+                <img src="https://via.placeholder.com/300x200?text=No+Image" alt="No image">
+            {% endif %}
+
+            <a href="{% url 'store_subcategory_products' store.id subcategory.slug %}">
+                {{ subcategory.name }}
+            </a>
+        </div>
+    {% endfor %}
+</div>
+{% else %}
+    <p>No subcategories available.</p>
+{% endif %}
+
+</body>
+</html>

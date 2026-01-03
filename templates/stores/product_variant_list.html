@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Products</title>
+    <style>
+        .product-card {
+            border: 1px solid #ddd;
+            padding: 16px;
+            margin-bottom: 24px;
+            border-radius: 6px;
+        }
+        .variant-box {
+            border-top: 1px dashed #ccc;
+            padding: 10px 0;
+        }
+        .variant-box img {
+            width: 80px;
+            height: auto;
+        }
+        button {
+            padding: 6px 12px;
+            margin-right: 6px;
+        }
+        .out-of-stock {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Available Products</h2>
+
+{% regroup inventory_items by product_variant.product as product_groups %}
+
+{% for group in product_groups %}
+<div class="product-card">
+
+    <!-- PRODUCT DETAILS -->
+    <h3>{{ group.grouper.name }}</h3>
+
+    {% if group.grouper.image %}
+        <img src="{{ group.grouper.image.url }}" width="120">
+    {% endif %}
+
+    <p><strong>Brand:</strong> {{ group.grouper.brand }}</p>
+    <p>{{ group.grouper.description }}</p>
+
+    <!-- VARIANTS -->
+    <h4>Variants</h4>
+
+    {% for item in group.list %}
+        <div class="variant-box">
+
+            <p><strong>{{ item.product_variant.variant_name }}</strong></p>
+
+            {% if item.product_variant.image %}
+                <img src="{{ item.product_variant.image.url }}">
+            {% endif %}
+
+            <p>Price: ₹{{ item.price }}</p>
+
+            {% if item.quantity_available > 0 %}
+                <p>Stock: {{ item.quantity_available }}</p>
+
+                <form method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit">Add to Cart</button>
+                </form>
+            {% else %}
+                <p class="out-of-stock">Out of Stock</p>
+            {% endif %}
+
+            <form method="post"  style="display:inline;">
+                {% csrf_token %}
+                <button type="submit">♡ Wishlist</button>
+            </form>
+
+        </div>
+    {% endfor %}
+
+</div>
+{% empty %}
+    <p>No products available.</p>
+{% endfor %}
+
+</body>
+</html>
