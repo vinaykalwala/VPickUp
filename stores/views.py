@@ -140,28 +140,20 @@ class StoreDeleteView(APIView):
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import AllowAny
 
-class StoreListView(APIView):
+class StoreOwnerStoreListView(APIView):
     authentication_classes = [SessionAuthentication]
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        user = request.user
-
-        if user.is_authenticated and user.role == 'customer':
-            stores = Store.objects.filter(
-                is_active=True,
-                verification_status='verified'
-            )
-        elif user.is_authenticated and user.role == 'store_owner':
-            stores = Store.objects.filter(owner=user)
-        elif user.is_authenticated and (user.role == 'admin' or user.is_superuser):
-            stores = Store.objects.all()
-        else:
-            stores = Store.objects.filter(
-                is_active=True,
-                verification_status='verified'
-            )
-
+        # Ensure the user is a store owner
+        if request.user.role != 'store_owner':
+            return render(request, 'stores/access_denied.html', 
+                         {'message': 'This page is only accessible to store owners'}, 
+                         status=403)
+        
+        # Get stores owned by the authenticated user
+        stores = Store.objects.filter(owner=request.user)
+        
         return render(request, 'stores/store_list.html', {'stores': stores})
 class StoreDetailView(APIView):
     authentication_classes = [SessionAuthentication]
