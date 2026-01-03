@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>All Stores</title>
+    <style>
+        .btn-view {
+            padding: 6px 12px;
+            background-color: #0d6efd;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .btn-view:hover {
+            background-color: #0b5ed7;
+        }
+    </style>
+</head>
+<body>
+
+<h2>All Stores (Admin View)</h2>
+
+<table border="1" cellpadding="8" cellspacing="0">
+    <tr>
+        <th>Name</th>
+        <th>Owner</th>
+        <th>Status</th>
+        <th>Active</th>
+        <th>Created</th>
+        <th>Action</th>
+    </tr>
+
+    {% for store in stores %}
+    <tr>
+        <td>{{ store.name }}</td>
+        <td>{{ store.owner.email }}</td>
+        <td>{{ store.verification_status }}</td>
+        <td>{{ store.is_active }}</td>
+        <td>{{ store.created_at }}</td>
+        <td>
+            <a href="{% url 'store_detail' store.id %}" class="btn-view">
+                View
+            </a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+</body>
+</html>

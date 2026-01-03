@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Available Stores</title>
+</head>
+<body>
+<h2>Available Stores Near You</h2>
+
+{% if stores %}
+    <ul>
+        {% for store in stores %}
+            <li>
+                <strong>{{ store.name }}</strong><br>
+                {{ store.address }}<br>
+                Opens: {{ store.opening_time }} - {{ store.closing_time }}
+            </li>
+            <hr>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No stores available at the moment.</p>
+{% endif %}
+
+</body>
+</html>

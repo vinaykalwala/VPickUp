@@ -155,6 +155,56 @@ class StoreOwnerStoreListView(APIView):
         stores = Store.objects.filter(owner=request.user)
         
         return render(request, 'stores/store_list.html', {'stores': stores})
+    
+class CustomerStoreListView(APIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        # Ensure the user is a customer
+        if request.user.role != 'customer':
+            return render(
+                request,
+                'stores/access_denied.html',
+                {'message': 'This page is only accessible to customers'},
+                status=403
+            )
+
+        # Show only verified & active stores
+        stores = Store.objects.filter(
+            verification_status='verified',
+            is_active=True
+        )
+
+        return render(
+            request,
+            'stores/customer_store_list.html',
+            {'stores': stores}
+        )
+
+class AdminStoreListView(APIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        # Ensure the user is an admin
+        if not (request.user.role == 'admin' or request.user.is_superuser):
+            return render(
+                request,
+                'stores/access_denied.html',
+                {'message': 'This page is only accessible to admins'},
+                status=403
+            )
+
+        # Admin can see all stores
+        stores = Store.objects.all()
+
+        return render(
+            request,
+            'stores/admin_store_list.html',
+            {'stores': stores}
+        )
+
 class StoreDetailView(APIView):
     authentication_classes = [SessionAuthentication]
     permission_classes = [AllowAny]

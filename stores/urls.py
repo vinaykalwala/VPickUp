@@ -3,6 +3,8 @@ from .views import *
 
 urlpatterns = [
     path('stores/', StoreOwnerStoreListView.as_view(), name='store_list'),
+    path('customer/stores/', CustomerStoreListView.as_view(), name='customer_store_list'),
+    path('storesadmin/', AdminStoreListView.as_view(), name='admin_store_list'),
     path('stores/create/', StoreCreateView.as_view(), name='store_create'),
     path('stores/<int:store_id>/', StoreDetailView.as_view(), name='store_detail'),
     path('stores/<int:store_id>/update/', StoreUpdateView.as_view(), name='store_update'),
