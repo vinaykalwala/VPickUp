@@ -153,10 +153,35 @@
         </div>
         {% endfor %}
 
+        
+
         <button class="nav prev" onclick="moveSlide(-1)">‹</button>
         <button class="nav next" onclick="moveSlide(1)">›</button>
     </div>
     {% endif %}
+
+    
+{% if banners %}
+<div class="promotional-banners">
+    <div class="row">
+        {% for banner in banners %}
+        <div class="col-md-4 mb-4">
+            <div class="banner-card">
+                <img src="{{ banner.image.url }}" alt="{{ banner.title }}" class="img-fluid">
+                {% if banner.title %}
+                <div class="banner-content">
+                    <h3>{{ banner.title }}</h3>
+                    {% if banner.description %}
+                    <p>{{ banner.description }}</p>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
 
 </div>
 
