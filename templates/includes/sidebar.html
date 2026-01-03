@@ -382,6 +382,9 @@ Smart Store Inventory
       <a href="{% url 'admin_store_verification_list' %}">
         <i class="fa-solid fa-check"></i> Store Verifications
       </a>
+       <a href="{% url 'admin_store_list' %}">
+  <i class="fa-solid fa-store"></i> Stores List
+</a>
       <a href="{% url 'category_list' %}">
   <i class="fa-solid fa-tags"></i> Categories List
 </a>
@@ -398,10 +401,9 @@ Smart Store Inventory
   <i class="fa-solid fa-clipboard-check"></i> SubCategories Approvals
 </a>
 
-<a href="{% url 'slider_list' %}">
- <i class="fa-solid fa-image"></i>
- Sliders
-</a>
+<a href="{% url 'slider_list' %}"><i class="fa-solid fa-image"></i>Sliders</a>
+<a href="{% url 'banner_list' %}"><i class="fa-solid fa-bullhorn"></i>Promotional Banners</a>
+
 
     </div>
     {% endif %}
