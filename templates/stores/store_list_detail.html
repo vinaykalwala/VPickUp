@@ -1,0 +1,11 @@
+<h2>{{ store.name }}</h2>
+<h3>Shop by Category</h3>
+
+{% for category in categories %}
+    <div>
+        <h4>{{ category.name }}</h4>
+        <a href="{% url 'store_category' store.id category.slug %}">
+            View Subcategories
+        </a>
+    </div>
+{% endfor %}
