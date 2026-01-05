@@ -1,54 +1,892 @@
-{% extends 'base.html' %}
+{% extends 'admin_base.html' %}
+{% load static %}
 
 {% block content %}
-<div class="container">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>Promotional Banners</h2>
-        <a href="{% url 'banner_create' %}" class="btn btn-primary">
-            <i class="fas fa-plus"></i> Add New Banner
-        </a>
+<style>
+/* ================= DESIGN SYSTEM ================= */
+:root {
+    --primary: #0e7490;
+    --primary-dark: #155e75;
+    --primary-light: #0891b2;
+    --primary-soft: rgba(14, 116, 144, 0.1);
+    --secondary: #8b5cf6;
+    --success: #10b981;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --info: #3b82f6;
+    --white: #ffffff;
+    --light-bg: #f8fafc;
+    --light-gray: #f1f5f9;
+    --border: #e2e8f0;
+    --border-dark: #cbd5e1;
+    --text-dark: #0f172a;
+    --text-medium: #475569;
+    --text-light: #64748b;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    --shadow-primary: 0 10px 20px rgba(14, 116, 144, 0.15);
+    --radius-sm: 8px;
+    --radius: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ================= PAGE LAYOUT ================= */
+.banner-admin-page {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    min-height: 100vh;
+    padding:20px;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.banner-container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+.header-two-column {
+    display: grid;
+    grid-template-columns: 1.3fr 0.7fr;
+    gap: 24px;
+    align-items: stretch;
+}
+.header-right-image {
+    position: relative;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    min-height: 180px;
+}
+.header-right-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.header-image-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(14, 116, 144, 0.35); /* transparent color */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.overlay-button {
+    background: #ffffff;
+    color: var(--primary);
+    padding: 12px 26px;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.25s ease;
+}
+
+.overlay-button:hover {
+    background: var(--primary);
+    color: #ffffff;
+}
+@media (max-width: 768px) {
+    .header-two-column {
+        grid-template-columns: 1fr;
+    }
+
+    .header-right-image {
+        min-height: 160px;
+    }
+
+    .overlay-button {
+        padding: 10px 20px;
+        font-size: 0.85rem;
+    }
+}
+.header-left-bg {
+    background: linear-gradient(
+        135deg,
+        rgba(14, 116, 144, 0.4),
+        rgba(14, 116, 144, 0.15)
+    );
+    padding:0 30px;
+    border-radius: var(--radius-lg);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-bottom: 20px;
+}
+
+/* ================= PAGE HEADER ================= */
+.page-header {
+    background: var(--white);
+    border-radius: var(--radius-xl);
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+    
+}
+
+.page-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 6px;
+    height: 100%;
+    background: linear-gradient(to bottom, var(--primary), var(--secondary));
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.header-left h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, var(--text-dark) 0%, var(--primary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.header-left p {
+    color: var(--text-light);
+    font-size: 1rem;
+    max-width: 600px;
+    line-height: 1.6;
+}
+/* ================= HEADER SEARCH BAR ================= */
+.header-search {
+    margin-top: 10px;
+    position: relative;
+    max-width: 360px;
+}
+
+.header-search i {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-light);
+    font-size: 0.9rem;
+    pointer-events: none;
+}
+
+.header-search input {
+    width: 100%;
+    padding: 12px 14px 12px 40px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.9);
+    font-size: 0.9rem;
+    color: var(--text-dark);
+    transition: var(--transition);
+}
+
+.header-search input::placeholder {
+    color: var(--text-light);
+}
+
+.header-search input:focus {
+    outline: none;
+    border-color: var(--primary);
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(14, 116, 144, 0.15);
+}
+@media (max-width: 768px) {
+    .header-search {
+        max-width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+
+
+/* ================= BANNER GRID ================= */
+.banner-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 25px;
+    margin-top: 20px;
+}
+
+/* ================= BANNER CARD ================= */
+.banner-card {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    transition: var(--transition);
+    border: 1px solid var(--border);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.banner-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-xl);
+    border-color: var(--primary);
+}
+
+/* Banner Image */
+.banner-image {
+    position: relative;
+    height: 220px;
+    overflow: hidden;
+}
+
+.banner-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.banner-card:hover .banner-image img {
+    transform: scale(1.05);
+}
+
+.banner-status {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.status-active {
+    background: rgba(16, 185, 129, 0.9);
+    color: white;
+}
+
+.status-inactive {
+    background: rgba(148, 163, 184, 0.9);
+    color: white;
+}
+
+
+/* Banner Content */
+.banner-content {
+    padding: 25px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.banner-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 12px;
+    line-height: 1.4;
+}
+
+.banner-description {
+    color: var(--text-medium);
+    line-height: 1.6;
+    margin-bottom: 20px;
+    flex: 1;
+    font-size: 0.95rem;
+}
+
+.banner-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 15px;
+    border-top: 1px solid var(--border);
+    margin-top: auto;
+}
+
+.banner-date {
+    color: var(--text-light);
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.banner-date i {
+    font-size: 0.9rem;
+}
+
+/* Banner Actions */
+.banner-actions {
+    display: flex;
+    gap: 10px;
+    padding: 20px 25px;
+    background: var(--light-bg);
+    border-top: 1px solid var(--border);
+}
+
+.btn-action {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    text-decoration: none;
+    border: 2px solid transparent;
+}
+
+.btn-edit {
+    background: var(--primary-soft);
+    color: var(--primary);
+    border-color: rgba(14, 116, 144, 0.2);
+}
+
+.btn-edit:hover {
+    background: var(--primary);
+    color: white;
+    transform: translateY(-2px);
+}
+
+.btn-delete {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--danger);
+    border-color: rgba(239, 68, 68, 0.2);
+}
+
+.btn-delete:hover {
+    background: var(--danger);
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Delete Form */
+.delete-form {
+    margin: 0;
+    flex: 1;
+}
+
+.delete-form button {
+    width: 100%;
+    border: none;
+    background: none;
+    font: inherit;
+    cursor: pointer;
+}
+
+/* ================= EMPTY STATE ================= */
+.empty-state {
+    background: var(--white);
+    border-radius: var(--radius-xl);
+    padding: 60px 40px;
+    text-align: center;
+    box-shadow: var(--shadow-lg);
+    border: 2px dashed var(--border);
+    margin-top: 30px;
+}
+
+.empty-icon {
+    font-size: 4rem;
+    color: var(--text-light);
+    margin-bottom: 20px;
+    opacity: 0.5;
+}
+
+.empty-state h3 {
+    color: var(--text-medium);
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.empty-state p {
+    color: var(--text-light);
+    margin-bottom: 30px;
+    font-size: 1rem;
+    line-height: 1.6;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.empty-state .btn-add-banner {
+    display: inline-flex;
+}
+
+/* ================= LOADING SKELETON ================= */
+.skeleton-loading {
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* ================= RESPONSIVE DESIGN ================= */
+
+/* Large Desktop (1440px+) */
+@media (min-width: 1440px) {
+    .banner-container {
+        max-width: 1600px;
+    }
+    
+    .banner-grid {
+        grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+        gap: 30px;
+    }
+    
+    .page-header {
+        padding: 40px;
+    }
+    
+    .header-left h1 {
+        font-size: 2.2rem;
+    }
+}
+
+/* Desktop (1024px - 1439px) */
+@media (max-width: 1439px) {
+    .banner-grid {
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 25px;
+    }
+    
+    .banner-image {
+        height: 200px;
+    }
+}
+
+/* Tablet Landscape (768px - 1023px) */
+@media (max-width: 1023px) {
+    .banner-admin-page {
+        padding: 20px 15px;
+    }
+    
+    .page-header {
+        padding: 25px;
+        margin-bottom: 25px;
+    }
+    
+    .header-content {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+    }
+    
+    .header-left h1 {
+        font-size: 1.8rem;
+    }
+    
+    .banner-grid {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+    }
+    
+    .banner-content {
+        padding: 20px;
+    }
+    
+    .banner-title {
+        font-size: 1.2rem;
+    }
+}
+
+/* Tablet Portrait (576px - 767px) */
+@media (max-width: 767px) {
+    .banner-admin-page {
+        padding: 15px 10px;
+    }
+    
+    .page-header {
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: var(--radius-lg);
+    }
+    
+    .header-left h1 {
+        font-size: 1.6rem;
+    }
+    
+    .btn-add-banner {
+        width: 100%;
+        justify-content: center;
+        padding: 12px 24px;
+    }
+    
+    .banner-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .banner-card {
+        border-radius: var(--radius);
+    }
+    
+    .banner-actions {
+        padding: 15px 20px;
+    }
+    
+    .btn-action {
+        padding: 10px 14px;
+        font-size: 0.85rem;
+    }
+    
+    .empty-state {
+        padding: 40px 20px;
+        border-radius: var(--radius-lg);
+    }
+    
+    .empty-icon {
+        font-size: 3rem;
+    }
+    
+    .empty-state h3 {
+        font-size: 1.3rem;
+    }
+}
+
+/* Mobile (425px - 575px) */
+@media (max-width: 575px) {
+    .page-header {
+        padding: 18px;
+    }
+    
+    .header-left h1 {
+        font-size: 1.4rem;
+    }
+    
+    .header-left p {
+        font-size: 0.95rem;
+    }
+    
+    .banner-image {
+        height: 180px;
+    }
+    
+    .banner-content {
+        padding: 18px;
+    }
+    
+    .banner-title {
+        font-size: 1.1rem;
+    }
+    
+    .banner-description {
+        font-size: 0.9rem;
+    }
+    
+    .banner-meta {
+        font-size: 0.8rem;
+    }
+    
+    .banner-status {
+        font-size: 0.7rem;
+        padding: 4px 10px;
+    }
+}
+
+/* Small Mobile (320px - 424px) */
+@media (max-width: 424px) {
+    .banner-admin-page {
+        padding: 10px 8px;
+    }
+    
+    .page-header {
+        padding: 15px;
+        border-radius: var(--radius);
+    }
+    
+    .header-left h1 {
+        font-size: 1.3rem;
+    }
+    
+    .banner-grid {
+        gap: 15px;
+    }
+    
+    .banner-image {
+        height: 160px;
+    }
+    
+    .banner-content {
+        padding: 15px;
+    }
+    
+    .banner-actions {
+        padding: 12px 15px;
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .btn-action {
+        width: 100%;
+        padding: 12px;
+    }
+    
+    .empty-state {
+        padding: 30px 15px;
+        border-radius: var(--radius);
+    }
+    
+    .empty-icon {
+        font-size: 2.5rem;
+    }
+}
+
+/* ================= PRINT STYLES ================= */
+@media print {
+    .banner-admin-page {
+        background: white;
+        padding: 0;
+    }
+    
+    .btn-add-banner,
+    .banner-actions,
+    .banner-status {
+        display: none;
+    }
+    
+    .banner-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    
+    .banner-card {
+        break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid #ddd;
+    }
+}
+
+/* ================= DARK MODE SUPPORT ================= */
+@media (prefers-color-scheme: dark) {
+    .banner-admin-page {
+        background: #0f172a;
+    }
+    
+    .page-header,
+    .banner-card,
+    .empty-state {
+        background: #1e293b;
+        border-color: #334155;
+    }
+    
+    .header-left h1 {
+        background: linear-gradient(135deg, #e2e8f0 0%, var(--primary-light) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    
+    .header-left p,
+    .banner-description,
+    .banner-date,
+    .empty-state p {
+        color: #94a3b8;
+    }
+    
+    .banner-title {
+        color: #f1f5f9;
+    }
+    
+    .banner-actions {
+        background: #0f172a;
+        border-color: #334155;
+    }
+    
+    .btn-edit {
+        background: rgba(14, 116, 144, 0.2);
+        border-color: rgba(14, 116, 144, 0.3);
+    }
+    
+    .btn-delete {
+        background: rgba(239, 68, 68, 0.2);
+        border-color: rgba(239, 68, 68, 0.3);
+    }
+    
+    .empty-state {
+        border-color: #475569;
+    }
+    
+    .empty-icon {
+        color: #64748b;
+    }
+}
+
+/* ================= ACCESSIBILITY ================= */
+@media (prefers-reduced-motion: reduce) {
+    .banner-card,
+    .banner-card:hover .banner-image img,
+    .btn-add-banner,
+    .btn-action {
+        transition: none;
+        transform: none;
+    }
+}
+
+@media (prefers-contrast: high) {
+    .banner-card,
+    .page-header,
+    .empty-state {
+        border: 2px solid var(--text-dark);
+    }
+    
+    .btn-action,
+    .btn-add-banner {
+        border: 2px solid currentColor;
+    }
+}
+</style>
+
+<div class="banner-admin-page">
+    <div class="banner-container">
+        
+        <!-- Page Header -->
+       <div class="page-header header-two-column">
+
+    <!-- LEFT CONTENT (unchanged) -->
+<div class="header-left header-left-bg">
+        <h1>Promotional Banners</h1>
+        <p>
+            Manage and organize your promotional banners.
+            Create, edit, and track banner performance.
+        </p>
+        <form class="header-search">
+    <i class="fas fa-search"></i>
+    <input 
+        type="text" 
+        id="bannerSearch"
+        placeholder="Search banners..."
+    >
+</form>
+
     </div>
 
-    <div class="row">
-        {% for banner in banners %}
-        <div class="col-md-6 col-lg-4 mb-4">
-            <div class="card h-100">
-                <img src="{{ banner.image.url }}" class="card-img-top" alt="{{ banner.title }}" style="height: 200px; object-fit: cover;">
-                <div class="card-body">
-                    <h5 class="card-title">
-                        {{ banner.title|default:"No Title" }}
+    <!-- RIGHT IMAGE WITH OVERLAY -->
+    <div class="header-right-image">
+        <img src="{% static 'images/promotion.jpg' %}" alt="Promotional Banners">
+
+        <div class="header-image-overlay">
+            <a href="{% url 'banner_create' %}" class="overlay-button">
+                <i class="fas fa-plus"></i> Add New Banner
+            </a>
+        </div>
+    </div>
+
+</div>
+
+
+        <!-- Banner Grid -->
+        <div class="banner-grid">
+            {% for banner in banners %}
+            <div class="banner-card">
+                <!-- Banner Image -->
+                <div class="banner-image">
+                    <img src="{{ banner.image.url }}" alt="{{ banner.title|default:'Promotional Banner' }}" loading="lazy">
+                    <span class="banner-status {% if banner.is_active %}status-active{% else %}status-inactive{% endif %}">
                         {% if banner.is_active %}
-                            <span class="badge bg-success">Active</span>
+                        <i class="fas fa-circle"></i> Active
                         {% else %}
-                            <span class="badge bg-secondary">Inactive</span>
+                        <i class="fas fa-circle"></i> Inactive
                         {% endif %}
-                    </h5>
-                    <p class="card-text">{{ banner.description|truncatechars:100 }}</p>
-                    <p class="text-muted small">Created: {{ banner.created_at|date:"M d, Y" }}</p>
+                    </span>
+                    
                 </div>
-                <div class="card-footer bg-transparent">
-                    <div class="btn-group" role="group">
-                        <a href="{% url 'banner_update' banner.pk %}" class="btn btn-sm btn-outline-primary">
-                            <i class="fas fa-edit"></i> Edit
-                        </a>
-                        <form method="post" action="{% url 'banner_delete' banner.pk %}" class="d-inline">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-sm btn-outline-danger" 
-                                    onclick="return confirm('Are you sure you want to delete this banner?')">
-                                <i class="fas fa-trash"></i> Delete
-                            </button>
-                        </form>
+
+                <!-- Banner Content -->
+                <div class="banner-content">
+                       <div class="banner-content-scroll">
+                    <h3 class="banner-title">
+                        {{ banner.title|default:"No Title" }}
+                    </h3>
+                    <p class="banner-description">
+                        {{ banner.description|truncatechars:120|default:"No description provided." }}
+                    </p>
+                    </div>
+                    <div class="banner-meta">
+                        <span class="banner-date">
+                            <i class="far fa-calendar-alt"></i>
+                            {{ banner.created_at|date:"M d, Y" }}
+                        </span>
+                        {% if banner.updated_at != banner.created_at %}
+                        <span class="banner-date">
+                            <i class="fas fa-sync-alt"></i>
+                            Updated
+                        </span>
+                        {% endif %}
                     </div>
                 </div>
+
+                <!-- Banner Actions -->
+                <div class="banner-actions">
+                    <a href="{% url 'banner_update' banner.pk %}" class="btn-action btn-edit">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                    
+                    <form method="post" action="{% url 'banner_delete' banner.pk %}" class="delete-form">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-action btn-delete" 
+                                onclick="return confirm('Are you sure you want to delete this banner? This action cannot be undone.')">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </form>
+                </div>
             </div>
-        </div>
-        {% empty %}
-        <div class="col-12">
-            <div class="alert alert-info">
-                No promotional banners found. <a href="{% url 'banner_create' %}">Create your first banner</a>.
+            {% empty %}
+            <!-- Empty State -->
+            <div class="empty-state">
+                <div class="empty-icon">
+                    <i class="fas fa-images"></i>
+                </div>
+                <h3>No banners found</h3>
+                <p>You haven't created any promotional banners yet. Create your first banner to get started!</p>
+                <a href="{% url 'banner_create' %}" class="btn-add-banner">
+                    <i class="fas fa-plus"></i> Create First Banner
+                </a>
             </div>
+            {% endfor %}
         </div>
-        {% endfor %}
     </div>
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const searchInput = document.getElementById("bannerSearch");
+    const bannerCards = document.querySelectorAll(".banner-card");
+
+    searchInput.addEventListener("input", function () {
+        const value = this.value.toLowerCase();
+
+        bannerCards.forEach(card => {
+            const title = card.querySelector(".banner-title")?.innerText.toLowerCase() || "";
+            const desc = card.querySelector(".banner-description")?.innerText.toLowerCase() || "";
+
+            if (title.includes(value) || desc.includes(value)) {
+                card.style.display = "";
+            } else {
+                card.style.display = "none";
+            }
+        });
+    });
+});
+</script>
+
+
 {% endblock %}

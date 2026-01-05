@@ -3,11 +3,39 @@
 {% block content %}
 
 <style>
+    :root {
+    --primary: #0e7490;
+    --primary-light: rgba(14, 116, 144, 0.1);
+    --primary-dark: #0c6699;
+
+    --dark: #1f2937;
+
+    --gray-100: #f1f5f9;
+    --gray-200: #e2e8f0;
+    --gray-300: #cbd5e1;
+    --gray-600: #475569;
+
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+
+    --radius-sm: 8px;
+    --radius-md: 12px;
+}
+
+    /* ===== Global Typography ===== */
+body {
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    color: #222;
+    background-color: #ffff;
+}
+
+
+
 /* ===== Overall spacing ===== */
 .dashboard-wrapper {
     padding: 30px 20px;
-    max-width: 1500px;
-    margin: auto;
+    max-width: 1600px;
+    margin:0 auto;
 }
 
 /* ===== Slider Card ===== */
@@ -192,6 +220,1354 @@
         height: 120px;
     }
 }
+
+
+
+/* ================= HOME BANNERS ================= */
+
+.home-banner-zone {
+    margin: 30px auto;
+}
+
+.home-banner-grid {
+    display: grid;
+    gap: 22px;
+}
+
+/* COLUMN RULES */
+.banner-cols-2 {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.banner-cols-3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+/* Banner */
+.home-banner {
+    position: relative;
+    height: 180px;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #000;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.18);
+}
+
+.home-banner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Overlay */
+.home-banner::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to right,
+        rgba(0,0,0,0.65),
+        rgba(0,0,0,0.35),
+        rgba(0,0,0,0.05)
+    );
+}
+
+/* Text */
+.home-banner-text {
+    position: absolute;
+    left: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+    max-width: 70%;
+    color: #fff;
+    z-index: 2;
+}
+
+.home-banner-text h3 {
+    font-size: 21px;
+    font-weight: 700;
+    margin-bottom: 6px;
+        font-family: 'DM Sans', system-ui, sans-serif;
+
+}
+
+.home-banner-text p {
+    font-size: 14px;
+}
+
+/* Hover */
+.home-banner:hover img {
+    transform: scale(1.03);
+    transition: transform 0.4s ease;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .home-banner-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+/* Featured Section Start */
+
+.fp-section {
+    margin: 48px 0 35px 0;
+}
+
+.fp-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    padding: 0 2px;
+}
+
+.fp-header h3 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0;
+}
+
+.fp-view {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #0e7490;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+}
+
+.fp-view:hover {
+    background: rgba(14, 116, 144, 0.1);
+    border-color: #0e7490;
+    transform: translateX(4px);
+}
+
+.fp-carousel-wrapper {
+    position: relative;
+}
+
+.fp-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    font-size: 20px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    z-index: 2;
+}
+
+.fp-nav.prev { left: -22px; }
+.fp-nav.next { right: -22px; }
+
+.fp-carousel {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    padding: 8px 0;
+}
+
+.fp-carousel::-webkit-scrollbar {
+    display: none;
+}
+
+.fp-item {
+    width: 240px;
+    flex: 0 0 auto;
+}
+
+.fp-card {
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+}
+
+.fp-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    border-color: #0e7490;
+}
+
+.fp-image {
+    height: 160px;
+    position: relative;
+    background: #f1f5f9;
+}
+
+.fp-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block; /* ← ADD THIS */
+}
+
+
+.fp-noimg {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.fp-ribbon {
+    position: absolute;
+    top: 14px;
+    left: -40px;
+    padding: 6px 52px;
+    background: linear-gradient(135deg, #0e7490, #0369a1, #22c55e);
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transform: rotate(-45deg);
+    box-shadow: 0 10px 22px rgba(0,0,0,0.35);
+}
+
+.fp-body {
+    padding:0 16px;
+    padding-bottom: 16px;
+}
+
+.fp-body h6 {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #1f2937;
+}
+
+.fp-body p {
+    font-size: 13px;
+    color: #475569;
+    margin-bottom: 16px;
+}
+
+.fp-btn {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 8px;
+    background: rgba(14, 116, 144, 0.1);
+    color: #0e7490;
+    border: 1px solid #0e7490;
+}
+
+.fp-btn:hover {
+    background: #0e7490;
+    color: #ffffff;
+}
+
+/* ===== MOBILE < 360px ===== */
+@media (max-width: 360px) {
+    .fp-item {
+        width: 160px;
+    }
+
+    .fp-image {
+        height: 120px;
+    }
+
+    .fp-header h3 {
+        font-size: 20px;
+    }
+
+    .fp-view {
+        padding: 6px 12px;
+        font-size: 13px;
+    }
+
+    .fp-body {
+        padding: 12px;
+    }
+
+    .fp-body h6 {
+        font-size: 13px;
+    }
+}
+/* ===== Best Price Section ===== */
+.bp-section {
+    margin: 30px 0;
+    background-color: #0e7490;
+    padding: 40px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+
+}
+
+/* Carousel */
+.bp-carousel-wrapper {
+    position: relative;
+}
+
+.bp-carousel {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding: 6px 0;
+    scrollbar-width: none;
+}
+
+.bp-carousel::-webkit-scrollbar {
+    display: none;
+}
+
+.bp-item {
+    flex: 0 0 auto;
+    width: 340px;
+}
+
+/* Nav */
+.bp-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    font-size: 22px;
+    cursor: pointer;
+    z-index: 2;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+}
+
+.bp-nav.prev { left: -18px; }
+.bp-nav.next { right: -18px; }
+
+/* ===== Card ===== */
+.bp-card {
+    display: flex;                 /* SAME ROW */
+    align-items: center;           /* VERTICAL ALIGN */
+    gap: 14px;
+    padding: 14px;
+    background:#fff;
+    border-radius: 16px;
+    border: 1px solid #e5e7eb;
+    transition: all 0.3s ease;
+}
+
+.bp-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 30px rgba(0,0,0,0.15);
+}
+
+/* Image */
+.bp-thumb {
+    width: 96px;
+    height: 96px;
+    flex-shrink: 0;
+    border-radius: 12px;
+    background: #f8fafc;
+    overflow: hidden;
+}
+
+.bp-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.bp-noimg {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    color: #94a3b8;
+}
+
+/* Content */
+.bp-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* Remove default gaps */
+.bp-content h6 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.bp-store {
+    margin: 2px 0 0;
+    font-size: 12px;
+    color: #64748b;
+}
+
+/* Bottom */
+.bp-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 8px;
+}
+
+/* Price */
+.bp-price-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.bp-price {
+    font-size: 18px;
+    font-weight: 800;
+    color: #16a34a;
+}
+
+.bp-tag {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: #dcfce7;
+    color: #15803d;
+}
+
+/* Button */
+.bp-btn {
+    padding: 6px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 999px;
+    background: #16a34a;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.bp-btn:hover {
+    background: #15803d;
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    .bp-item {
+        width: 300px;
+    }
+
+    .bp-thumb {
+        width: 80px;
+        height: 80px;
+    }
+}
+/* ===== FIX BUY BUTTON ON MOBILE ===== */
+@media (max-width: 480px) {
+
+    .bp-bottom {
+        flex-direction: column;     /* stack price + button */
+        align-items: flex-start;    /* left align */
+        gap: 8px;
+    }
+
+    .bp-btn {
+        width: 100%;                /* full width button */
+        text-align: center;
+        padding: 8px 0;
+    }
+
+    .bp-price {
+        font-size: 16px;
+    }
+}
+/* ================= New Arrivals ================= */
+
+.na-section {
+    margin: 30px 0;
+    padding: 0 8px;
+}
+
+/* Header */
+.na-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 22px;
+}
+
+.na-header h3 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0;
+}
+
+.na-header-badge {
+    margin-left: 8px;
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: #ef4444;
+    color: #fff;
+    font-weight: 600;
+}
+
+.na-viewall {
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+    color: #0e7490;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.na-viewall:hover {
+    background: rgba(14,116,144,0.1);
+    border-color: #0e7490;
+}
+
+/* GRID – 10 PER ROW */
+.na-grid {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 18px;
+}
+
+/* Item */
+.na-item {
+    text-align: center;
+}
+
+/* Image box */
+.na-image {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 120px;
+    border-radius: 18px;
+    background: #f1f5f9;
+    margin-bottom: 10px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.na-image img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    display: block;
+}
+
+.na-image:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 30px rgba(0,0,0,0.15);
+}
+
+/* NEW badge on image */
+.na-badge {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: #ef4444;
+    color: #fff;
+}
+
+/* Name */
+.na-name {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1f2937;
+    text-decoration: none;
+    line-height: 1.3;
+}
+
+.na-name:hover {
+    color: #0e7490;
+}
+
+/* No image */
+.na-noimg {
+    font-size: 28px;
+    color: #94a3b8;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1400px) {
+    .na-grid { grid-template-columns: repeat(8, 1fr); }
+}
+
+@media (max-width: 1200px) {
+    .na-grid { grid-template-columns: repeat(6, 1fr); }
+}
+
+@media (max-width: 768px) {
+    .na-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+@media (max-width: 480px) {
+    .na-grid { grid-template-columns: repeat(3, 1fr); }
+}
+/* ================= STORE PRODUCTS SECTION ================= */
+.sp-section {
+  margin: 48px 0;
+  padding: 0 8px;
+}
+
+/* ===== Header ===== */
+.sp-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 22px;
+}
+
+.sp-header h3 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Badge */
+.sp-badge {
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(14,116,144,0.15);
+  color: #0e7490;
+  font-weight: 600;
+}
+
+/* View all */
+.sp-view {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  color: #0e7490;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.sp-view:hover {
+  background: rgba(14,116,144,0.1);
+  border-color: #0e7490;
+}
+
+/* ===== Grid ===== */
+.sp-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 16px;
+}
+
+/* ===== Card ===== */
+.sp-card {
+  background: #ffffff;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  transition: all 0.3s ease;
+  height: 100%;
+}
+
+.sp-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 30px rgba(0,0,0,0.15);
+  border-color: #0e7490;
+}
+
+/* Image */
+.sp-image {
+  height: 120px;
+  background: #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.sp-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sp-noimg {
+  font-size: 28px;
+  color: #94a3b8;
+}
+
+/* Body */
+.sp-body {
+  padding: 10px;
+  text-align: center;
+}
+.vs-pro-nav {
+  z-index: 10;
+}
+
+.sp-body h6 {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 4px;
+}
+
+.sp-body p {
+  font-size: 12px;
+  color: #64748b;
+  margin: 0 0 10px;
+}
+
+/* Button */
+.sp-btn {
+  display: block;
+  width: 100%;
+  padding: 8px 0;
+  border-radius: 8px;
+  background: rgba(14,116,144,0.1);
+  color: #0e7490;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid #0e7490;
+  transition: all 0.3s ease;
+}
+
+.sp-btn:hover {
+  background: #0e7490;
+  color: #ffffff;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 1200px) {
+  .sp-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .sp-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 480px) {
+  .sp-grid { grid-template-columns: repeat(2, 1fr); }
+}
+/* ===== VERIFIED STORES (PRO FIX) ===== */
+
+.vs-pro {
+  margin: 48px 0;
+  padding: 32px 20px;
+  background: linear-gradient(180deg,#0e7490);
+  border-radius: 20px;
+  overflow: hidden; /* 🔑 PREVENT OUTSIDE OVERFLOW */
+}
+
+/* Header */
+.vs-pro-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 22px;
+  flex-wrap: wrap; /* 🔑 MOBILE FIX */
+}
+
+.vs-pro-header h3 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.vs-pro-count {
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background:white;
+  color:#0e7490;
+  font-weight: 600;
+}
+
+.vs-pro-view {
+  font-size: 14px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid #fff;
+  color: #fff;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.vs-pro-view:hover {
+  background: rgba(14,116,144,0.1);
+}
+
+/* Carousel */
+.vs-pro-carousel-wrap {
+  position: relative;
+  overflow: hidden; /* 🔑 HARD STOP OVERFLOW */
+}
+
+.vs-pro-carousel {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 6px 4px;
+  scrollbar-width: none;
+}
+
+.vs-pro-carousel::-webkit-scrollbar {
+  display: none;
+}
+
+.vs-pro-item {
+  flex: 0 0 auto;
+  width: 200px;
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Card */
+.vs-pro-card {
+  position: relative;
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 20px 14px 16px;
+  text-align: center;
+  box-shadow: 0 12px 28px rgba(0,0,0,0.1);
+  transition: transform 0.25s ease;
+}
+
+.vs-pro-card:hover {
+  transform: translateY(-6px);
+}
+
+/* Creative Verified Badge */
+.vs-pro-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: #fff;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 0 rgba(34,197,94,0.5);
+  animation: badgePulse 2s infinite;
+}
+
+@keyframes badgePulse {
+  0% { box-shadow: 0 0 0 0 rgba(34,197,94,0.5); }
+  70% { box-shadow: 0 0 0 8px rgba(34,197,94,0); }
+  100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); }
+}
+
+/* Logo */
+.vs-pro-logo {
+  width: 76px;
+  height: 76px;
+  margin: 16px auto 10px;
+  border-radius: 50%;
+  background: #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.vs-pro-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.vs-pro-logo i {
+  font-size: 28px;
+  color: #94a3b8;
+}
+.vs-pro-nav {
+  z-index: 10;
+}
+
+/* Info */
+.vs-pro-body h6 {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.vs-pro-body p {
+  font-size: 12px;
+  color: #64748b;
+  margin: 0;
+}
+
+/* Nav */
+.vs-pro-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+}
+
+.vs-pro-nav.prev { left: 2px; }
+.vs-pro-nav.next { right: 2px; }
+
+/* Mobile */
+@media (max-width: 600px) {
+  .vs-pro-item {
+    width: 160px;
+  }
+
+  .vs-pro-header {
+    align-items: flex-start;
+  }
+}
+.vs-pro-carousel {
+  justify-content: center;
+}
+
+/* ===== TOP PICKS SECTION ===== */
+.tp-section {
+  margin: 20px 0;
+  padding: 0 8px;
+}
+
+/* Header */
+.tp-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+
+.tp-header h3 {
+  font-size: 26px;
+  font-weight: 700;
+  color: #1f2937;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+}
+
+.tp-badge {
+  font-size: 12px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: rgba(234, 179, 8, 0.15);
+  color: #92400e;
+  font-weight: 700;
+}
+
+.tp-view {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  color: #0e7490;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.tp-view:hover {
+  background: rgba(14,116,144,0.1);
+}
+
+/* Grid */
+.tp-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 20px;
+}
+
+/* Card */
+.tp-card {
+  position: relative;
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 18px 14px 20px;
+  text-align: center;
+  box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+  transition: all 0.35s ease;
+}
+
+.tp-card:hover {
+  transform: translateY(-10px) scale(1.02);
+}
+
+/* Rank badge */
+.tp-rank {
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  background: linear-gradient(135deg,#facc15,#f97316);
+  color: #78350f;
+  font-size: 13px;
+  font-weight: 900;
+  padding: 6px 12px;
+  border-radius: 12px;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.3);
+}
+
+/* Image */
+.tp-image {
+  height: 120px;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tp-image img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.tp-image i {
+  font-size: 32px;
+  color: #94a3b8;
+}
+
+/* Body */
+.tp-body h6 {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #1f2937;
+}
+
+.tp-tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #dcfce7;
+  color: #15803d;
+  margin-bottom: 12px;
+}
+
+/* Button */
+.tp-btn {
+  display: block;
+  padding: 9px 0;
+  border-radius: 10px;
+  background: #0e7490;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.tp-btn:hover {
+  background: #0c4a6e;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .tp-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .tp-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 420px) {
+  .tp-header h3 { font-size: 22px; }
+}
+
+ /* ===== SUBCATEGORY CLEAN GRID ===== */
+
+.subcat-section {
+  margin: 40px 0 20px;
+}
+
+.subcat-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 36px;
+  color: #0f172a;
+}
+
+/* GRID — 8 PER ROW */
+.subcat-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 36px 20px;
+}
+
+/* ITEM */
+.subcat-item {
+  text-decoration: none;
+  color: inherit;
+  text-align: center;
+  transition: transform 0.35s ease;
+}
+
+.subcat-item:hover {
+  transform: translateY(-6px);
+}
+
+/* IMAGE */
+.subcat-image {
+  width: 96px;
+  height: 96px;
+  margin: 0 auto 14px;
+  border-radius: 50%;
+  background: #f8fafc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 18px 36px rgba(0,0,0,0.18);
+  transition: transform 0.35s ease;
+}
+
+.subcat-item:hover .subcat-image {
+  transform: scale(1.08);
+}
+
+.subcat-image img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.subcat-image i {
+  font-size: 32px;
+  color: #94a3b8;
+}
+
+/* CONTENT */
+.subcat-content {
+  line-height: 1.3;
+}
+
+.subcat-name {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.subcat-count {
+  display: block;
+  font-size: 12px;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+.subcat-parent {
+  display: block;
+  font-size: 11px;
+  color: #94a3b8;
+  margin-top: 2px;
+}
+
+/* ===== RESPONSIVE ===== */
+
+/* Large tablets */
+@media (max-width: 1200px) {
+  .subcat-grid {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
+
+/* Tablets */
+@media (max-width: 900px) {
+  .subcat-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .subcat-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px 12px;
+  }
+
+  .subcat-image {
+    width: 80px;
+    height: 80px;
+  }
+
+  .subcat-title {
+    font-size: 22px;
+  }
+}
+/* ===== FEATURE GRID (4 COLUMN, EVEN/ODD) ===== */
+
+.feat-docs {
+  margin: 40px 0;
+}
+
+.feat-title {
+  font-size: 30px;
+  font-weight: 700;
+  margin-bottom: 36px;
+  color: #0f172a;
+}
+
+/* GRID */
+.feat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  background: #e5e7eb; /* divider color */
+}
+
+/* ITEM */
+.feat-item {
+  padding: 42px 28px;
+  text-align: center;
+  text-decoration: none;
+  color: inherit;
+  border-right: 1px solid #e5e7eb;
+  border-bottom: 1px solid #e5e7eb;
+  transition: background 0.35s ease;
+}
+
+/* EVEN / ODD BACKGROUNDS */
+.feat-item:nth-child(odd) {
+  background: #ffffff;
+}
+
+.feat-item:nth-child(even) {
+  background: #f8fafc;
+}
+
+/* remove right border on 4th column */
+.feat-item:nth-child(4n) {
+  border-right: none;
+}
+
+/* remove bottom border on last row */
+.feat-item:nth-last-child(-n + 4) {
+  border-bottom: none;
+}
+
+/* hover */
+.feat-item:hover {
+  background: #eef6f9;
+}
+
+/* IMAGE */
+.feat-image {
+  height: 110px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 18px;
+}
+
+.feat-image img {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.feat-image i {
+  font-size: 40px;
+  color: #94a3b8;
+}
+
+/* CONTENT */
+.feat-content h4 {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: #0f172a;
+}
+
+.feat-content p {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0;
+}
+
+/* ===== RESPONSIVE ===== */
+
+/* Tablets */
+@media (max-width: 1024px) {
+  .feat-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .feat-item:nth-child(4n) {
+    border-right: 1px solid #e5e7eb;
+  }
+
+  .feat-item:nth-child(2n) {
+    border-right: none;
+  }
+
+  .feat-item:nth-last-child(-n + 2) {
+    border-bottom: none;
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .feat-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .feat-item {
+    border-right: none;
+  }
+
+  .feat-item:last-child {
+    border-bottom: none;
+  }
+
+  .feat-title {
+    font-size: 24px;
+  }
+}
+
 </style>
 
 <div class="dashboard-wrapper">
@@ -219,273 +1595,317 @@
     {% endif %}
 
     <!-- Promotional Banners -->
-    {% if banners %}
-    <div class="promotional-banners mt-5">
-        <div class="row">
-            {% for banner in banners %}
-            <div class="col-md-4 mb-4">
-                <div class="banner-card">
-                    <img src="{{ banner.image.url }}" alt="{{ banner.title }}" class="img-fluid">
-                    {% if banner.title %}
-                    <div class="banner-content">
-                        <h3>{{ banner.title }}</h3>
-                        {% if banner.description %}
-                        <p>{{ banner.description }}</p>
+   {% if banners %}
+<section class="home-banner-zone">
+    <div class="home-banner-grid
+        {% if banners|length == 1 %}banner-cols-2
+        {% elif banners|length == 2 or banners|length == 4 %}banner-cols-2
+        {% else %}banner-cols-3{% endif %}">
+        
+        {% for banner in banners %}
+        <div class="home-banner">
+            <img src="{{ banner.image.url }}" alt="{{ banner.title }}">
+            <div class="home-banner-text">
+                {% if banner.title %}<h3>{{ banner.title }}</h3>{% endif %}
+                {% if banner.description %}<p>{{ banner.description }}</p>{% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+
+    <!-- SECTION 1: Featured Products (Available in only ONE store) -->
+   {% if featured_products %}
+<section class="fp-section">
+    <div class="fp-header">
+        <h3>Featured Exclusives</h3>
+        <a href="#" class="fp-view">View all</a>
+    </div>
+
+    <div class="fp-carousel-wrapper">
+        <button class="fp-nav prev" onclick="fpScroll(-1)">‹</button>
+
+        <div class="fp-carousel" id="fpCarousel">
+            {% for product in featured_products %}
+            <div class="fp-item">
+                <div class="fp-card">
+                    <div class="fp-image">
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                        {% else %}
+                            <div class="fp-noimg"><i class="fas fa-box"></i></div>
                         {% endif %}
+                        <span class="fp-ribbon">Exclusive</span>
                     </div>
-                    {% endif %}
+
+                    <div class="fp-body">
+                        <h6>{{ product.name|truncatechars:26 }}</h6>
+                        <p>Available : {{ product.store.name }}</p>
+                        <a href="{% url 'home' %}" class="fp-btn">View product</a>
+                    </div>
                 </div>
             </div>
             {% endfor %}
         </div>
-    </div>
-    {% endif %}
 
-    <!-- SECTION 1: Featured Products (Available in only ONE store) -->
-    {% if featured_products %}
-    <div class="row mb-5">
-        <div class="col-12">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h3>Featured Products <span class="badge bg-warning">Exclusive</span></h3>
-                <a href="#" class="btn btn-outline-primary btn-sm">View All</a>
-            </div>
-            <div class="row">
-                {% for product in featured_products %}
-                <div class="col-md-2 col-4 mb-3">
-                    <div class="card h-100">
-                        {% if product.image %}
-                        <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" 
-                             style="height: 120px; object-fit: cover;">
-                        {% else %}
-                        <div class="card-img-top bg-light d-flex align-items-center justify-content-center" 
-                             style="height: 120px;">
-                            <i class="fas fa-box text-muted fa-2x"></i>
-                        </div>
-                        {% endif %}
-                        <div class="card-body p-2">
-                            <h6 class="card-title mb-1 small">{{ product.name|truncatechars:30 }}</h6>
-                            <p class="card-text small text-muted mb-1">Available at: {{ product.store.name }}</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <a href="{% url 'home' %}" class="btn btn-primary btn-sm">View</a>
-                                <span class="badge bg-info">Exclusive</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
+        <button class="fp-nav next" onclick="fpScroll(1)">›</button>
     </div>
-    {% endif %}
+</section>
+{% endif %}
+
 
     <!-- SECTION 2: Best Price Products -->
-    {% if best_price_products %}
-    <div class="row mb-5">
-        <div class="col-12">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h3>Best Prices <span class="badge bg-success">Great Deals</span></h3>
-                <a href="#" class="btn btn-outline-primary btn-sm">View All</a>
-            </div>
-            <div class="row">
-                {% for product in best_price_products %}
-                <div class="col-md-2 col-4 mb-3">
-                    <div class="card h-100">
+  {% if best_price_products %}
+<section class="bp-section">
+
+    <!-- Header (same style as Featured) -->
+    <div class="fp-header">
+        <h3 style="color: #fff;">Best Prices <span class="badge bg-success">Great Deals</span></h3>
+        <a href="#" class="fp-view" style="color: #fff;">View all</a>
+    </div>
+
+    <div class="bp-carousel-wrapper">
+        <button class="bp-nav prev" onclick="bpScroll(-1)">‹</button>
+
+        <div class="bp-carousel" id="bpCarousel">
+            {% for product in best_price_products %}
+            <div class="bp-item">
+
+                <div class="bp-card">
+
+                    <!-- LEFT IMAGE -->
+                    <div class="bp-thumb">
                         {% if product.image %}
-                        <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" 
-                             style="height: 120px; object-fit: cover;">
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}">
                         {% else %}
-                        <div class="card-img-top bg-light d-flex align-items-center justify-content-center" 
-                             style="height: 120px;">
-                            <i class="fas fa-box text-muted fa-2x"></i>
-                        </div>
+                            <div class="bp-noimg"><i class="fas fa-box"></i></div>
                         {% endif %}
-                        <div class="card-body p-2">
-                            <h6 class="card-title mb-1 small">{{ product.name|truncatechars:30 }}</h6>
-                            <p class="card-text small text-success fw-bold mb-1">
-                                From ₹{{ product.min_price|floatformat:2 }}
-                            </p>
-                            <a href="{% url 'home' %}" class="btn btn-success btn-sm w-100">Buy Now</a>
+                    </div>
+
+                    <!-- RIGHT DETAILS -->
+                    <div class="bp-content">
+                        <div class="bp-top">
+                            <h6>{{ product.name|truncatechars:34 }}</h6>
+                            <p class="bp-store">Available in {{ product.store.name }}</p>
+                        </div>
+
+                        <div class="bp-bottom">
+                            <div class="bp-price-wrap">
+                                <span class="bp-price">                              <span style="font-size: 12px;color: #333;">  From </span> ₹{{ product.min_price|floatformat:2 }}
+</span>
+                            </div>
+
+                            <a href="{% url 'home' %}" class="bp-btn">Buy Now</a>
                         </div>
                     </div>
+
                 </div>
-                {% endfor %}
+
             </div>
+            {% endfor %}
         </div>
+
+        <button class="bp-nav next" onclick="bpScroll(1)">›</button>
     </div>
-    {% endif %}
+</section>
+{% endif %}
+
 
     <!-- SECTION 3: New Arrivals -->
-    {% if new_arrivals %}
-    <div class="row mb-5">
-        <div class="col-12">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h3>New Arrivals <span class="badge bg-danger">New</span></h3>
-                <a href="#" class="btn btn-outline-primary btn-sm">View All</a>
-            </div>
-            <div class="row">
-                {% for product in new_arrivals %}
-                <div class="col-md-2 col-4 mb-3">
-                    <div class="card h-100">
-                        {% if product.image %}
-                        <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" 
-                             style="height: 120px; object-fit: cover;">
-                        {% else %}
-                        <div class="card-img-top bg-light d-flex align-items-center justify-content-center" 
-                             style="height: 120px;">
-                            <i class="fas fa-box text-muted fa-2x"></i>
-                        </div>
-                        {% endif %}
-                        <div class="card-body p-2">
-                            <h6 class="card-title mb-1 small">{{ product.name|truncatechars:30 }}</h6>
-                            <span class="badge bg-danger mb-2">NEW</span>
-                            <a href="{% url 'home'%}" class="btn btn-outline-primary btn-sm w-100">View</a>
-                        </div>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
-    {% endif %}
+  {% if new_arrivals %}
+<section class="na-section">
 
-    <!-- Categories Section -->
-    {% if categories %}
-    <div class="row mb-5">
-        <div class="col-12">
-            <h3 class="mb-3">Shop By Category</h3>
-            <div class="row">
-                {% for category in categories %}
-                <div class="col-md-2 col-4 mb-3">
-                    <a href="{% url 'home' %}" class="text-decoration-none">
-                        <div class="text-center">
-                            {% if category.image %}
-                            <img src="{{ category.image.url }}" class="rounded-circle mb-2" alt="{{ category.name }}" 
-                                 style="width: 80px; height: 80px; object-fit: cover;">
-                            {% else %}
-                            <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mb-2 mx-auto" 
-                                 style="width: 80px; height: 80px;">
-                                <i class="fas fa-folder text-muted fa-2x"></i>
-                            </div>
-                            {% endif %}
-                            <p class="mb-0 text-dark fw-bold">{{ category.name }}</p>
-                            <small class="text-muted">{{ category.product_count }} products</small>
-                        </div>
-                    </a>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
+    <!-- HEADER -->
+    <div class="na-header">
+        <h3>New Arrivals </h3>
+        <a href="#" class="na-viewall">View all</a>
     </div>
-    {% endif %}
+
+    <!-- GRID -->
+    <div class="na-grid">
+        {% for product in new_arrivals %}
+        <div class="na-item">
+
+            <!-- IMAGE -->
+            <a href="{% url 'home' %}" class="na-image">
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                {% else %}
+                    <div class="na-noimg">
+                        <i class="fas fa-box"></i>
+                    </div>
+                {% endif %}
+                <span class="na-badge">NEW</span>
+            </a>
+
+            <!-- NAME -->
+            <a href="{% url 'home' %}" class="na-name">
+                {{ product.name|truncatechars:30 }}
+            </a>
+
+        </div>
+        {% endfor %}
+    </div>
+
+</section>
+{% endif %}
+
+   
 
     <!-- SECTION 4: Products from Stores -->
-    {% if store_products %}
-    <div class="row mb-5">
-        <div class="col-12">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h3>Available Products <span class="badge bg-info">In Stock</span></h3>
-                <a href="#" class="btn btn-outline-primary btn-sm">View All</a>
+   {% if store_products %}
+<section class="sp-section">
+
+  <!-- Header -->
+  <div class="sp-header">
+    <h3>
+      Available Products
+      <span class="sp-badge">In Stock</span>
+    </h3>
+    <a href="#" class="sp-view">View all</a>
+  </div>
+
+  <!-- Grid -->
+  <div class="sp-grid">
+    {% for product in store_products %}
+    <div class="sp-item">
+
+      <div class="sp-card">
+
+        <!-- Image -->
+        <div class="sp-image">
+          {% if product.image %}
+            <img src="{{ product.image.url }}" alt="{{ product.name }}">
+          {% else %}
+            <div class="sp-noimg">
+              <i class="fas fa-box"></i>
             </div>
-            <div class="row">
-                {% for product in store_products %}
-                <div class="col-md-2 col-4 mb-3">
-                    <div class="card h-100">
-                        {% if product.image %}
-                        <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" 
-                             style="height: 120px; object-fit: cover;">
-                        {% else %}
-                        <div class="card-img-top bg-light d-flex align-items-center justify-content-center" 
-                             style="height: 120px;">
-                            <i class="fas fa-box text-muted fa-2x"></i>
-                        </div>
-                        {% endif %}
-                        <div class="card-body p-2">
-                            <h6 class="card-title mb-1 small">{{ product.name|truncatechars:30 }}</h6>
-                            <p class="card-text small text-muted mb-1">{{ product.store.name }}</p>
-                            <a href="{% url 'home' %}" class="btn btn-info btn-sm w-100">Available</a>
-                        </div>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
+          {% endif %}
         </div>
+
+        <!-- Body -->
+        <div class="sp-body">
+          <h6>{{ product.name|truncatechars:30 }}</h6>
+          <p>{{ product.store.name }}</p>
+          <a href="{% url 'home' %}" class="sp-btn">Available</a>
+        </div>
+
+      </div>
+
     </div>
-    {% endif %}
+    {% endfor %}
+  </div>
+
+</section>
+{% endif %}
 
     <!-- Stores Section -->
-    {% if stores %}
-    <div class="row mb-5">
-        <div class="col-12">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h3>Verified Stores <span class="badge bg-primary">{{ stores|length }} stores</span></h3>
-                <a href="#" class="btn btn-outline-primary btn-sm">View All Stores</a>
-            </div>
-            <div class="row">
-                {% for store in stores %}
-                <div class="col-md-2 col-4 mb-3">
-                    <a href="#" class="text-decoration-none">
-                        <div class="card text-center h-100">
-                            {% if store.store_image %}
-                            <img src="{{ store.store_image.url }}" class="card-img-top rounded-circle mt-3 mx-auto" 
-                                 alt="{{ store.name }}" style="width: 70px; height: 70px; object-fit: cover;">
-                            {% else %}
-                            <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mt-3 mx-auto" 
-                                 style="width: 70px; height: 70px;">
-                                <i class="fas fa-store text-muted fa-2x"></i>
-                            </div>
-                            {% endif %}
-                            <div class="card-body p-2">
-                                <h6 class="card-title mb-1">{{ store.name|truncatechars:20 }}</h6>
-                                <p class="card-text small text-muted mb-1">
-                                    <i class="fas fa-map-marker-alt"></i> {{ store.city }}
-                                </p>
-                                <span class="badge bg-success">Verified</span>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                {% endfor %}
-            </div>
+   {% if stores %}
+<section class="vs-pro">
+
+  <!-- Header -->
+  <div class="vs-pro-header">
+    <h3>
+      Verified Stores
+      <span class="vs-pro-count">{{ stores|length }}</span>
+    </h3>
+    <a href="#" class="vs-pro-view">View All</a>
+  </div>
+
+  <!-- Carousel -->
+  <div class="vs-pro-carousel-wrap">
+    <button class="vs-pro-nav prev" onclick="vsProScroll(-1)">‹</button>
+
+    <div class="vs-pro-carousel" id="vsProCarousel">
+      {% for store in stores %}
+      <a href="#" class="vs-pro-item">
+
+        <div class="vs-pro-card">
+
+          <!-- Creative Verified Badge -->
+          <span class="vs-pro-badge">
+            <i class="fas fa-check"></i>
+          </span>
+
+          <!-- Store Image -->
+          <div class="vs-pro-logo">
+            {% if store.store_image %}
+              <img src="{{ store.store_image.url }}" alt="{{ store.name }}">
+            {% else %}
+              <i class="fas fa-store"></i>
+            {% endif %}
+          </div>
+
+          <!-- Info -->
+          <div class="vs-pro-body">
+            <h6>{{ store.name|truncatechars:20 }}</h6>
+            <p>
+              <i class="fas fa-map-marker-alt"></i>
+              {{ store.city }}
+            </p>
+          </div>
+
         </div>
+
+      </a>
+      {% endfor %}
     </div>
-    {% endif %}
+
+    <button class="vs-pro-nav next" onclick="vsProScroll(1)">›</button>
+  </div>
+
+</section>
+{% endif %}
+
 
     <!-- SECTION 5: Top Products -->
-    {% if top_products %}
-    <div class="row mb-5">
-        <div class="col-12">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h3>Most Popular <span class="badge bg-warning">Top Selling</span></h3>
-                <a href="#" class="btn btn-outline-primary btn-sm">View All</a>
-            </div>
-            <div class="row">
-                {% for product in top_products %}
-                <div class="col-md-2 col-4 mb-3">
-                    <div class="card h-100">
-                        {% if product.image %}
-                        <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" 
-                             style="height: 120px; object-fit: cover;">
-                        {% else %}
-                        <div class="card-img-top bg-light d-flex align-items-center justify-content-center" 
-                             style="height: 120px;">
-                            <i class="fas fa-box text-muted fa-2x"></i>
-                        </div>
-                        {% endif %}
-                        <div class="card-body p-2">
-                            <h6 class="card-title mb-1 small">{{ product.name|truncatechars:30 }}</h6>
-                            <span class="badge bg-warning mb-2">Bestseller</span>
-                            <a href="{% url 'home' %}" class="btn btn-warning btn-sm w-100">View</a>
-                        </div>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
+ {% if top_products %}
+<section class="tp-section">
+
+  <!-- Header -->
+  <div class="tp-header">
+    <h3>
+    Top Selling
+    </h3>
+    <a href="#" class="tp-view">View All</a>
+  </div>
+
+  <!-- Grid -->
+  <div class="tp-grid">
+    {% for product in top_products %}
+    <div class="tp-card">
+
+      <!-- Rank -->
+      <span class="tp-rank">#{{ forloop.counter }}</span>
+
+      <!-- Image -->
+      <div class="tp-image">
+        {% if product.image %}
+          <img src="{{ product.image.url }}" alt="{{ product.name }}">
+        {% else %}
+          <i class="fas fa-box"></i>
+        {% endif %}
+      </div>
+
+      <!-- Content -->
+      <div class="tp-body">
+        <h6>{{ product.name|truncatechars:28 }}</h6>
+        <span class="tp-tag">Bestseller</span>
+        <a href="{% url 'home' %}" class="tp-btn">View Product</a>
+      </div>
+
     </div>
-    {% endif %}
+    {% endfor %}
+  </div>
+
+</section>
+{% endif %}
+
 
     <!-- SECTION 6: Store Exclusive Products -->
-    {% if store_exclusive %}
+    <!-- {% if store_exclusive %}
     <div class="row mb-5">
         <div class="col-12">
             <div class="d-flex justify-content-between align-items-center mb-3">
@@ -518,69 +1938,70 @@
             </div>
         </div>
     </div>
-    {% endif %}
+    {% endif %} -->
 
     <!-- SECTION 7: Products by Category -->
-    {% if products_by_category %}
-    <div class="row mb-5">
-        <div class="col-12">
-            <h3 class="mb-3">Featured by Category</h3>
-            <div class="row">
-                {% for item in products_by_category %}
-                <div class="col-md-2 col-4 mb-3">
-                    <div class="card h-100">
-                        {% if item.product.image %}
-                        <img src="{{ item.product.image.url }}" class="card-img-top" alt="{{ item.product.name }}" 
-                             style="height: 100px; object-fit: cover;">
-                        {% else %}
-                        <div class="card-img-top bg-light d-flex align-items-center justify-content-center" 
-                             style="height: 100px;">
-                            <i class="fas fa-box text-muted fa-2x"></i>
-                        </div>
-                        {% endif %}
-                        <div class="card-body p-2">
-                            <h6 class="card-title mb-1 small">{{ item.product.name|truncatechars:25 }}</h6>
-                            <span class="badge bg-secondary mb-2">{{ item.category.name }}</span>
-                            <a href="{% url 'home' %}" class="btn btn-outline-secondary btn-sm w-100">View</a>
-                        </div>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
-    {% endif %}
+   {% if products_by_category %}
+<section class="feat-docs">
+
+  <h3 class="feat-title">Featured by Category</h3>
+
+  <div class="feat-grid">
+    {% for item in products_by_category %}
+    <a href="{% url 'home' %}" class="feat-item">
+
+      <div class="feat-image">
+        {% if item.product.image %}
+          <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+        {% else %}
+          <i class="fas fa-box"></i>
+        {% endif %}
+      </div>
+
+      <div class="feat-content">
+        <h4>{{ item.product.name|truncatechars:24 }}</h4>
+        <p>{{ item.category.name }}</p>
+      </div>
+
+    </a>
+    {% endfor %}
+  </div>
+
+</section>
+{% endif %}
+
 
     <!-- Subcategories Section -->
-    {% if subcategories %}
-    <div class="row mb-5">
-        <div class="col-12">
-            <h3 class="mb-3">Popular Subcategories</h3>
-            <div class="row">
-                {% for subcategory in subcategories %}
-                <div class="col-md-2 col-4 mb-3">
-                    <a href="{% url 'home' %}" class="text-decoration-none">
-                        <div class="text-center">
-                            {% if subcategory.image %}
-                            <img src="{{ subcategory.image.url }}" class="rounded mb-2" alt="{{ subcategory.name }}" 
-                                 style="width: 80px; height: 80px; object-fit: cover;">
-                            {% else %}
-                            <div class="rounded bg-light d-flex align-items-center justify-content-center mb-2 mx-auto" 
-                                 style="width: 80px; height: 80px;">
-                                <i class="fas fa-tags text-muted fa-2x"></i>
-                            </div>
-                            {% endif %}
-                            <p class="mb-0 text-dark">{{ subcategory.name|truncatechars:15 }}</p>
-                            <small class="text-muted">{{ subcategory.product_count }} products</small>
-                            <small class="text-muted d-block">{{ subcategory.category_name }}</small>
-                        </div>
-                    </a>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
-    {% endif %}
+   {% if subcategories %}
+<section class="subcat-section">
+
+  <h3 class="subcat-title">Popular Subcategories</h3>
+
+  <div class="subcat-grid">
+    {% for subcategory in subcategories %}
+    <a href="{% url 'home' %}" class="subcat-item">
+
+      <div class="subcat-image">
+        {% if subcategory.image %}
+          <img src="{{ subcategory.image.url }}" alt="{{ subcategory.name }}">
+        {% else %}
+          <i class="fas fa-tags"></i>
+        {% endif %}
+      </div>
+
+      <div class="subcat-content">
+        <span class="subcat-name">{{ subcategory.name|truncatechars:18 }}</span>
+        <span class="subcat-count">{{ subcategory.product_count }} products</span>
+        <span class="subcat-parent">{{ subcategory.category_name }}</span>
+      </div>
+
+    </a>
+    {% endfor %}
+  </div>
+
+</section>
+{% endif %}
+
 
 </div>
 
@@ -602,5 +2023,36 @@ setInterval(() => {
     moveSlide(1);
 }, 5000);
 </script>
+<script>
+function fpScroll(direction) {
+    const carousel = document.getElementById('fpCarousel');
+    const cardWidth = document.querySelector('.fp-item').offsetWidth;
+    const scrollAmount = cardWidth * direction * 3;
 
-{% endblock %}
+    carousel.scrollBy({
+        left: scrollAmount,
+        behavior: 'smooth'
+    });
+}
+</script>
+<script>
+function bpScroll(direction) {
+    const carousel = document.getElementById('bpCarousel');
+    const cardWidth = document.querySelector('.bp-item').offsetWidth;
+    carousel.scrollBy({
+        left: cardWidth * direction,
+        behavior: 'smooth'
+    });
+}
+</script>
+<script>
+function vsProScroll(direction) {
+  const carousel = document.getElementById('vsProCarousel');
+  carousel.scrollBy({
+    left: carousel.clientWidth * 0.7 * direction,
+    behavior: 'smooth'
+  });
+}
+</script>
+
+{% endblock %}    
