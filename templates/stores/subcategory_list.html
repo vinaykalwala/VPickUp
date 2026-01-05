@@ -2,74 +2,589 @@
 <html>
 <head>
     <title>{{ category.name }} | {{ store.name }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-        .subcategory-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 16px;
+        :root {
+            --primary: #06b6d4;
+            --primary-dark: #0e7490;
+            --primary-light: #cffafe;
+            --primary-bg: #ecfeff;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+            --shadow: 0 4px 20px rgba(6, 182, 212, 0.08);
+            --radius: 20px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --white: #ffffff;
+            --bg-light: #f8fafc;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --glass-bg: rgba(255, 255, 255, 0.95);
+            --glass-border: rgba(255, 255, 255, 0.3);
         }
-        .subcategory-card {
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            padding: 12px;
-            text-align: center;
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        .subcategory-card img {
-            width: 100%;
-            height: 140px;
-            object-fit: cover;
-            border-radius: 4px;
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 30%, #dbf4ff 70%, #f8fafc 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--text-dark);
         }
-        .subcategory-card a {
-            display: block;
-            margin-top: 10px;
-            font-weight: 600;
-            text-decoration: none;
-            color: #0d6efd;
+
+        .page-wrapper {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            min-height: 100vh;
         }
+
+        /* Breadcrumb Styles */
         .breadcrumb {
-            margin-bottom: 16px;
+            margin-bottom: 40px;
             font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            padding: 16px 24px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow);
         }
+
         .breadcrumb a {
             text-decoration: none;
-            color: #555;
+            color: var(--text-light);
+            font-weight: 500;
+            transition: var(--transition);
+            padding: 6px 12px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .breadcrumb a:hover {
+            color: var(--primary-dark);
+            background: var(--primary-light);
+        }
+
+        .breadcrumb-separator {
+            color: var(--primary);
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+        }
+
+        .breadcrumb-current {
+            color: var(--primary-dark);
+            font-weight: 600;
+            padding: 6px 16px;
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-bg) 100%);
+            border-radius: 8px;
+            border: 1px solid var(--primary-light);
+        }
+
+        /* Header Styles */
+        .category-header {
+            margin-bottom: 40px;
+            padding: 30px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .category-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 50%, var(--primary) 100%);
+        }
+
+        .category-header h1 {
+            font-size: 42px;
+            font-weight: 800;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, var(--text-dark) 0%, var(--primary-dark) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+            line-height: 1.2;
+        }
+
+        .category-subtitle {
+            color: var(--text-light);
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .category-subtitle::before {
+            content: '📁';
+            font-size: 20px;
+        }
+
+        .category-count {
+            color: var(--primary-dark);
+            font-weight: 600;
+            font-size: 14px;
+            background: var(--primary-light);
+            padding: 6px 16px;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+            border: 1px solid var(--primary);
+        }
+
+        /* Subcategory Grid */
+        .subcategory-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 24px;
+            margin-bottom: 60px;
+        }
+
+        .subcategory-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius);
+            border: 1px solid var(--glass-border);
+            padding: 20px;
+            text-align: center;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .subcategory-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 50%, transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .subcategory-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 
+                0 20px 40px rgba(6, 182, 212, 0.15),
+                0 0 0 1px rgba(6, 182, 212, 0.1);
+            border-color: var(--primary-light);
+        }
+
+        .subcategory-card:hover::before {
+            transform: translateX(0);
+        }
+
+        .image-container {
+            width: 100%;
+            height: 180px;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            position: relative;
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--bg-light) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .subcategory-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .subcategory-card:hover .subcategory-image {
+            transform: scale(1.05);
+        }
+
+        .placeholder-icon {
+            font-size: 48px;
+            color: var(--primary);
+            opacity: 0.5;
+        }
+
+        .subcategory-name {
+            font-size: 18px;
+            font-weight: 700;
+            margin: 16px 0;
+            color: var(--text-dark);
+            transition: var(--transition);
+            line-height: 1.4;
+        }
+
+        .subcategory-card:hover .subcategory-name {
+            color: var(--primary-dark);
+        }
+
+        .view-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            transition: var(--transition);
+            box-shadow: 
+                0 4px 12px rgba(6, 182, 212, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .view-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 8px 20px rgba(6, 182, 212, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+            letter-spacing: 0.3px;
+        }
+
+        .view-link i {
+            font-size: 16px;
+            transition: transform 0.3s ease;
+        }
+
+        .view-link:hover i {
+            transform: translateX(4px);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 80px 40px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius);
+            border: 2px dashed var(--border);
+            margin: 40px 0;
+        }
+
+        .empty-icon {
+            font-size: 64px;
+            color: var(--primary);
+            opacity: 0.3;
+            margin-bottom: 24px;
+        }
+
+        .empty-state h3 {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+        }
+
+        .empty-state p {
+            color: var(--text-light);
+            font-size: 16px;
+            max-width: 400px;
+            margin: 0 auto 24px;
+            line-height: 1.6;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            text-decoration: none;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: var(--transition);
+            border: 1px solid var(--primary);
+        }
+
+        .back-button:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateX(-5px);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .subcategory-grid {
+                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+                gap: 20px;
+            }
+            
+            .category-header h1 {
+                font-size: 36px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 16px;
+            }
+            
+            .subcategory-grid {
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+                gap: 16px;
+            }
+            
+            .category-header {
+                padding: 24px;
+            }
+            
+            .category-header h1 {
+                font-size: 32px;
+            }
+            
+            .breadcrumb {
+                padding: 12px 16px;
+                font-size: 13px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .subcategory-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            
+            .category-header h1 {
+                font-size: 28px;
+            }
+            
+            .category-subtitle {
+                font-size: 16px;
+            }
+            
+            .image-container {
+                height: 160px;
+            }
+            
+            .empty-state {
+                padding: 40px 20px;
+            }
+            
+            .empty-icon {
+                font-size: 48px;
+            }
+        }
+
+        /* Dark Mode Support */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --primary: #22d3ee;
+                --primary-dark: #0891b2;
+                --primary-light: #164e63;
+                --primary-bg: #0c4a6e;
+                --text-dark: #f1f5f9;
+                --text-light: #cbd5e1;
+                --border: #334155;
+                --bg-light: #1e293b;
+                --white: #0f172a;
+                --glass-bg: rgba(15, 23, 42, 0.95);
+            }
+
+            body {
+                background: linear-gradient(135deg, #0c4a6e 0%, #164e63 30%, #1e293b 70%, #0f172a 100%);
+            }
+        }
+
+        /* High Contrast Mode */
+        @media (prefers-contrast: high) {
+            :root {
+                --primary: #0066cc;
+                --primary-dark: #004080;
+                --primary-light: #cce5ff;
+            }
+            
+            .subcategory-card,
+            .category-header,
+            .breadcrumb {
+                border: 2px solid var(--primary);
+            }
         }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-
-<!-- Breadcrumb -->
-<div class="breadcrumb">
-    <a href="{% url 'customer_store_detail' store.id %}">{{ store.name }}</a>
-    &nbsp;›&nbsp;
-    <strong>{{ category.name }}</strong>
-</div>
-
-<h2>{{ category.name }}</h2>
-<p>Select a subcategory</p>
-
-<hr>
-
-{% if subcategories %}
-<div class="subcategory-grid">
-    {% for subcategory in subcategories %}
-        <div class="subcategory-card">
-            {% if subcategory.image %}
-                <img src="{{ subcategory.image.url }}" alt="{{ subcategory.name }}">
-            {% else %}
-                <img src="https://via.placeholder.com/300x200?text=No+Image" alt="No image">
-            {% endif %}
-
-            <a href="{% url 'store_subcategory_products' store.id subcategory.slug %}">
-                {{ subcategory.name }}
+    <div class="page-wrapper">
+        <!-- Breadcrumb Navigation -->
+        <div class="breadcrumb">
+            <a href="{% url 'customer_store_detail' store.id %}">
+                <i class="fas fa-store"></i>
+                {{ store.name }}
             </a>
+            <div class="breadcrumb-separator">›</div>
+            <div class="breadcrumb-current">
+                <i class="fas fa-folder"></i>
+                {{ category.name }}
+            </div>
         </div>
-    {% endfor %}
-</div>
-{% else %}
-    <p>No subcategories available.</p>
-{% endif %}
 
+        <!-- Category Header -->
+        <div class="category-header">
+            <h1>{{ category.name }}</h1>
+            <div class="category-subtitle">
+                Browse through our collection
+            </div>
+            <div class="category-count">
+                <i class="fas fa-layer-group"></i>
+                {{ subcategories|length }} subcategor{{ subcategories|length|pluralize:"y,ies" }} available
+            </div>
+        </div>
+
+        <!-- Subcategories Grid -->
+        {% if subcategories %}
+            <div class="subcategory-grid">
+                {% for subcategory in subcategories %}
+                    <div class="subcategory-card">
+                        <div class="image-container">
+                            {% if subcategory.image %}
+                                <img src="{{ subcategory.image.url }}" 
+                                     alt="{{ subcategory.name }}" 
+                                     class="subcategory-image"
+                                     loading="lazy">
+                            {% else %}
+                                <div class="placeholder-icon">
+                                    <i class="fas fa-folder-open"></i>
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <h3 class="subcategory-name">{{ subcategory.name }}</h3>
+                        
+                        <a href="{% url 'store_subcategory_products' store.id subcategory.slug %}" 
+                           class="view-link">
+                            <span>View Products</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <!-- Empty State -->
+            <div class="empty-state">
+                <div class="empty-icon">
+                    <i class="fas fa-folder-open"></i>
+                </div>
+                <h3>No Subcategories Available</h3>
+                <p>This category doesn't have any subcategories yet. Please check back later or explore other categories.</p>
+                <a href="{% url 'customer_store_detail' store.id %}" class="back-button">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Store
+                </a>
+            </div>
+        {% endif %}
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add hover effect to cards
+            const cards = document.querySelectorAll('.subcategory-card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-8px)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+
+            // Add loading animation to images
+            const images = document.querySelectorAll('.subcategory-image');
+            images.forEach(img => {
+                img.addEventListener('load', function() {
+                    this.style.opacity = '1';
+                    this.style.transform = 'scale(1)';
+                });
+                
+                // Set initial state
+                img.style.opacity = '0';
+                img.style.transform = 'scale(0.95)';
+                img.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+            });
+
+            // Add click effect to view links
+            const links = document.querySelectorAll('.view-link');
+            links.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    // Create ripple effect
+                    const ripple = document.createElement('span');
+                    const rect = this.getBoundingClientRect();
+                    const size = Math.max(rect.width, rect.height);
+                    const x = e.clientX - rect.left - size / 2;
+                    const y = e.clientY - rect.top - size / 2;
+                    
+                    ripple.style.cssText = `
+                        position: absolute;
+                        border-radius: 50%;
+                        background: rgba(255, 255, 255, 0.3);
+                        width: ${size}px;
+                        height: ${size}px;
+                        top: ${y}px;
+                        left: ${x}px;
+                        pointer-events: none;
+                        transform: scale(0);
+                        animation: ripple 0.6s ease-out;
+                    `;
+                    
+                    this.appendChild(ripple);
+                    
+                    // Remove ripple after animation
+                    setTimeout(() => {
+                        ripple.remove();
+                    }, 600);
+                });
+            });
+
+            // Add ripple animation keyframes
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes ripple {
+                    to {
+                        transform: scale(4);
+                        opacity: 0;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
 </body>
 </html>
